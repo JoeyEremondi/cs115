@@ -1,10 +1,3 @@
-#include <iostream>
-using namespace std;
-
-int main( ){
-  cout << "Hello, World!" << endl;
-  return 0;
-}
 * Review
  
  
@@ -12,6 +5,7 @@ Basic program structure, local/global variables, value passing semantics, string
  
 ** Hello world!
  
+
 #+begin_src c++
 #include <iostream>
 using namespace std;
@@ -33,6 +27,7 @@ function invocations
  
 ** Functional abstraction
  
+
 #+begin_src c++
 // Declaration of the triple function
 int triple(int x);
@@ -64,6 +59,7 @@ Can a function call itself?!
  
 ** Local and global variables and constants
  
+
 #+begin_src c++
 // Declaration of a global variable
 int g;
@@ -93,6 +89,7 @@ Use ``extern to access global variables declared in other files
  
 ** Conditionals (if-then-else branching)
  
+
 #+begin_src c++
 int max(int a, int b){
   if (a >= b)
@@ -116,6 +113,7 @@ int main( ){
  
  - Compare the following: 
  
+
 #+begin_src c++
 int max(int a, int b){
   if (a >= b)
@@ -132,6 +130,7 @@ int max(int a, int b) {
 
 Can be nested:
  
+
 #+begin_src c++
 int inRange(int num, int low, int high) {
  if(num>=low)
@@ -148,6 +147,7 @@ Note: could have used a compound conditional statement instead
  
  - Can have multiple branches: 
  
+
 #+begin_src c++
 int sign(int a){
   if (a > 0)
@@ -164,6 +164,7 @@ int sign(int a){
 
 Switch cases?
  
+
 #+begin_src c++
 switch (month){
       case 1: case 2: case 3: case 4:
@@ -185,6 +186,7 @@ switch (month){
  - Want to compute:  
 f(n) = 1 + 2 + 3 + ... + n
  
+
 #+begin_src c++
 unsigned int triangular(unsigned int n){
   unsigned int result = 0;
@@ -204,6 +206,7 @@ Can have an empty body!
  
 ** Repetition structures (loops)
  
+
 #+begin_src c++
 const unsigned int BASE = 10;
  
@@ -231,6 +234,7 @@ Loops can be nested
  
  - Call by value (arguments evaluated) 
  
+
 #+begin_src c++
 void doubleV(int a){
   a = a*2;
@@ -247,6 +251,7 @@ int main( ){
 
 Call by reference (can only send vars)
  
+
 #+begin_src c++
 void doubleR(int &a){
   a = a*2;
@@ -267,6 +272,7 @@ int main() {
  
  - Call by address (arguments evaluated) 
  
+
 #+begin_src c++
 void doubleP(int *a){
   *a = (*a)*2;
@@ -283,6 +289,7 @@ int main( ){
 
 Call by reference (can only send vars)
  
+
 #+begin_src c++
 void doubleR(int &a){
   a = a*2;
@@ -309,6 +316,7 @@ e.g., printing stuff using cout, changing a global variable, changing a local va
  
  - C++ libraries provide string facilities 
  
+
 #+begin_src c++
 #include <string>
  
@@ -328,6 +336,7 @@ cout << s[i] << endl;
 
 Characters are integer values
  
+
 #+begin_src c++
 char charToUpper(char c){
 if (a <= c && c <= z)
@@ -345,6 +354,7 @@ But not safe as modifying the passed string also modifies the original one
 Solution: pass by constant reference 
  
  - For example:  
+
 #+begin_src c++
 string capitalize(const string &s);
  
@@ -354,6 +364,7 @@ string capitalize(const string &s);
 Occasionally, you may want to return a value by constant reference (meh!)
  
 const string &chooseFirst(const string &s1, const string &s2)
+
 #+begin_src c++
 {
 if (s1 < s2)
@@ -368,6 +379,7 @@ return s2;
 ** Strings
  
 string &chooseFirst(string &s1, string &s2)
+
 #+begin_src c++
 {
 if (s1 < s2)
@@ -382,8 +394,9 @@ return s2;
 chooseFirst( ) returns reference to lexicographically smaller string
  
  - main( ) prints PQR! since s1=PQR! 
-int main( )
+
 #+begin_src c++
+int main( )
 {
 string s2 = XYZ!;
  
@@ -407,6 +420,7 @@ the program development process can be seen as a process of building reusable to
  
 Reuse reduces the overhead of solving a recurring problem over and over again, saves us from redoing testing and documentation for similar code, and in general improves the comprehensibility of source code
  
+
 #+begin_src c++
 Code structured into modules; separates interface from implementation 
  
@@ -430,6 +444,7 @@ getline(cin, <string>) and cin.get(<char>) can be used to read input from a file
  
 ** Misc
  
+
 #+begin_src c++
 Separate (unrelated) functions in different files; compile separately using -c command, and link together
  
@@ -441,6 +456,7 @@ g++ -o prog.out main.o my_util.o
  
 Collect all function prototypes together in a header file and include it in main.cpp
  
+
 #+begin_src c++
 #include my_util.h
 #pragma once preprocessor
@@ -449,11 +465,13 @@ Collect all function prototypes together in a header file and include it in main
 
 Assertions (debugging aid)
  
+
 #+begin_src c++
 #include <cassert>
 #+end_src
 
  - ... 
+
 #+begin_src c++
 assert (n>0); //prog. Terminates if not
  
@@ -469,6 +487,7 @@ One, two, and multi-dimensional arrays
  
 ** Motivation
  
+
 #+begin_src c++
   int value0;
   int value1;
@@ -478,6 +497,7 @@ One, two, and multi-dimensional arrays
    .
    .
    .
+
 #+begin_src c++
   int value999;
  
@@ -489,6 +509,7 @@ One, two, and multi-dimensional arrays
    .
    .
    .
+
 #+begin_src c++
   cin >> value999;
  
@@ -500,6 +521,7 @@ One, two, and multi-dimensional arrays
    .
    .
    .
+
 #+begin_src c++
   cout << value0 << endl;
  
@@ -516,6 +538,7 @@ Tedious, not scalable, and error prone
    + random access 
  
  
+
 #+begin_src c++
  int a[120000];    // Array declaration
  
@@ -529,6 +552,7 @@ Tedious, not scalable, and error prone
 ** Simple arrays
  
  
+
 #+begin_src c++
   const int N = 120000;
   int a[N];    // Array declaration
@@ -547,6 +571,7 @@ Easy to change size: just update N (the rest of the program remains intact)
  
 ** Passing arrays as arguments
  
+
 #+begin_src c++
 int sumArray(int a[], unsigned int n) // Array argument
 {   
@@ -557,10 +582,7 @@ int sumArray(int a[], unsigned int n) // Array argument
 }
  
  
-#+end_src
-
 int main()
-#+begin_src c++
 {
 // Array initialization
   int a[] = { 3, 24, -88, 17, -1 };  
@@ -576,6 +598,7 @@ Array size can be left unspecified in array initialization syntax
 Array arguments are always automatically passed by reference 
 no special notation is require
  
+
 #+begin_src c++
 // int sumArray(int& a[], unsigned int n) - INCORRECT
 int sumArray(int a[], unsigned int n)    // CORRECT
@@ -583,6 +606,7 @@ int sumArray(int a[], unsigned int n)    // CORRECT
 #+end_src
 
   ...
+
 #+begin_src c++
 }
 #+end_src
@@ -592,16 +616,22 @@ Interface not safe: can modify the content of A
  
 ** Passing arrays as arguments
  
+
 #+begin_src c++
 int sumArray(int a[], unsigned int n)    // not safe, sumArray can modify A!
  
 #+end_src
 
 Use the following instead:
+
+#+begin_src c++
 int sumArray(const int a[], unsigned int n)
  
+#+end_src
+
 How to figure out array size when passing n if the size was left unspecified when declaring it?
 use sizeof function: 
+
 #+begin_src c++
 int a[] = {1,2,6,3,8};
 int x = sumArray(a, sizeof(a) / sizeof(int));
@@ -610,6 +640,7 @@ int x = sumArray(a, sizeof(a) / sizeof(int));
 
 ** Play time
  
+
 #+begin_src c++
 bool arrayIsSorted(const int a[], unsigned int n){
 for (int i = 0; i < n-1; i++){
@@ -624,6 +655,7 @@ for (int i = 0; i < n-1; i++){
 
 ** Play time
  
+
 #+begin_src c++
 void swap(int &a, int &b) {
 int tmp = a;
@@ -640,6 +672,7 @@ for (int i = 0; i < n/2; i++)
 
 ** Processing subarrays
  
+
 #+begin_src c++
 // pos   : index of the first component in the subarray
 // count: total number of components in the subarray
@@ -655,6 +688,7 @@ sum += a[i];
 
 ** Processing subarrays
  
+
 #+begin_src c++
 // begin: index of first component in the subarray
 // end   : index of the last component in the subarray
@@ -673,16 +707,19 @@ return sum;
  
 C++ does not check if array indices are within bound 
 Array Copying
+
 #+begin_src c++
 a = b // invalid
 #+end_src
 
 copy cell by cell: 
+
 #+begin_src c++
 a[6]=b[9] // works!
 #+end_src
 
 Array Comparison
+
 #+begin_src c++
 if(a == b) // invalid
 #+end_src
@@ -701,6 +738,7 @@ recall item n is the (n+1)-th item as index starts from 0!
  
 ** Two dimensional arrays
  
+
 #+begin_src c++
 const unsigned int NUM_OF_REGIONS = 4;
 const unsigned int NUM_OF_PRODUCTS = 3;
@@ -710,12 +748,14 @@ unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS];
 #+end_src
 
 To access sales figure for first product in second region, use: 
+
 #+begin_src c++
 sales[1][0] // recall, indices start from 0 
  
 #+end_src
 
 e.g., want to set sales figure for first product in second region to 500 
+
 #+begin_src c++
 sales[1][0] = 500;
  
@@ -723,6 +763,7 @@ sales[1][0] = 500;
 
 ** Two dimensional arrays
  
+
 #+begin_src c++
 // Read input stream
  for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
@@ -741,6 +782,7 @@ total_sales += sales[region][0]; // add up sales from all regions for product 0
 ** Two dimensional arrays
  
 unsigned int sumProductSales(unsigned int 
+
 #+begin_src c++
 sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS], unsigned int product){
 unsigned int total_sales = 0;
@@ -750,20 +792,22 @@ total_sales += sales[region][product];
 return total_sales;
 }
  
-#+end_src
-
 Can you implement a safer interface? (see slide 7)
  
 As usual, can leave size of first dimension unspecified, e.g. int F(int arr[ ][SIZE]) 
+#+end_src
+
 but not the second one (why?)
  
 ** Making things more modular
  
+
 #+begin_src c++
 // Implement a function that returns the value of one element from the sales array
 #+end_src
 
 unsigned int getSales(const unsigned int 
+
 #+begin_src c++
 sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS], unsigned int r, unsigned int p){
 return sales[r][p];
@@ -772,6 +816,7 @@ return sales[r][p];
 #+end_src
 
 void setSales(unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS],
+
 #+begin_src c++
 unsigned int r, unsigned int p, unsigned int v){
 sales[r][p] = v;
@@ -781,6 +826,7 @@ sales[r][p] = v;
 
 ** Using typedef
  
+
 #+begin_src c++
 // too lazy to write long types? Use typedef instead!
  
@@ -790,6 +836,7 @@ unsigned int sumSales(const Sales sales){
 #+end_src
 
  - ... 
+
 #+begin_src c++
 }
  
@@ -801,11 +848,13 @@ unsigned int sumSales(const Sales sales){
 
 ** Simulating Two-dimensional Arrays by One-dimensional Ones
  
+
 #+begin_src c++
 unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS];
 #+end_src
 
 versus
+
 #+begin_src c++
 unsigned int _sales[NUM_OF_REGIONS * NUM_OF_PRODUCTS];
  
@@ -819,6 +868,7 @@ e.g. sales[i][j] is the same as _sales[i * NUM_OF_PRODUCTS + j] in row-major
  
 ** Simulating Two-dimensional Arrays by One-dimensional Ones
  
+
 #+begin_src c++
 unsigned int totalSales = 0;
  
@@ -831,6 +881,7 @@ totalSales += _sales[region * NUM_OF_PRODUCTS + product];
 
 ** Multi-dimensional Arrays
  
+
 #+begin_src c++
 const unsigned int NUM_YEARS = 2;
 const unsigned int NUM_REGIONS = 4;	
@@ -863,6 +914,7 @@ Item[n_1][n_2]...[n_d]
  
 can be represented as a single dimensional array with the following index
  
+
 #+begin_src c++
 _Item[n_d + S_d * (n_{d-1} + S_{d-1} * (n_{d-2} + S_{d-2} * (...+S_2*n_1) ... ))] 
  
@@ -886,6 +938,7 @@ Structs and unions
  
  
 Solution using arrays:
+
 #+begin_src c++
 string titles[N];
 string authors[N];
@@ -903,6 +956,7 @@ Poor choice of interface!
  
 Data can be heterogenous 
 Define:
+
 #+begin_src c++
 struct CatalogEntry {
     string title;
@@ -915,6 +969,7 @@ struct CatalogEntry {
 
 Only 1 argument needs to be passed
 Declare:
+
 #+begin_src c++
 struct CatalogEntry c; 
 or CatalogEntry c;
@@ -922,6 +977,7 @@ or CatalogEntry c;
 #+end_src
 
 Initialize:
+
 #+begin_src c++
 c.title = "Peter Pan";
 c.author = "J. M. Barrie";
@@ -936,6 +992,7 @@ c.callNumber = "B2754 1980";
  - As with arrays  
  
 CatalogEntry c = 
+
 #+begin_src c++
 {
 #+end_src
@@ -945,12 +1002,14 @@ CatalogEntry c =
   "Scribner",
   1980,
   "B2754 1980"
+
 #+begin_src c++
 };
  
 #+end_src
 
 Copying a record:
+
 #+begin_src c++
 // initialization list
 CatalogEntry c = { ... }; 
@@ -967,6 +1026,7 @@ c2 = c;
 
 ** Functions operating on records
  
+
 #+begin_src c++
 void printCatalogEntry(CatalogEntry c){
      cout << "Title: " << c.title << endl;
@@ -985,6 +1045,7 @@ As usual, by default arguments are passed by value (call by value)
  
 For efficiency, call by reference is also supported
  
+
 #+begin_src c++
 void printCatalogEntry(const CatalogEntry &c){
      cout << "Title: " << c.title << endl;
@@ -1000,12 +1061,14 @@ void printCatalogEntry(const CatalogEntry &c){
 
 ** Equality checking
  
+
 #+begin_src c++
 if (c1 == c2)  // invalid
  
 #+end_src
 
 As in the case for arrays, must do this each field at a time
+
 #+begin_src c++
 bool CatalogEntryEquals(const CatalogEntry& c1, const CatalogEntry& c2){
 #+end_src
@@ -1015,6 +1078,7 @@ bool CatalogEntryEquals(const CatalogEntry& c1, const CatalogEntry& c2){
       c1.author == c2.author &&
       c1.publisher == c2.publisher && 
       c1.publishingYear == c2.publishingYear &&
+
 #+begin_src c++
       c1.callNumber == c2.callNumber;
 }
@@ -1025,12 +1089,14 @@ bool CatalogEntryEquals(const CatalogEntry& c1, const CatalogEntry& c2){
 
 ** Complex record data structures
  
+
 #+begin_src c++
 CatalogEntry A[3];
  
 #+end_src
 
 CatalogEntry A[] = 
+
 #+begin_src c++
 {
 {"Peter Pan",
@@ -1039,6 +1105,7 @@ CatalogEntry A[] =
     "J. M. Barrie",
     "Scribner",
     1980,
+
 #+begin_src c++
     "B2754 1980"},
  
@@ -1050,6 +1117,7 @@ CatalogEntry A[] =
      "Stanley B. Lippman",
      "Addison-Wesley",
      1998,
+
 #+begin_src c++
  
    {"Anatomy of LISP",
@@ -1058,6 +1126,7 @@ CatalogEntry A[] =
      "John Allen",
      "McGraw-Hill",
      1978,
+
 #+begin_src c++
      "QA 76.73 L23A44"}
  };
@@ -1079,6 +1148,7 @@ See the very first announcement in UR Courses
  
 ** Complex record data structures
  
+
 #+begin_src c++
 const int MAX_NAMES = 100;
  
@@ -1097,6 +1167,7 @@ struct FullName {
 
 ** Complex record data structures
  
+
 #+begin_src c++
 const int SCREEN_HEIGHT = 768, SCREEN_WIDTH = 1024;
  struct Screen{
@@ -1107,6 +1178,7 @@ char screen_array[SCREEN_HEIGHT][SCREEN_WIDTH];
 
  - ... 
  
+
 #+begin_src c++
 Screen my_screen;
 for (int i = 0; i < SCREEN_HEIGHT; i++){
@@ -1123,6 +1195,7 @@ for (int i = 0; i < SCREEN_HEIGHT; i++){
 
 ** Complex record data structures
  
+
 #+begin_src c++
 struct str1 {
 int a[2];
@@ -1151,6 +1224,7 @@ What will be the output?
  
 User-defined data type that consists of integral constants
  
+
 #+begin_src c++
 enum day {
 #+end_src
@@ -1160,6 +1234,7 @@ enum day {
   Sunday = 90,
   ...,
   Thursday 
+
 #+begin_src c++
 };
  
@@ -1171,6 +1246,7 @@ if (d == Saturday || d == Sunday)
 
 cout << Enjoy the weekend!
  
+
 #+begin_src c++
 cout << d+1 ;
  
@@ -1183,6 +1259,7 @@ What will be the output?
 Multiple component fields can be defined
 At most one field can be in use at one time (fields share the same memory)
  
+
 #+begin_src c++
 union Coordinates {
 #+end_src
@@ -1190,6 +1267,7 @@ union Coordinates {
   int a,
   double b,
   char c
+
 #+begin_src c++
 };
  
@@ -1207,12 +1285,14 @@ cout << x.c;         // works, prints p
 
 ** Example
  
+
 #+begin_src c++
 enum CatalogEntryType {
 #+end_src
 
   BookEntry,
   DVDEntry
+
 #+begin_src c++
 };
  
@@ -1236,6 +1316,7 @@ union CatalogEntryVariantPart {
 #+end_src
 
  
+
 #+begin_src c++
 struct CatalogEntry {
   string title;
@@ -1251,12 +1332,14 @@ struct CatalogEntry {
 #+end_src
 
  
+
 #+begin_src c++
 void printCatalogEntry(const CatalogEntry& c) {
   cout << "Title: " << c.title << endl;
 #+end_src
 
   ...
+
 #+begin_src c++
   cout << "Call Number: " << c.callNumber << endl;
   switch (c.tag) {
@@ -1276,6 +1359,7 @@ void printCatalogEntry(const CatalogEntry& c) {
 ** Anonymous declaration of records and variant-records
  
  - Earlier: 
+
 #+begin_src c++
 union CatalogEntryVariantPart {
   BookSpecificInfo book;
@@ -1285,6 +1369,7 @@ union CatalogEntryVariantPart {
 #+end_src
 
  - Could have actually declared them in-line: 
+
 #+begin_src c++
 union CatalogEntryVariantPart {
 struct BookSpecificInfo { unsigned int pages; } book;
@@ -1297,6 +1382,7 @@ struct DVDSpecificInfo { unsigned int discs, minutes; } dvd;
  
  - Can also anonymize: 
  
+
 #+begin_src c++
 union CatalogEntryVariantPart {
 struct { unsigned int pages; } book;
@@ -1311,6 +1397,7 @@ struct { unsigned int discs, minutes; } dvd;
  
  - In fact, we could have done the same with the union 
  
+
 #+begin_src c++
 struct CatalogEntry {
 string title;
@@ -1359,6 +1446,7 @@ OOP: via classes and objects
  
 Refactoring is to rewrite code in order to improve its readability, reusability, or structure without affecting its meaning or behaviour
 perhaps older version was poorly written due to time constraints etc.
+
 #+begin_src c++
 e.g., replace 416 with the constant GTA_CODE1, replace long if-then-else branches with switch/case statements, divide overly complex implementation into smaller functions, replace with efficient code, etc.
  
@@ -1376,10 +1464,18 @@ each higher, more abstract level builds on a lower, less abstract level
  
 Modular programming is a method of developing software where each section of code is a module with a carefully specified interface 
 interface makes the purpose of your code clear
+
+#+begin_src c++
 client software can focus on the interface (and ignore its implementation)
  
+#+end_src
+
 A crucial aspect of modular programming is mentally separating the interface from the implementation
+
+#+begin_src c++
 we will specify the interfaces in .h files (as well-documented prototypes) 
+#+end_src
+
 we will specify the implementation in .cpp files (primarily as functions)
 some functions and variables are not (directly) accessible!
  
@@ -1393,6 +1489,7 @@ by defining new abstract data types (ADT) using records and classes
  
 ** The static keyword
  
+
 #+begin_src c++
 // whatever.cpp
  
@@ -1421,6 +1518,7 @@ doh(13); // invalid
 
 ** The static keyword
  
+
 #+begin_src c++
 void fun(int var1) {
 int x1=0;
@@ -1450,6 +1548,7 @@ funS(7);
 
 ** Namespaces
  
+
 #+begin_src c++
 // myProg.h
  
@@ -1480,6 +1579,7 @@ return 0;
 
 ** Anonymous namespaces
  
+
 #+begin_src c++
 // myProg.h
  
@@ -1528,6 +1628,7 @@ similar effects can be achieved using namespaces
  
  - Start by specifying the interface of the module 
  
+
 #+begin_src c++
 // initializeCounter
 //
@@ -1544,6 +1645,7 @@ similar effects can be achieved using namespaces
 
 ** Separating interface and implementation
  
+
 #+begin_src c++
 // getCounterValue
 //
@@ -1572,6 +1674,7 @@ similar effects can be achieved using namespaces
 
 ** Separating interface and implementation
  
+
 #+begin_src c++
 // encapsulated_counter.h
 //
@@ -1598,6 +1701,7 @@ void incrementCounter();
 
 ** Separating interface and implementation
  
+
 #+begin_src c++
 #include <iostream>
 using namespace std;
@@ -1624,6 +1728,7 @@ Output:
  
 ** Separating interface and implementation
  
+
 #+begin_src c++
 // encapsulated_counter.cpp
 //
@@ -1659,6 +1764,7 @@ invariants
  
 ** Design by contract (example)
  
+
 #+begin_src c++
 // initializeCounter
 //
@@ -1677,6 +1783,7 @@ invariants
 
 ** Design by contract (example)
  
+
 #+begin_src c++
 // encapsulated_counter.cpp
 #include <cassert>
@@ -1691,6 +1798,7 @@ counter_upper = upper1;
 
 ** Design by contract (example)
  
+
 #+begin_src c++
 // initializeCounter
 //
@@ -1708,6 +1816,7 @@ static bool isInvariantTrue(){
 
 ** Design by contract (example)
  
+
 #+begin_src c++
 void initializeCounter(unsigned int value1, unsigned int upper1){
   assert(value1 < upper1);
@@ -1741,6 +1850,7 @@ But if interface remains the same, changing implementation does not require chan
  
  - Motivation: returning to our example, we want to have multiple counters 
 ADT:  data type defined by its possible values and operations, e.g.: counters
+
 #+begin_src c++
 // counter.h
 //
@@ -1757,6 +1867,7 @@ struct Counter{
 
 ** Abstract data types (ADT)
  
+
 #+begin_src c++
 // counterInitialize
 //
@@ -1777,6 +1888,7 @@ void counterInitialize(Counter& counter, unsigned int value1, unsigned int upper
 
 ** Abstract data types (ADT)
  
+
 #+begin_src c++
 // counterGetValue
 //
@@ -1808,6 +1920,7 @@ void counterIncrement(Counter& counter);
 
 ** Abstract data types (ADT)
  
+
 #+begin_src c++
 int main( ){
   Counter c, d;
@@ -1825,6 +1938,7 @@ int main( ){
 
 ** Abstract data types (ADT)
  
+
 #+begin_src c++
 struct Counter {
   unsigned int value;
@@ -1840,6 +1954,7 @@ no data encapsulation
 no initialization guarantees
  
 No encapsulation
+
 #+begin_src c++
 Counter c;
 counterInitialize(c, 0, 3);
@@ -1848,6 +1963,7 @@ c.value = 999; // allowed!
 #+end_src
 
 No initialization guarantees
+
 #+begin_src c++
 // Precondition:
 //  <1> The counter module must 
@@ -1866,6 +1982,7 @@ Declaring ADT as classes, data representation, member functions, public vs. priv
 ** Classes
  
 Classes are record types, and thus have fields, but can also declared member functions
+
 #+begin_src c++
 // counter.h
 class Counter {
@@ -1883,6 +2000,7 @@ private:
 #+end_src
 
  
+
 #+begin_src c++
 Public member functions can be used elsewhere
 #+end_src
@@ -1890,16 +2008,18 @@ Public member functions can be used elsewhere
 how about public static ones?
 Private member functions have class scope 
 (cf. file scope as in static or namespaces)
+
 #+begin_src c++
 Note: member functions no longer take the counter as argument; why?
+ void initialize(unsigned int value1, unsigned int upper1)
 #+end_src
 
- void initialize(unsigned int value1, unsigned int upper1)
 Public vs. private fields/member functions of a class
 how to call/invoke public member functions? 
 how to define/implement a member function?
  
  
+
 #+begin_src c++
 #include "counter.h"
  
@@ -1924,12 +2044,14 @@ return 0;
 #+end_src
 
  
+
 #+begin_src c++
 class Counter {
 public: 
 #+end_src
 
 ... ... ...
+
 #+begin_src c++
 private: // encapsulation
 unsigned int value; // current value of the counter
@@ -1943,6 +2065,7 @@ c.initialize(0, 3);
 #+end_src
 
  
+
 #+begin_src c++
 // counter.cpp
  
@@ -1969,6 +2092,7 @@ value = 0;
 #+end_src
 
  
+
 #+begin_src c++
 // counter.h
  
@@ -1977,6 +2101,7 @@ public:
 #+end_src
 
 ... ... ...
+
 #+begin_src c++
 private: // encapsulation
 // isInvariantTrue
@@ -2000,8 +2125,9 @@ assert(isInvariantTrue());
  - Can declare a class constructor 
 special kind of member function 
 automatically invoked when an instance of the class is created 
-   + intended to perform initialization (forces to initialize when creating instances!) 
+
 #+begin_src c++
+   + intended to perform initialization (forces to initialize when creating instances!) 
 // counter.h
 class Counter {
 public:
@@ -2011,12 +2137,14 @@ public:
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
 #+end_src
 
  
+
 #+begin_src c++
 // counter.cpp
  
@@ -2037,6 +2165,7 @@ c.increment();
 #+end_src
 
  - ... 
+
 #+begin_src c++
 Counter x; // invalid!
 }
@@ -2045,6 +2174,7 @@ Counter x; // invalid!
 
 ** Another example (time accumulator)
  
+
 #+begin_src c++
 // time.h
 Class Time{
@@ -2061,6 +2191,7 @@ bool lessThan(const Time &t);
 #+end_src
 
  
+
 #+begin_src c++
 // getComponents
 void getComponents(unsigned int &hrs, unsigned int &mins, unsigned int &secs);
@@ -2077,6 +2208,7 @@ private:
 #+end_src
 
  
+
 #+begin_src c++
 #include "time.h"
 int main( ) {
@@ -2097,6 +2229,7 @@ Return 0;
 #+end_src
 
  
+
 #+begin_src c++
 // time.h
 class Time {
@@ -2104,6 +2237,7 @@ public:
 #+end_src
 
  - ... 
+
 #+begin_src c++
 private:
 // Another constructor
@@ -2119,6 +2253,7 @@ unsigned long int seconds;
 #+end_src
 
  
+
 #+begin_src c++
 // time.cpp
 #include <cassert>
@@ -2136,6 +2271,7 @@ return hrs * SECS_IN_HOUR + mins * SECS_IN_MIN + secs;
 #+end_src
 
  
+
 #+begin_src c++
 // time.cpp
 Time::Time(unsigned int hrs, unsigned int mins, unsigned int secs) {
@@ -2152,6 +2288,7 @@ seconds += convertToSecs(hrs, mins, secs);
 #+end_src
 
  
+
 #+begin_src c++
 // time.cpp
 bool Time::equals(const Time &t) {
@@ -2169,6 +2306,7 @@ secs =  seconds % SECS_IN_MIN;
 #+end_src
 
  
+
 #+begin_src c++
 // time.cpp
  
@@ -2199,6 +2337,7 @@ seconds = secs;
 used by add( ) and diff( )
 in general, can have many
 Could have implemented add( ) and diff( ) differently
+
 #+begin_src c++
 Time Time::add(const Time &t) {
   return Time(seconds + t.seconds);
@@ -2215,6 +2354,7 @@ Time Time::diff(const Time &t) {
 Above alternative implementation creates a temporary, anonymous instance of Time and returns it right away (more efficient)
 no intermediate variables are declared 
  - Another example (where 2 temporary instances are created): 
+
 #+begin_src c++
 Time t = Time(1, 0, 45).add(Time(0, 30, 15));
 #+end_src
@@ -2225,6 +2365,7 @@ Time t = Time(1, 0, 45).add(Time(0, 30, 15));
  
  - Has no parameters 
 Invoked by compiler if the client did not invoke another constructor 
+
 #+begin_src c++
 // time.h
 class Time {
@@ -2234,6 +2375,7 @@ Time( );
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
 // time.cpp
@@ -2250,6 +2392,7 @@ Time z( ); // invalid!
 
 ** C++ classes are records with encapsulated fields
  
+
 #+begin_src c++
 struct Time {
 unsigned long int seconds;
@@ -2266,6 +2409,7 @@ public:
 #+end_src
 
  - ... 
+
 #+begin_src c++
 private:
 unsigned long int seconds;
@@ -2276,6 +2420,7 @@ unsigned long int seconds;
 
 ** C++ classes are records with encapsulated fields
  
+
 #+begin_src c++
 struct Time {
 public:
@@ -2297,6 +2442,7 @@ Only difference: by default, fields are public in structures and private in clas
  
 ** Thus:
  
+
 #+begin_src c++
 class A { ... };
 void func1(A z) { ... }
@@ -2305,12 +2451,14 @@ A x, y;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 x = y;
  
 #+end_src
 
  - ... 
+
 #+begin_src c++
 func1(x);
  
@@ -2319,6 +2467,7 @@ A x;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 return x;
 }
@@ -2333,12 +2482,14 @@ A z = func2( );
 Just like structures, no initialization is performed by default (unless a constructor is provided)
 If no constructors are provided, the compiler supplies a dummy one that does nothing!
  
+
 #+begin_src c++
 class A {
 // no constructor declared here
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
 A x; // initialization will not be performed
@@ -2351,6 +2502,7 @@ A x; // initialization will not be performed
 better to pass by reference
 sometimes want to ensure that the passed object is not modified via the const keyword
  
+
 #+begin_src c++
 int f(const Time &t) {
 if (t.lessThan(Time(0, 30, 0))) // valid: lessThan is const 
@@ -2362,6 +2514,7 @@ t.increment(0, 30, 0);             // invalid: increment is not const
 
 ** const member functions
  
+
 #+begin_src c++
 Time add(const Time &t); // in Time class
 Time t3 = t1.add(t2);        // in main function
@@ -2370,6 +2523,7 @@ Time t3 = t1.add(t2);        // in main function
 
  
  - Use the following declaration instead 
+
 #+begin_src c++
 Time add(const Time &t) const; // in Time.h
  
@@ -2378,6 +2532,7 @@ increment(1,15,30); // invalid!
 #+end_src
 
  - ... 
+
 #+begin_src c++
 }
  
@@ -2408,6 +2563,7 @@ Partially correct: sound but not complete
  
 ** Linear search
  
+
 #+begin_src c++
 typedef int ItemType;
  
@@ -2429,6 +2585,7 @@ typedef int ItemType;
 
 ** Linear search
  
+
 #+begin_src c++
 int linearSearch(const ItemType x, const ItemType A[], unsigned int n) {
 for (unsigned int i = 0; i < n; i++){
@@ -2455,6 +2612,7 @@ if the x > m then x will not be located to the left of m, and thus x should be s
  
 ** Binary search
  
+
 #+begin_src c++
  //
   // binarySearch
@@ -2474,6 +2632,7 @@ if the x > m then x will not be located to the left of m, and thus x should be s
 ** Binary search
  
  bool binarySearch(ItemType x, 
+
 #+begin_src c++
 const ItemType A[], unsigned int n){
 /*1*/    int low = 0;
@@ -2532,6 +2691,7 @@ So, repeatedly select the minimum element from the remaining elements and places
  
 Sort array A[n]:
  
+
 #+begin_src c++
 for (i = 0; i < n; i++){
 #+end_src
@@ -2539,6 +2699,7 @@ for (i = 0; i < n; i++){
 1. find the min element in the unsorted array
 2. remove min element from unsorted array
 3. place min element at index i of sorted array
+
 #+begin_src c++
 }
  
@@ -2549,12 +2710,14 @@ for (i = 0; i < n; i++){
  
 Sort array A[n]:
  
+
 #+begin_src c++
   for (i = 0; i < n; i++){
 #+end_src
 
 1. find the min element in the unsorted region of array A
 2. swap the min element with the element at index i
+
 #+begin_src c++
   }
  
@@ -2569,12 +2732,14 @@ the subarray A[i..n] contains the remaining elements in some arbitrary order
  
 Refined version:
  
+
 #+begin_src c++
   for (i = 0; i < n; i++){
 #+end_src
 
 1. find the min element in A[i..n]
 2. swap the min element with A[i]
+
 #+begin_src c++
   }
  
@@ -2583,6 +2748,7 @@ Refined version:
 
 ** The selection sort algorithm
  
+
 #+begin_src c++
 void selectionSort(ItemType A[], unsigned int n){
 for (unsigned int i = 0; i < n; i++){
@@ -2596,6 +2762,7 @@ swap(A[i], A[m]);
 
 ** The selection sort algorithm
  
+
 #+begin_src c++
 unsigned int min(const ItemType A[], unsigned int begin, unsigned int end){
 assert(begin <= end);
@@ -2612,6 +2779,7 @@ m = i;
 
 ** The selection sort algorithm
  
+
 #+begin_src c++
 void swap(ItemType &x, ItemType &y) {
 ItemType tmp = x;
@@ -2624,6 +2792,7 @@ y = tmp;
 
 ** The selection sort algorithm
  
+
 #+begin_src c++
 void selectionSort(ItemType A[], int N){
     int i, j, search_min;
@@ -2661,6 +2830,7 @@ insert it into the sorted region to generate a sorted region that is one element
  
 Sort A[n]:
  
+
 #+begin_src c++
 for i ranging from 0 to n-1 do {
 Select x = A[i];
@@ -2679,6 +2849,7 @@ while the subarray A[i+1..n] is in some arbitrary order
  
 Sort A[n]:
  
+
 #+begin_src c++
 for i ranging from 0 to n-1 do {
 Select x = A[i];
@@ -2689,6 +2860,7 @@ Insert x into subarray A[0..i];
 
 ** The insertion sort algorithm
  
+
 #+begin_src c++
 void insertionSort(ItemType A[], unsigned int n) {
 for (unsigned int i = 0; i < n; i++) {
@@ -2706,6 +2878,7 @@ A[j] = x;
 
 ** The insertion sort algorithm
  
+
 #+begin_src c++
 unsigned int find(ItemType x, const ItemType A[], unsigned int n) {
 for (unsigned int i = 0; i < n; i++) {
@@ -2720,6 +2893,7 @@ if (A[i] >= x)
 
 ** The insertion sort algorithm
  
+
 #+begin_src c++
 void shiftRight(ItemType A[], unsigned int begin, unsigned int end) {
 assert(0 <= begin);
@@ -2735,6 +2909,7 @@ A[j] = A[j-1];
 
 ** The insertion sort algorithm
  
+
 #+begin_src c++
  void insertionSort(DataType A[], int N) {
     int i, j, insert_index;
@@ -2749,6 +2924,7 @@ A[j] = A[j-1];
 #+end_src
 
       while ((insert_index < i) && (x > A[insert_index]))
+
 #+begin_src c++
         insert_index++;
       // Shift the elements
@@ -2774,6 +2950,7 @@ Function overloading, type coercion, operator overloading
  - Default constructor written by the programmer 
 constructor creates an empty Multiset
  
+
 #+begin_src c++
 class Multiset {
 public:
@@ -2781,6 +2958,7 @@ Multiset();
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -2788,6 +2966,7 @@ Multiset();
 
  - Default constructor provided by the compiler 
  
+
 #+begin_src c++
  - Client code: Multiset m; // but not Multiset m( ); 
  
@@ -2798,6 +2977,7 @@ Multiset();
 ** Constructors
  
  - Want to insert all elements of an array A of size n into Multiset 
+
 #+begin_src c++
 int A[5] = { 2, 5, 4, 3, 1 };
 Multiset m;
@@ -2807,6 +2987,7 @@ m.insert(A[i]);
 #+end_src
 
  - If frequently done, might as well write a constructor 
+
 #+begin_src c++
 class Multiset {
 public:
@@ -2815,6 +2996,7 @@ Multiset(const ItemType A[], unsigned int n);
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -2823,6 +3005,7 @@ Multiset(const ItemType A[], unsigned int n);
 ** Constructors
  
  - Client code 
+
 #+begin_src c++
 int A[5] = { 2, 5, 4, 3, 1 };
 Multiset m(A, 5);  // Invoking the constructor with an array argument followed 
@@ -2831,6 +3014,7 @@ Multiset m(A, 5);  // Invoking the constructor with an array argument followed
 #+end_src
 
  - If frequently done, might as well write a constructor 
+
 #+begin_src c++
 Multiset::Multiset(const ItemType A[], unsigned int n) {
 assert(n <= MAX_LENGTH);
@@ -2848,6 +3032,7 @@ sort(data, data_count);  // e.g., any sorting algorithm
  
  - Want to create a Multiset with n copies of the same item x 
  
+
 #+begin_src c++
 Multiset(ItemType x, unsigned int n);
  
@@ -2857,6 +3042,7 @@ Client code: Multiset m(999, 5);  // A multiset of 5 copies of 999
 
  - implementation 
  
+
 #+begin_src c++
 Multiset::Multiset(ItemType x, unsigned int n) {
 data_count = n;
@@ -2870,6 +3056,7 @@ data[i] = x;
  
 Anonymous objects can be useful and efficient
  
+
 #+begin_src c++
 Counter c1, c2;         // ordinary variables initialized using default constructor
 Counter c3(0, 3);       // ordinary variable initialized using initializing constructor
@@ -2883,17 +3070,20 @@ ctr1[5] = Counter(0,3);
 
  
  - Creating anonymous objects for function call 
+
 #+begin_src c++
 House h1(500000);
 #+end_src
 
  - ... 
+
 #+begin_src c++
 House p = h1.add(House(1000000));
  
 #+end_src
 
 Creating anonymous for the purpose of returning it 
+
 #+begin_src c++
 House House::add(const House &other) const {
 if (price == 0 && other.price == 0) {
@@ -2908,6 +3098,7 @@ return House(price + other.price);
 
 ** Overloading
  
+
 #+begin_src c++
 int myMax(int a, int b) {
 if (a > b)
@@ -2937,6 +3128,7 @@ return 0;
 
 ** Overloading
  
+
 #+begin_src c++
 int myMax(int a, int b) {
 if (a > b)
@@ -2952,6 +3144,7 @@ return myMax(a, myMax(b, c));
 #+end_src
 
 How about different return types only? (nope!)
+
 #+begin_src c++
 int main( ) {
  
@@ -2969,6 +3162,7 @@ return 0;
 
 ** Overloading
  
+
 #+begin_src c++
 // header 
 void print( ) const;
@@ -3003,6 +3197,7 @@ No warnings are provided for type upgrade given in the above order
  
 ** Type coercions (examples)
  
+
 #+begin_src c++
 void myMax(float f1, float f2); // 1Avoid myMax(int i1, int i2); // 1BmyMax(7, 9);
  
@@ -3021,6 +3216,7 @@ void crunch(string s1, string s2); // 5Avoid crunch(string s1); // 5Bdouble e 
 5: Error! 
  
  
+
 #+begin_src c++
 void mixed(int i1, double d1); // 6Avoid mixed(double d1, int i1); // 6Bint k3 = 3, k4 = 4;mixed(k3, k4);
  
@@ -3038,6 +3234,7 @@ void mixed(int i1, double d1); // 7Avoid mixed(double d1, int i1); // 7Bdouble
 thus, overloading the operator 
  - Uses keyword operator 
  
+
 #+begin_src c++
 	// equality operator
 	bool operator== (const House &h) const;
@@ -3049,6 +3246,7 @@ thus, overloading the operator
 
 ** Operator overloading (example)
  
+
 #+begin_src c++
 class House {
 	string address;
@@ -3065,6 +3263,7 @@ class House {
 	House(const string &initAddress,
 	      const string &initOwner,
 	      unsigned int initCost,
+
 #+begin_src c++
 	      bool initFireplace);
  
@@ -3090,6 +3289,7 @@ class House {
 ** Implementing ==
  
  
+
 #+begin_src c++
 bool House::isEquals(const House &h) const {
 if (address != h.address) return false;
@@ -3103,11 +3303,13 @@ return true;
 
 We could have implemented it as follows
  
+
 #+begin_src c++
 bool House::operator==(const House &h) const {
 #+end_src
 
  - ... 
+
 #+begin_src c++
 }
  
@@ -3117,6 +3319,7 @@ bool House::operator==(const House &h) const {
  
 Can now use it as an operator 
  
+
 #+begin_src c++
 House h1, h2;
 ...  // initialize fields of h1 and h2
@@ -3130,6 +3333,7 @@ if (h1 == h2) {
 
 ** Implementing assignment operator (=) 
  
+
 #+begin_src c++
 void House::operator=(const House &h) {
 address = h.address;
@@ -3147,6 +3351,7 @@ for this, need to mutable House type object (i.e. reference)
  
 ** Implementing assignment operator (=) 
  
+
 #+begin_src c++
 House &House::operator=(const House &h) { // & is used for efficiency only!
 if (this != &h) {
@@ -3166,6 +3371,7 @@ this is a pointer to the reference object
  
 ** Assignment operator (=) 
  
+
 #+begin_src c++
 House h1, h2, h3;
 h1.setCost(500); h2.setcost(700); h3.setCost(900);
@@ -3180,6 +3386,7 @@ h1.printCost(); // prints 900
 
 ** Implementing addition operator (+) 
  
+
 #+begin_src c++
 House House::operator+ (const House &h) {
  
@@ -3199,6 +3406,7 @@ return newHouse;
 
 ** Implementing increment operator (+=) 
  
+
 #+begin_src c++
 House &House::operator+= (const House &h) {
  
@@ -3216,6 +3424,7 @@ return *this;
 
 ** Reimplementing addition operator (+) 
  
+
 #+begin_src c++
 House House::operator+ (const House &h) {
  
@@ -3235,6 +3444,7 @@ return newHouse;
 What if you did not write the House class? 
 no problem, implement it as a non-member function with an additional House argument (standing for the reference object)
  
+
 #+begin_src c++
 House operator+ (const House &h1, const House &h2) {
 House newHouse;
@@ -3250,6 +3460,7 @@ Similarly for the case when the first operand is a primitive type
 ** Overloading non-member operations
  
  - Want to add a stream insertion operator (operator<<) to the House class 
+
 #+begin_src c++
 myStream << h1;
  
@@ -3267,12 +3478,14 @@ One issue: fields (e.g. address) are private!
  
 ** Overloading non-member operations
  
+
 #+begin_src c++
 class House {
 void print(ostream &out) const;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -3296,6 +3509,7 @@ With this, cout << h2; works as intended
 
 ** Overloading non-member operations
  
+
 #+begin_src c++
  - But cout << h2 << endl; will give compile time error! 
  
@@ -3303,6 +3517,7 @@ With this, cout << h2; works as intended
 
  - Use the following implementation instead: 
  
+
 #+begin_src c++
 ostream &operator<< (ostream &out, const House &h) {
 h.print(out);
@@ -3341,6 +3556,7 @@ use the methods of C1, C2, and C3 using the declared objects while implementing 
  
 ** Composition (example)
  
+
 #+begin_src c++
 class Bicycle {
 private:
@@ -3363,6 +3579,7 @@ public:
 		 int spokeCount2,
 		 string seat_manufacturer1, 
        string seat_product1,
+
 #+begin_src c++
 		 string seat_colour1);
 	Bicycle (const Bicycle& original);
@@ -3378,6 +3595,7 @@ public:
  
 Bicycle::Bicycle()
 	: front_wheel(), back_wheel(),seat()
+
 #+begin_src c++
 {
 // body of default constructor
@@ -3387,6 +3605,7 @@ Bicycle::Bicycle()
 #+end_src
 
  - What happens when you declare a Bicycle object? 
+
 #+begin_src c++
 Bicycle b;
  
@@ -3403,6 +3622,7 @@ string seat_manufacturer1, string seat_product1, string seat_colour1)
 	  back_wheel (wheel_manufacturer2, wheel_product2,
 		 diameter_in_inches2, weight_in_grams2, spokeCount2),
 	  seat (seat_manufacturer1, seat_product1, seat_colour1)
+
 #+begin_src c++
 {
 // body of initializing constructor
@@ -3412,6 +3632,7 @@ string seat_manufacturer1, string seat_product1, string seat_colour1)
 
 ** Composition (example)
  
+
 #+begin_src c++
 class Seat {
 private:
@@ -3431,6 +3652,7 @@ public:
 
 Seat::Seat (string manufacturer1, 
                    string product1, string colour1)
+
 #+begin_src c++
 	: manufacturer(manufacturer1), // copy cons
 	  product(product1), //copy constructor 
@@ -3444,6 +3666,7 @@ Seat::Seat (string manufacturer1,
 Seat::Seat (const Seat &original)
 	: manufacturer(original.manufacturer),
 	  product(original.product), 
+
 #+begin_src c++
 	  colour(original.colour) {
 // body of initializing constructor
@@ -3458,6 +3681,7 @@ Bicycle::Bicycle (const Bicycle &original)
 	: front_wheel (original.front_wheel),
 	  back_wheel (original.back_wheel),
 	  seat (original.seat)
+
 #+begin_src c++
 {
 // body of copy constructor
@@ -3467,6 +3691,7 @@ Bicycle::Bicycle (const Bicycle &original)
 
 ** Composition (another example)
  
+
 #+begin_src c++
 typedef int ItemType;
  
@@ -3485,6 +3710,7 @@ ItemType data_array[LENGTH];
 
 ** Composition (another example)
  
+
 #+begin_src c++
 GuardedArray::GuardedArray() {
 for (unsigned int i = 0; i < LENGTH; i++)
@@ -3511,6 +3737,7 @@ data_array[i] = x;
 
 ** Composition (another example)
  
+
 #+begin_src c++
 class ManagedArray {
  
@@ -3538,6 +3765,7 @@ GuardedArray guaurded_array;
 
 ** Composition (another example)
  
+
 #+begin_src c++
 ManagedArray::ManagedArray(unsigned int n, ItemType x) : guaurded_array(x) {
 assert(n <= MAX_LENGTH);
@@ -3554,6 +3782,7 @@ return guaurded_array.retrieve(i);
 
 ** Composition (another example)
  
+
 #+begin_src c++
 void ManagedArray::insert(unsigned int i, ItemType x) {
 assert(i <= length());
@@ -3598,6 +3827,7 @@ then all publicly inherited public fields of C will be members of GC
  
 ** Inheritance (public vs. private)
  
+
 #+begin_src c++
 class P {
 public:
@@ -3608,6 +3838,7 @@ private:
 #+end_src
 
 int v1
+
 #+begin_src c++
 int v2;
 };
@@ -3634,6 +3865,7 @@ what if we wrote : private p?
 ** Inheritance (hierarchy, overriding)
  
 Can specify a hierarchy:
+
 #+begin_src c++
 class C : public P { ... };
 class GC : public C { ... };
@@ -3641,6 +3873,7 @@ class GC : public C { ... };
 #+end_src
 
 Can override an inherited function:
+
 #+begin_src c++
 class P {
 public:
@@ -3668,6 +3901,7 @@ f1(); // which f1?
  
 Constructor of the base class is implicitly invoked
  - Can specify constructors as well 
+
 #+begin_src c++
 class C : ... { ... };
 class D : public C {
@@ -3676,6 +3910,7 @@ D(...);
 #+end_src
 
  - ... 
+
 #+begin_src c++
 private:
 D1 f1;
@@ -3683,16 +3918,19 @@ D2 f2;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
 #+end_src
 
 D::D(...) : C(...), f1(...), f2(...), ... 
+
 #+begin_src c++
 {
 #+end_src
 
  - ... 
+
 #+begin_src c++
 }
  
@@ -3707,6 +3945,7 @@ the body of the constructor of D is invoked
  
 Supports more flexibility
  
+
 #+begin_src c++
 class P {
 public:
@@ -3741,6 +3980,7 @@ int z;
  
  - All permutations possible 
  
+
 #+begin_src c++
 class P {
 public:
@@ -3757,6 +3997,7 @@ class C1 : public P {
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -3764,6 +4005,7 @@ class C2 : protected P {
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -3771,6 +4013,7 @@ class C3 : private P {
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -3782,6 +4025,7 @@ class C3 : private P {
  
  
  
+
 #+begin_src c++
 class P {
 public:
@@ -3809,6 +4053,7 @@ c1.f1();     // error, not accessible!
 #+end_src
 
  - ... 
+
 #+begin_src c++
 }
  
@@ -3816,6 +4061,7 @@ c1.f1();     // error, not accessible!
 
 ** Example: the Building (base) class
  
+
 #+begin_src c++
 class Building {
  
@@ -3829,6 +4075,7 @@ Building();
 Building(const string& address1,
            const string& owner1,
            unsigned int cost1,
+
 #+begin_src c++
            unsigned int area1);
  
@@ -3848,6 +4095,7 @@ unsigned int area;
 
 ** Example: the House (child) class
  
+
 #+begin_src c++
 class House : public Building {
  
@@ -3862,6 +4110,7 @@ House(const string& address1,
         unsigned int area1,
         unsigned int roomCount1,
         bool fireplace1,
+
 #+begin_src c++
         unsigned int applianceCount1);
  
@@ -3889,6 +4138,7 @@ House::House(const string& address1,
              bool fireplace1,
              unsigned int applianceCount1)
       : Building(address1, owner1,
+
 #+begin_src c++
  cost1, area1) {
   roomCount = roomCount1;
@@ -3902,12 +4152,14 @@ cout << endl;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 cout << "Bedrooms: "<< roomCount; 
 cout << endl;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 }
  
@@ -3916,6 +4168,7 @@ cout << endl;
 
 ** Example: the Barn (base) class
  
+
 #+begin_src c++
 class Barn : public Building {
 public:
@@ -3928,6 +4181,7 @@ Barn(const string& address1,
        const string& owner1,
        unsigned int cost1,
        unsigned int area1,
+
 #+begin_src c++
        float hayCapacity1);
  
@@ -3944,6 +4198,7 @@ float hayCapacity;
 
 ** Example: client code
  
+
 #+begin_src c++
 Barn b1("123 Farmyard Lane", "Jed", 135000, 1000, 24.3);
 b1.print();
@@ -3973,6 +4228,7 @@ For code reuse, we will almost always use composition rather than implementation
  - Rather than reusing implementation, reuse interface! 
 program to an interface, not an implementation
  
+
 #+begin_src c++
 Say we want to develop 3 similar functions; how to rather implement one? 
 #+end_src
@@ -3980,13 +4236,18 @@ Say we want to develop 3 similar functions; how to rather implement one?
 via a common interface 
  
  - Key idea: 
+
+#+begin_src c++
 introduce abstract interface (the base class)
+#+end_src
+
 write the function in terms of this interface
 develop 3 derived classes that extend this base class and implements (virtual) functions of the base class
 c++ compiler will do the rest via dynamic binding
  
 ** Example: data sources
  
+
 #+begin_src c++
 int sumArray(const int A[], unsigned int n) {
 int sum = 0;
@@ -4002,6 +4263,7 @@ return sum;
 #+end_src
 
  
+
 #+begin_src c++
 int sumManagedArray(const ManagedArray &A) {
 int sum = 0;
@@ -4017,6 +4279,7 @@ return sum;
 #+end_src
 
  
+
 #+begin_src c++
 int sumStandardInputStream() {
 int sum = 0;
@@ -4033,6 +4296,7 @@ return sum;
 #+end_src
 
  
+
 #+begin_src c++
 int sumDataSource(a data source) {
 int sum = 0;
@@ -4047,6 +4311,7 @@ return sum;
 #+end_src
 
  
+
 #+begin_src c++
 class DataSource {
  
@@ -4064,6 +4329,7 @@ virtual int next() = 0; // pure virtual function
 
  
  
+
 #+begin_src c++
 int sumDataSource(DataSource &ds) {
 int sum = 0;
@@ -4078,6 +4344,7 @@ return sum;
  - Called a polymorphic function 
  
  
+
 #+begin_src c++
 const unsigned ARRAY_DATA_SOURCE_CAPACITY = 1000;
  
@@ -4096,6 +4363,7 @@ unsigned i;
 #+end_src
 
  
+
 #+begin_src c++
 ArrayDataSource::ArrayDataSource(const int A[], unsigned int n) {
 assert(n < ARRAY_DATA_SOURCE_CAPACITY);
@@ -4117,6 +4385,7 @@ return data[i - 1];
 #+end_src
 
  
+
 #+begin_src c++
 // set up and initialize managed array data source
 int A[ ] = { 1, 3, 9, -2 };
@@ -4132,6 +4401,7 @@ determined at runtime
 depends on the exact type of object ads is bound to
  
  
+
 #+begin_src c++
 class ManagedArrayDataSource : public DataSource {
 public:
@@ -4148,6 +4418,7 @@ unsigned int i;
 
  
 ManagedArrayDataSource::ManagedArrayDataSource(const ManagedArray& A)
+
 #+begin_src c++
   : array(A.length()) {
 for (unsigned int k = 0; k < A.length(); k++)
@@ -4166,6 +4437,7 @@ return array.retrieve(i - 1);
 #+end_src
 
  
+
 #+begin_src c++
 // set up and initialize managed array data source
 int A[] = { 1, 3, 9, -2 };
@@ -4182,6 +4454,7 @@ int sum = sumDataSource(mads);
 
 ** Static vs. dynamic binding
  
+
 #+begin_src c++
 class C {
 public:
@@ -4189,6 +4462,7 @@ void f() { /* implementation 1 */ }
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -4198,6 +4472,7 @@ void f() { /* implementation 2 */ }
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -4219,6 +4494,7 @@ return 0;
 #+end_src
 
  
+
 #+begin_src c++
 class C {
 public:
@@ -4226,6 +4502,7 @@ virtual void f() { /* implementation 1 */ }
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -4236,6 +4513,7 @@ void f() { /* implementation 2 */ }
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -4257,6 +4535,7 @@ return 0;
 #+end_src
 
  
+
 #+begin_src c++
 class E : public C {
 public:
@@ -4266,6 +4545,7 @@ void f(int i) { /* implementation 3 */ }
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -4290,6 +4570,7 @@ return 0;
  
 A function or operator in the base class with the same name and parameters as a function in the derived class
 can still access a hidden function using the base-class type qualifier
+
 #+begin_src c++
 void Derived1::func() {
 Base1::func(); // func() is defined in both the base and the child class Derived1
@@ -4299,6 +4580,7 @@ Base1::func(); // func() is defined in both the base and the child class Derived
 #+end_src
 
 And similarly for operators
+
 #+begin_src c++
 Derived1 &Derived1::operator=(const Derived1 &original) {
 if (this != &original) {
@@ -4322,6 +4604,7 @@ Parametric polymorphism: template functions, template classes
  
 Want to define both uniformly
  
+
 #+begin_src c++
 int MaxInt(int a, int b) {
 if (b < a)
@@ -4350,6 +4633,7 @@ return b;
  
 Can define a generic function with generic parameters
  
+
 #+begin_src c++
 SomeType MaxSomeType(SomeType a, SomeType b) {
 if (b < a)
@@ -4365,6 +4649,7 @@ return b;
  
  - Keywords: template, typename 
  
+
 #+begin_src c++
 template <typename T> // can also use the keyword class rather than typename
 T Max(T a, T b) {
@@ -4393,6 +4678,7 @@ avoids ``code bloat suffered by early implementations
  
 ** Restrictions on template abstraction
  
+
 #+begin_src c++
 Max(string("abc"), string("def")); // works as string class overloads <
  
@@ -4401,6 +4687,7 @@ Max("abc", "def"); // WRONG, as < is not defined for C strings
 #+end_src
 
  
+
 #+begin_src c++
 struct Book {
 string author;
@@ -4412,6 +4699,7 @@ string title;
 
 ** Restrictions on template abstraction
  
+
 #+begin_src c++
 Book b1, b2;
 b1.author = "Me";
@@ -4428,11 +4716,13 @@ Max(b1,b2); // WRONG!
 
 Unless we also have the following:
  
+
 #+begin_src c++
 bool operator<(const Book &b1, const Book &b2) { 
 #+end_src
 
 return (b1.author < b2.author) ||
+
 #+begin_src c++
    ((b1.author==b2.author) && (b1.title <b2.title));
 }
@@ -4441,6 +4731,7 @@ return (b1.author < b2.author) ||
 
 Only then:
  
+
 #+begin_src c++
 Max(b1,b2); // Works!
  
@@ -4449,6 +4740,7 @@ Max(b1,b2); // Works!
 
 ** Specifying template abstraction
  
+
 #+begin_src c++
 // Max.h
 //
@@ -4474,6 +4766,7 @@ Max(b1,b2); // Works!
 Earlier, could have dropped the copy constructor requirement by passing references instead:
  
 template <typename T>
+
 #+begin_src c++
 T &Max(T &a, T &b) {
 if (b < a)
@@ -4487,6 +4780,7 @@ return b;
  
 ** Another example
  
+
 #+begin_src c++
 typedef int ItemType;
  
@@ -4499,6 +4793,7 @@ unsigned int FindMin(const ItemType A[], unsigned int begin, unsigned int end){
 #+end_src
 
  - ... 
+
 #+begin_src c++
 }
 void Sort(ItemType A[], unsigned int n){
@@ -4513,6 +4808,7 @@ void Sort(ItemType A[], unsigned int n){
 ** Another example
  
 template <typename ItemType>
+
 #+begin_src c++
 void Swap(ItemType &a, ItemType &b){
   ItemType tmp = a;        // copy constructor
@@ -4522,6 +4818,7 @@ void Swap(ItemType &a, ItemType &b){
 #+end_src
 
 template <typename ItemType>
+
 #+begin_src c++
 unsigned int FindMin(const ItemType A[], unsigned int begin, unsigned int end){
   assert(begin <= end);
@@ -4538,6 +4835,7 @@ unsigned int FindMin(const ItemType A[], unsigned int begin, unsigned int end){
 ** Another example
  
 template <typename ItemType>
+
 #+begin_src c++
 void Sort(ItemType A[], unsigned int n){
 for (unsigned int i = 0; i < n; i++){
@@ -4548,6 +4846,7 @@ Swap(A[i], A[m]);
 #+end_src
 
  - Thus the interface should include the following requirements: 
+
 #+begin_src c++
 // Template Parameter(s):
 //  <1> ItemType: A type for which the following operations are defined:
@@ -4562,12 +4861,14 @@ Swap(A[i], A[m]);
 Can have multiple different type names in template arguments (separated by a comma), e.g.:  
  
 template <typename T, typename K, typename O>
+
 #+begin_src c++
 T func1(K a, O b) {
 T x, y;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 if (func2(a,b)==x)
 return x;
@@ -4581,8 +4882,9 @@ return y;
  
 Could have generalized our selection sort template to sort either in ascending or in descending order by replacing < with a function
  
-template <typename T, bool compare(const T &x, const T &y)>
+
 #+begin_src c++
+template <typename T, bool compare(const T &x, const T &y)>
 unsigned int Find(const T A[], unsigned int begin, unsigned int end) {
 assert(begin <= end);
 unsigned int m = begin;
@@ -4599,8 +4901,9 @@ return m;
  
  - New template for sort 
  
-template <typename T, bool compare(const T &x, const T &y)>
+
 #+begin_src c++
+template <typename T, bool compare(const T &x, const T &y)>
 void Sort(T A[], unsigned int n){
 for (unsigned int i = 0; i < n; i++){
 unsigned int m = Find<T, compare>(A, i, n - 1);
@@ -4613,6 +4916,7 @@ Swap(A[i], A[m]);
 
 ** Misc notes
  
+
 #+begin_src c++
 bool less_than(const int &x, const int &y){
 return x < y;
@@ -4620,6 +4924,7 @@ return x < y;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 Sort<int, less_than>(...);
  
@@ -4629,6 +4934,7 @@ bool greater_than(const int &x, const int &y){
 #+end_src
 
  - ... 
+
 #+begin_src c++
 Sort<int, greater_than>(...);
  
@@ -4637,6 +4943,7 @@ Sort<int, greater_than>(...);
 ** Template classes
  
 template<typename T>
+
 #+begin_src c++
 class Comparator{
 T x;
@@ -4650,6 +4957,7 @@ bool isLessThan();
 #+end_src
 
 template<typename T>
+
 #+begin_src c++
 Comparator<T>::Comparator(T ax, T ay){
 x = ax;
@@ -4658,6 +4966,7 @@ y = ay;
 #+end_src
 
 template<typename T>
+
 #+begin_src c++
 bool Comparator<T>::isEquals(){
   return x == y;
@@ -4666,6 +4975,7 @@ bool Comparator<T>::isEquals(){
 #+end_src
 
 template<typename T>
+
 #+begin_src c++
 bool Comparator<T>::isGreaterThan(){
   return x > y;
@@ -4674,6 +4984,7 @@ bool Comparator<T>::isGreaterThan(){
 #+end_src
 
 template<typename T>
+
 #+begin_src c++
 bool Comparator<T>::isLessThan(){
   return x < y;
@@ -4683,6 +4994,7 @@ bool Comparator<T>::isLessThan(){
 
 ** Template classes
  
+
 #+begin_src c++
 #include <iostream>
  
@@ -4707,6 +5019,7 @@ std::cout << c2.isLessThan() <<"
  
  - Reference = alias for another variable 
  
+
 #+begin_src c++
 Pointer = address of another variable stored elsewhere in memory 
  
@@ -4715,6 +5028,7 @@ Pointer = address of another variable stored elsewhere in memory
  - Like references, but much more powerful 
 can be initialized to anything!
 can change over time (unlike references)
+
 #+begin_src c++
 can do pointer arithmetic (pointer arguments are evaluated when passed to functions during function invocation; see first lecture slides!)
  
@@ -4726,6 +5040,7 @@ x vs. &x vs. *x
  
 ** Motivation
  
+
 #+begin_src c++
 int *x, *y, p, q; // vs. int* x, y, p ,q; 
  
@@ -4756,6 +5071,7 @@ cout << **&x << n;
  
  - Call by value (arguments evaluated) 
  
+
 #+begin_src c++
 void doubleV(int a){
   a = a*2;
@@ -4772,6 +5088,7 @@ int main( ){
 
 Call by reference (can only send vars)
  
+
 #+begin_src c++
 void doubleR(int &a){
   a = a*2;
@@ -4792,6 +5109,7 @@ int main() {
  
  - Call by address (arguments evaluated) 
  
+
 #+begin_src c++
 void doubleP(int *a){
   *a = (*a)*2;
@@ -4808,6 +5126,7 @@ int main( ){
 
 Call by reference (can only send vars)
  
+
 #+begin_src c++
 void doubleR(int &a){
   a = a*2;
@@ -4828,6 +5147,7 @@ int main() {
  
  - Call by address (arguments evaluated) 
  
+
 #+begin_src c++
 void swap(int *a, int *b){
 int temp = *a;
@@ -4845,6 +5165,7 @@ int main( ){
 
 Call by reference (can only send vars)
  
+
 #+begin_src c++
 void doubleR(int &a, int &b){
   int temp = a;
@@ -4863,11 +5184,13 @@ int main() {
 
 ** Constant pointers 
  
+
 #+begin_src c++
 struct BigRecord {
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -4875,11 +5198,13 @@ void f(const BigRecord *pRec1){
 #+end_src
 
  - ... 
+
 #+begin_src c++
 BigRecord pRec2;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 *pRec1 = *pRec2; // Wrong!
 pRec1 = pRec2;   // No issues 
@@ -4890,11 +5215,13 @@ BigRecord x;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 f(&x);
 #+end_src
 
  - ... 
+
 #+begin_src c++
 }
  
@@ -4906,6 +5233,7 @@ f(&x);
 
 ** Arrays and pointers
  
+
 #+begin_src c++
 // Every array variable can be used as 
 // a pointer to the first member of the 
@@ -4938,6 +5266,7 @@ return sum;
 
 ** Arrays and pointers
  
+
 #+begin_src c++
 int A[5] = {1, 5, 10, 15, 20};
  
@@ -4969,6 +5298,7 @@ cout << *B;
 
 ** C-strings and pointers
  
+
 #+begin_src c++
 // computing the length of string #1
  
@@ -4977,6 +5307,7 @@ unsigned int length = 0;
 #+end_src
 
 while (s[length] != 0)
+
 #+begin_src c++
 length++;
 return length;
@@ -4993,6 +5324,7 @@ unsigned int length = 0;
 #+end_src
 
 while (*(s + length) != 0)
+
 #+begin_src c++
 length++;
 return length;
@@ -5002,6 +5334,7 @@ return length;
 #+end_src
 
  
+
 #+begin_src c++
 // computing the length of string #3
 // how it is actually implemented!
@@ -5011,16 +5344,18 @@ const char *p = s;
 #+end_src
 
 while (*p != 0)
+
 #+begin_src c++
 p++;     
 return p - s; // pointer difference
 }
  
-#+end_src
-
 In general, given two pointers p and q of the same type, (p - q) is the integer that can be added to p to obtain q.
  
+#+end_src
+
  
+
 #+begin_src c++
 // string copy using c-string
  
@@ -5034,6 +5369,7 @@ des[i] = 0;
 #+end_src
 
  
+
 #+begin_src c++
 // string concatenation
 void cstringConcat(char des[], const char src[]){
@@ -5055,6 +5391,7 @@ des[i] = 0;
 
 ** Programming using pointers
  
+
 #+begin_src c++
 // Book record
 struct Book {
@@ -5067,6 +5404,7 @@ string call_number;
 #+end_src
 
 Book collection[] = 
+
 #+begin_src c++
 { 
 { "Computer Security: Art and Science", "Matt Bishop", "QA 76.9.A25 B56 2002" },
@@ -5078,6 +5416,7 @@ Book collection[] =
 
 ** Programming using pointers
  
+
 #+begin_src c++
 // function for printing Books
 void printBook(const Book &book){
@@ -5099,6 +5438,7 @@ return n;
 
 ** Programming using pointers
  
+
 #+begin_src c++
 const unsigned int COLLECTION_SIZE = sizeof(collection) / sizeof(Book);
  
@@ -5116,6 +5456,7 @@ return 0;
 
 ** Programming using pointers
  
+
 #+begin_src c++
 // function for printing Books
 void printBook(const Book &book){
@@ -5134,6 +5475,7 @@ cout << "call number: " << book->call_number << endl;
 
 ** Programming using pointers
  
+
 #+begin_src c++
 // function for finding a Book with some title
 unsigned int findBook(const Book collection[], unsigned int n, const string &title){
@@ -5155,6 +5497,7 @@ return nullptr;
 
 ** Programming using pointers
  
+
 #+begin_src c++
 const unsigned int COLLECTION_SIZE = sizeof(collection) / sizeof(Book);
  
@@ -5198,6 +5541,7 @@ can be under-utilized (e.g. if we only use a small part of MAX)
 Allocates memory in ``heap (in contrast to .text, .data, and stack)
  
  - Uses keyword new to allocate memory 
+
 #+begin_src c++
 int *px = new int;
 *px = 777;
@@ -5207,6 +5551,7 @@ Must free-up space when done, using keyword delete (otherwise memory leak can ha
 #+end_src
 
  - ... 
+
 #+begin_src c++
 delete px;
 px = nullptr;
@@ -5215,6 +5560,7 @@ px = nullptr;
 
 ** Simple example
  
+
 #+begin_src c++
 struct Book {
 string title;
@@ -5250,6 +5596,7 @@ return 0;
 
 ** Pictorial representation
  
+
 #+begin_src c++
 Book *p;
 p = new Book;
@@ -5260,6 +5607,7 @@ p -> title = "Emma";
 
 ** Array of pointers
  
+
 #+begin_src c++
 Book *pb[10];
  
@@ -5283,6 +5631,7 @@ pb[i] -> title = "Emma";
 
 ** Array of pointers
  
+
 #+begin_src c++
 for (int i = 0; i < 10; i++)
 delete pb[i];
@@ -5301,6 +5650,7 @@ delete pb[i];
 Dangling pointers!
 assign nullptr to indicate this
  
+
 #+begin_src c++
 for (int i = 0; i < 10; i++)
 pb[i] = nullptr;
@@ -5311,6 +5661,7 @@ pb[i] = nullptr;
 
 ** Pointer to dynamic array
  
+
 #+begin_src c++
 Book *parray = new Book[10];
  
@@ -5336,6 +5687,7 @@ for (int i = 0; i < 10; i++)
 
 ** Pointer to dynamic array
  
+
 #+begin_src c++
 Book *parray = new Book[10];
  
@@ -5346,6 +5698,7 @@ parray[i].title = "Emma";
 
  - ... 
  
+
 #+begin_src c++
 delete [ ] parray;
  
@@ -5369,6 +5722,7 @@ Book **pparray = new Book * [10];
  
  
  
+
 #+begin_src c++
 for (int i = 0; i < 10; i++){
 parray[i] = new Book;
@@ -5382,6 +5736,7 @@ parray[i] -> title = "Emma";
  
 Book **pparray = new Book * [10];
  
+
 #+begin_src c++
 for (int i = 0; i < 10; i++){
 pparray[i] = new Book;
@@ -5394,6 +5749,7 @@ Deallocation must be done in the reverse order of allocation
  
  
  
+
 #+begin_src c++
 for (int i = 0; i < 10; i++){
 delete pparray[i];
@@ -5410,6 +5766,7 @@ pparray = nullptr;
 
 ** Collection data structures with maximum capacity
  
+
 #+begin_src c++
 const int CAPACITY = 1000;
  
@@ -5434,6 +5791,7 @@ return 0;
 
 ** Collection data structures w/o maximum capacity
  
+
 #+begin_src c++
 int main(){
 int length;
@@ -5479,6 +5837,7 @@ use the new array to store incoming integers until it is filled up again
  
 ** Collection data structures that dynamically expand/shrink
  
+
 #+begin_src c++
 int main(){
 // Initialize encapsulated array
@@ -5507,6 +5866,7 @@ cin >> x;
 
 ** Collection data structures that dynamically expand/shrink
  
+
 #+begin_src c++
 // Amount of memory available
 unsigned int array_capacity = 0;   
@@ -5541,6 +5901,7 @@ assert(isInitialized());
 
 ** Collection data structures that dynamically expand/shrink
  
+
 #+begin_src c++
 void append(int x) {
 assert(isInitialized());
@@ -5560,6 +5921,7 @@ array_length++;
 
 ** Collection data structures that dynamically expand/shrink
  
+
 #+begin_src c++
 void expand(){
 assert(isInitialized());
@@ -5572,6 +5934,7 @@ int new_array_capacity = array_capacity*2;
 #+end_src
 
 int *new_array = 
+
 #+begin_src c++
             new int[new_array_capacity];   
  
@@ -5593,6 +5956,7 @@ assert(array_length < array_capacity);
 
 ** Collection data structures that dynamically expand/shrink
  
+
 #+begin_src c++
 unsigned int length(){
 assert(isInitialized());
@@ -5625,6 +5989,7 @@ assert(! isInitialized());
 
 ** Dynamically allocated 2d arrays
  
+
 #+begin_src c++
 // allocate the 2D array
 #+end_src
@@ -5635,6 +6000,7 @@ int** pparray;
  
  
  
+
 #+begin_src c++
 pparray = nullptr;
  
@@ -5654,11 +6020,13 @@ pparray = new int*[10];
 
 ** Dynamically allocated 2d arrays
  
+
 #+begin_src c++
 // allocate the 2D array
 #+end_src
 
 int** pparray = nullptr;
+
 #+begin_src c++
 pparray = new int*[10];
  
@@ -5675,6 +6043,7 @@ pparray[i] = new int[20];
 
 ** Dynamically allocated 2d arrays
  
+
 #+begin_src c++
 // store 7 in position 6 of row 2
 pparray[2][6] = 7;
@@ -5683,6 +6052,7 @@ pparray[2][6] = 7;
 
  - How about using pointers? 
  
+
 #+begin_src c++
 // when done:
 // deallocate in reverse order
@@ -5712,18 +6082,21 @@ design a wrapper class for c-strings for
  
  
  
+
 #+begin_src c++
 class String {
 public:
 #+end_src
 
 ...  
+
 #+begin_src c++
 unsigned int length() const;
 char member(unsigned int i) const;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 private:
 const char *buf;
@@ -5746,6 +6119,7 @@ return buf[i];
 #+end_src
 
  
+
 #+begin_src c++
 class String {
 public:
@@ -5766,6 +6140,7 @@ String::String(const char *s) {
 #+end_src
 
 char *newbuf 
+
 #+begin_src c++
 = new char[strlen(s) + 1];
 strcpy(newbuf, s);
@@ -5776,6 +6151,7 @@ buf = newbuf;
 #+end_src
 
  
+
 #+begin_src c++
 class String {
 public:
@@ -5796,6 +6172,7 @@ const char *buf;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 } // end of scope: memory should be 
   // reclaimed here
@@ -5810,6 +6187,7 @@ delete [] buf;
 #+end_src
 
  
+
 #+begin_src c++
 class String {
 public:
@@ -5838,6 +6216,7 @@ buf = newbuf;
 #+end_src
 
  
+
 #+begin_src c++
 class String {
 public:
@@ -5859,6 +6238,7 @@ unsigned int len = original.length();
 #+end_src
 
 char* nonConstBuf 
+
 #+begin_src c++
 = new char[len + 1];
 strcpy(nonConstBuf, original.buf);
@@ -5872,6 +6252,7 @@ buf = nonConstBuf;
  
 Three different uses:
  
+
 #+begin_src c++
 // for initializing a string object by another
 String s("Hello"); // Const. invoked
@@ -5886,11 +6267,13 @@ void f(String s){
 #+end_src
 
   ...
+
 #+begin_src c++
 }
 #+end_src
 
  - ... 
+
 #+begin_src c++
 String t = "Hello";
 f(t);    // Copy const. invoked
@@ -5901,6 +6284,7 @@ String s;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 // Copy const. invoked to create 
 // return value
@@ -5916,6 +6300,7 @@ return s;
  
 Can the & before &original be left out?
  
+
 #+begin_src c++
 String::String(const String &original) {
 unsigned int len = original.length();
@@ -5932,6 +6317,7 @@ so if & is left out, it will repeatedly call the copy constructor till the stack
  
  
  
+
 #+begin_src c++
 class String {
 public:
@@ -5949,6 +6335,7 @@ s = u;                    // assignment operator
 #+end_src
 
  
+
 #+begin_src c++
 String &String::operator=(const String &original) {
 unsigned int len = original.length(); // len is length of string to be copied
@@ -5969,6 +6356,7 @@ s = s;   // Self assignment! Q: Is there anything wrong with this?
 #+end_src
 
  
+
 #+begin_src c++
 String &String::operator=(const String &original) {
 if (&original != this){
@@ -5988,17 +6376,20 @@ return *this;
 
 ** Concatenation
  
+
 #+begin_src c++
 class String {
 public:
 #+end_src
 
  - ... 
+
 #+begin_src c++
 String &append(const String &s);
 #+end_src
 
  - ... 
+
 #+begin_src c++
 private:
 const char *buf;
@@ -6256,6 +6647,7 @@ Install the buffer into the current object
  
 ** Concatenation
  
+
 #+begin_src c++
 String &String::append(const String &s){
 unsigned int len = strlen(buf) + strlen(s.buf);
@@ -6274,6 +6666,7 @@ return *this;
 ** Concatenation
  
  
+
 #+begin_src c++
 String concatenate(const String &s) const; // prototype
  
@@ -6294,6 +6687,7 @@ return String(*this).append(s);
  
 Efficient only if supported by the compiler
  
+
 #+begin_src c++
 String::String(const char *s, const char *t) {
 unsigned int len = strlen(s) + strlen(t);
@@ -6320,11 +6714,13 @@ Interaction between dynamic memory management and OOD features, such as composit
  
  - Recall invocation seq. of const. 
  
+
 #+begin_src c++
 class C : ... { 
 #+end_src
 
  - ...  
+
 #+begin_src c++
 };
 #+end_src
@@ -6333,6 +6729,7 @@ Invocation sequence does not depend on the order in which constructors are calle
 const. of base class
 const. of member vars, in the order they are defined
 body of the constructor 
+
 #+begin_src c++
 class D : public C {
 public:
@@ -6340,6 +6737,7 @@ D(...);
 #+end_src
 
  - ... 
+
 #+begin_src c++
 private:
 D1 f1;
@@ -6347,6 +6745,7 @@ D2 f2;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -6358,6 +6757,7 @@ D::D(...) : C(...), f2(...), f1(...), ... {
 
 ** Constructor invocation sequence example
  
+
 #+begin_src c++
 class C {
 public:
@@ -6400,11 +6800,13 @@ int main() {
  
 Destructor invocation sequence is exactly the opposite of that of the constructor!
  
+
 #+begin_src c++
 class C : ... { 
 #+end_src
 
  - ...  
+
 #+begin_src c++
 };
  
@@ -6414,12 +6816,14 @@ When an object of type D goes out of scope, ~D() is called, which executes its b
  
  
  
+
 #+begin_src c++
 class D : public C {
 public:
 #+end_src
 
  - ... 
+
 #+begin_src c++
 ~D();
 private:
@@ -6428,6 +6832,7 @@ C2 f2;
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -6439,6 +6844,7 @@ D::~D() {
 #+end_src
 
  
+
 #+begin_src c++
 class C{
 public:
@@ -6473,6 +6879,7 @@ return 0;
 
 ** Constructors and destructors
  
+
 #+begin_src c++
 String *ps = new String; // calls constructor as usual
  
@@ -6484,6 +6891,7 @@ delete ps; // (explicitly) calls the destructor
 
 ** Recall: static vs. dynamic binding
  
+
 #+begin_src c++
 class C {
 public:
@@ -6491,6 +6899,7 @@ virtual void f() { /* implementation 1 */ }
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -6501,6 +6910,7 @@ void f() { /* implementation 2 */ }
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -6523,6 +6933,7 @@ return 0;
 
 ** Virtual destructor
  
+
 #+begin_src c++
 class C {
 public:
@@ -6530,6 +6941,7 @@ public:
 #+end_src
 
  - ...  
+
 #+begin_src c++
 ~C();		// WRONG, use virtual ~C() instead 
 };
@@ -6539,23 +6951,27 @@ public:
 #+end_src
 
  - ...  
+
 #+begin_src c++
 ~D();
 private:
 #+end_src
 
  - ...  
+
 #+begin_src c++
 };
 void destroy(C *ptr) {
 #+end_src
 
  - ...  
+
 #+begin_src c++
 delete ptr; // wanted to call ~D()
 #+end_src
 
  - ... 
+
 #+begin_src c++
 }
  
@@ -6578,6 +6994,7 @@ then you may simply treat the class as a built-in type
  
 ** Example (using String to define Book)
  
+
 #+begin_src c++
 class Book {
 public:
@@ -6588,6 +7005,7 @@ Book &operator=(const Book &b);
 #+end_src
 
  - ...  
+
 #+begin_src c++
 private:
 String author;
@@ -6597,6 +7015,7 @@ String title;
 #+end_src
 
 Book::Book(const String &a, 
+
 #+begin_src c++
 const String &t) : author(a), title(t) { }
 Book::Book(const Book &b) : author(b.author), title(b.title) { }
@@ -6618,11 +7037,13 @@ Book::~Book() { }
  - Base class pointer = child class instance : works as expected 
  - Child class pointer = base class instance : WRONG 
  
+
 #+begin_src c++
 class Critter { 
 #+end_src
 
  - ...  
+
 #+begin_src c++
 };
  
@@ -6630,6 +7051,7 @@ class Spider : public Critter {
 #+end_src
 
  - ... 
+
 #+begin_src c++
 };
  
@@ -6643,6 +7065,7 @@ sp2 = cp; // WRONG!
 
 ** Polymorphism with pure virtual functions
  
+
 #+begin_src c++
 class Critter { 
 private:
@@ -6681,6 +7104,7 @@ cp->print(); // dynamic binding
 
 ** Polymorphism and dynamic arrays
  
+
 #+begin_src c++
 Critter *critter_array[100];
 for (int i = 0; i < 100; i++) {
@@ -6698,6 +7122,7 @@ for (int i = 0; i < 100; i++) {
 #+end_src
 
 Critter **critter_array = new Critter*[100];
+
 #+begin_src c++
 for (int i = 0; i < 100; i++) {
 		if (i % 2 == 0)
@@ -6732,6 +7157,7 @@ The reason for putting a class in canonical form: to avoid memory leaks and to m
 ** How to write a copy constructor
  
 MyClass::MyClass(const MyClass &original)
+
 #+begin_src c++
      : MyBaseClass(original), // delegate copying of base class fields to its own cc
        field1(original.field1),    // delegate copying of field1 to its own cc, etc.  
@@ -6739,6 +7165,7 @@ MyClass::MyClass(const MyClass &original)
 
        field2(original.field2),
        field3(original.field3)
+
 #+begin_src c++
        // ...
 {
@@ -6754,6 +7181,7 @@ MyClass::MyClass(const MyClass &original)
 ** How to write a destructor
  
 MyClass::~MyClass()
+
 #+begin_src c++
 {
 // usually empty (unless code performed dynamic allocation)
@@ -6766,6 +7194,7 @@ MyClass::~MyClass()
 
 A virtual destructor should be used for any class that is involved in inheritance, i.e., for any base class or any derived class (see week 10 slide 46)
 if in doubt, make it virtual
+
 #+begin_src c++
 virtual ~MyClass();
 #+end_src
@@ -6774,6 +7203,7 @@ never make it purely virtual, however (provide implementation regardless)
  
 ** How to write an assignment operator
  
+
 #+begin_src c++
 MyClass &MyClass::operator=(const MyClass &original){
      {
@@ -6797,6 +7227,7 @@ MyClass &MyClass::operator=(const MyClass &original){
 
 ** Example: the Committee class
  
+
 #+begin_src c++
 class Committee { // a class with dynamic allocation
    private:
@@ -6821,6 +7252,7 @@ class Committee { // a class with dynamic allocation
 
 ** The Committee class (default constructor)
  
+
 #+begin_src c++
 // Default Constructor
  
@@ -6839,11 +7271,13 @@ Committee::Committee() {
 
 ** The Committee class (copy constructor)
  
+
 #+begin_src c++
 // Copy Constructor
 #+end_src
 
 Committee::Committee(const Committee &original)
+
 #+begin_src c++
      :  pbudget(new float(*(original.pbudget))) // put this line (delegate copying to cc of float)
 {
@@ -6864,11 +7298,13 @@ Committee::Committee(const Committee &original)
 
 ** The Committee class (destructor)
  
+
 #+begin_src c++
 // Destructor
 #+end_src
 
 Committee::~Committee()
+
 #+begin_src c++
 {
      // optional for tracing execution:
@@ -6888,6 +7324,7 @@ Committee::~Committee()
 
 ** The Committee class (assignment operator)
  
+
 #+begin_src c++
 Committee &Committee::operator=(const Committee &original) {
      if (&original != this) {
@@ -6911,6 +7348,7 @@ Committee &Committee::operator=(const Committee &original) {
 
 ** New C++ features to support canonical classes
  
+
 #+begin_src c++
 Class A {
      A() = default; // default constructor has default implementation (i.e. does nothing)
@@ -6920,6 +7358,7 @@ Class A {
 #+end_src
 
      ...
+
 #+begin_src c++
 };
  
@@ -6930,6 +7369,7 @@ Class B{
 #+end_src
 
      ...
+
 #+begin_src c++
 };
  
@@ -6955,6 +7395,7 @@ This allows us to gradually develop a linked data structure that can dynamically
  
 ** Node definition
  
+
 #+begin_src c++
 struct Node{
 int data;       // the actual data
@@ -6972,6 +7413,7 @@ head = nullptr;
 
 ** Adding a new node to the list
  
+
 #+begin_src c++
 void insert(int data){
  
@@ -6990,6 +7432,7 @@ else{
 #+end_src
 
 while(temp->next != nullptr)
+
 #+begin_src c++
 temp = temp->next;
 temp->next = new Node;
@@ -7004,6 +7447,7 @@ temp->next = nullptr;
 
 ** Adding a new node to the list
  
+
 #+begin_src c++
 void insertS(int data){
  
@@ -7036,6 +7480,7 @@ else{
 
 ** Traversing the list
  
+
 #+begin_src c++
 bool isEmpty(){
 return head == nullptr;
@@ -7065,6 +7510,7 @@ return ctr;
 
 ** Deleting the entire list
  
+
 #+begin_src c++
 void deleteLinkedList(){
  
@@ -7084,6 +7530,7 @@ head = nullptr;
 
 ** Removing a node
  
+
 #+begin_src c++
 void remove(int x){
 Node *prev = nullptr;
@@ -7118,6 +7565,7 @@ delete curr;
 
 ** Testing it all out
  
+
 #+begin_src c++
 int main() {
  
@@ -7163,6 +7611,7 @@ print: print the members of a Multiset instance in ascending order
  
 ** ADT Multiset
  
+
 #+begin_src c++
 // multiset-linkedlist.h
 typedef int ItemType;
@@ -7200,6 +7649,7 @@ Node *pHead;
  
 Traversing: 
  
+
 #+begin_src c++
 bool empty() const;
 unsigned int memberCount() const;
@@ -7209,6 +7659,7 @@ void print() const;
 
 Managing (both are private helper member functions):
  
+
 #+begin_src c++
 void deleteLL(Node *pHead) const;
 Node *duplicateLinkedList(const Node *pOldHead) const;
@@ -7217,6 +7668,7 @@ Node *duplicateLinkedList(const Node *pOldHead) const;
 
 ** Implementing duplicateLL
  
+
 #+begin_src c++
 Node *duplicateLL(const Node *pHead1) const{
  
@@ -7256,6 +7708,7 @@ p2->data = p1->data;
 
 ** Constructors and destructors
  
+
 #+begin_src c++
 // default constructor
 Multiset::Multiset(){
@@ -7278,6 +7731,7 @@ deleteLL(pHead);
 
 ** Assignment operator
  
+
 #+begin_src c++
 Multiset &Multiset::operator=(const Multiset &original){
 if (&original != this){
@@ -7293,6 +7747,7 @@ return *this;
  
 Membership checking, Inserting, and removing
  
+
 #+begin_src c++
 bool Multiset::member(ItemType x) const; 
 void Multiset::insert(ItemType x); 
@@ -7303,6 +7758,7 @@ void Multiset::remove(ItemType x);
 Helper function used in notes to implement insert, remove, and member
 essentially returns ``prev
  
+
 #+begin_src c++
 Node *searchLinkedList(Node *pHead, ItemType x) const;
  
@@ -7311,6 +7767,7 @@ Node *searchLinkedList(Node *pHead, ItemType x) const;
 
 ** Implementing member
  
+
 #+begin_src c++
 bool Multiset::member(ItemType x) const {
  
