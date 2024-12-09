@@ -1,0 +1,6060 @@
+* Review
+
+
+Basic program structure, local/global variables, value passing semantics, strings, program dev. process
+
+** Hello world!
+						
+#include <iostream>
+using namespace std;
+
+int main( ){
+  cout << "Hello, World!" << endl;
+  return 0;
+}
+
+
+
+4 types of control structures: 
+sequences (see above)
+conditionals
+loops
+function invocations 
+
+** Functional abstraction
+						
+// Declaration of the triple function
+int triple(int x);
+
+int main( ){
+  int answer;
+  answer = triple(5);
+  cout << answer << endl;
+  cout << triple(2) << endl;
+  return 0;
+}
+
+
+
+// Definition of the triple function
+int triple(int x) {
+  return 3 * x;
+}
+
+Must declare functions before referencing them
+use function prototype /header
+OR declare before 1st use
+
+Scope of a function = file scope
+
+Can a function call itself?!
+
+** Local and global variables and constants
+						
+// Declaration of a global variable
+int g;
+
+// Declaration of a global constant
+const int THREE = 3;
+
+int main( ){
+  const int LOC = 29;
+  int loc = LOC;
+  g = 42;
+  cout << g << endl;
+  tripleGlobal();
+  cout << g << endl;
+  return 0;
+}
+
+void tripleGlobal( ){
+  // The local var loc is not acc. 
+  // The global var g is accessible 
+  g = THREE * g;
+}
+
+Use ``extern’’ to access global variables declared in other files
+
+** Conditionals (if-then-else branching)
+						
+int max(int a, int b){
+  if (a >= b)
+    return a;
+  else
+    return b;
+}
+
+
+
+int main( ){
+  cout << max(-1, 2) << endl;
+  cout << max(1, -2) << endl;
+  return 0;
+}
+
+
+** Conditionals (ternary operator cond ? b1 : b2)
+						
+Compare the following:
+
+int max(int a, int b){
+  if (a >= b)
+    return a;
+  else
+    return b;
+}
+
+int max(int a, int b) {
+  return (a >= b) ? a : b;
+}
+
+Can be nested:
+
+int inRange(int num, int low, int high) {
+ if(num>=low)
+if(num<=high)
+return 1;
+return 0;
+}
+
+Note: could have used a compound conditional statement instead 
+
+** Conditionals (else-if and switch cases)
+						
+Can have multiple branches:
+
+int sign(int a){
+  if (a > 0)
+    return 1;
+  else if (a < 0)
+    return -1;
+  else
+    return 0;
+}
+
+
+
+Switch cases?
+
+switch (month){
+      case 1: case 2: case 3: case 4:
+         cout << "Winter";
+         break;                                        
+      case 5: case 6: case 7: case 8:
+         cout << “Spring";
+         break;      
+      case 9: case 10: case 11: case 12:    
+         cout << “Fall”;
+         break;                      
+      default:
+      cout << "What are we smoking today?";
+ }
+
+** Repetition structures (loops)
+						
+Want to compute: 
+f(n) = 1 + 2 + 3 + ... + n
+
+unsigned int triangular(unsigned int n){
+  unsigned int result = 0;
+  for (unsigned int i = 1; i <= n; i++){
+    result += i;
+  }
+  return result;
+}
+
+Order of execution?
+
+Can have an empty body!
+
+
+
+** Repetition structures (loops)
+						
+const unsigned int BASE = 10;
+
+unsigned int sumOfDigits(unsigned int m){
+unsigned int sum = 0;
+while (m != 0) {
+unsigned int digit;
+digit = m % BASE;
+sum = sum + digit;
+m = m / BASE;
+}
+  return sum;
+}
+Trace it!
+
+More readable than for loops
+
+Do-while executes at least once
+
+Loops can be nested
+
+** Value passing semantics
+						
+Call by value (arguments evaluated)
+
+void doubleV(int a){
+  a = a*2;
+}
+
+int main( ){
+  int a = 2;
+  doubleV(a+a);
+  cout << a << endl;
+
+  return 0;
+}
+Call by reference (can only send vars)
+
+void doubleR(int &a){
+  a = a*2;
+}
+
+int main() {
+  int a = 4;
+  doubleR(a);
+  cout << a << endl;
+
+  return 0;
+}
+
+
+** Value passing semantics
+						
+Call by address (arguments evaluated)
+
+void doubleP(int *a){
+  *a = (*a)*2;
+}
+
+int main( ){
+  int a = 4;
+  doubleP(&a);
+  cout << a << endl;
+
+  return 0;
+}
+Call by reference (can only send vars)
+
+void doubleR(int &a){
+  a = a*2;
+}
+
+int main() {
+  int a = 4;
+  doubleR(a);
+  cout << a << endl;
+
+  return 0;
+}
+
+
+** Side effects
+						
+Any computational effects of a function other than the generation of a value to be returned
+those that persist
+e.g., printing stuff using cout, changing a global variable, changing a local variable via call by reference/pointer, etc.  
+
+** Strings
+						
+C++ libraries provide string facilities
+
+#include <string>
+
+int main( ){
+  string h = "hello";
+  string w = “world";
+  string msg = h + ' ' + w;
+
+  cout << msg << endl;  
+
+  return 0;
+}
+string s = "hello world";
+for (int i = 0; i < s.length(); i++)
+cout << s[i] << endl;
+
+Characters are integer values
+
+char charToUpper(char c){
+if ('a' <= c && c <= 'z')
+return c - 'a' + 'A';
+else
+return c;
+}
+
+** Strings
+						
+Passing a parameter by reference can be more efficient than passing by value for very large strings
+But not safe as modifying the passed string also modifies the original one
+Solution: pass by constant reference 
+
+For example: 
+string capitalize(const string &s);
+
+
+Occasionally, you may want to return a value by constant reference (meh!)
+
+const string &chooseFirst(const string &s1, const string &s2)
+{
+if (s1 < s2)
+return s1;
+else
+return s2;
+}
+
+
+** Strings
+						
+string &chooseFirst(string &s1, string &s2)
+{
+if (s1 < s2)
+return s1;
+else
+return s2;
+}
+
+
+chooseFirst( ) returns reference to lexicographically smaller string
+
+main( ) prints PQR! since s1=PQR!
+int main( )
+{
+string s1 =“ABC!";
+string s2 = “XYZ!”;
+
+chooseFirst(s1, s2) = "PQR!";
+   
+cout << s1;
+
+return 0;
+}
+
+** Modular vs. Application programs (115 vs. 110)
+						
+Top-down design is the process of repeatedly decomposing a complicated problem into smaller, more manageable subproblems
+each can be implemented independently
+e.g., decomposing a function into many smaller ones
+
+cf. the bottom-up approach
+the program development process can be seen as a process of building reusable tools, and then using those tools to build even more powerful tools, eventually leading to a solution to the original problem
+
+Reuse reduces the overhead of solving a recurring problem over and over again, saves us from redoing testing and documentation for similar code, and in general improves the comprehensibility of source code
+
+Code structured into modules; separates interface from implementation 
+
+** Standard input and output
+						
+Can redirect standard input and output from and to files resp.
+
+myProg < inFile > outFile
+
+Can pipe the standard output of a program to the standard input of another
+
+myProg1 | myProg2
+
+
+See notes for how 
+getline(cin, <string>) and cin.get(<char>) can be used to read input from a file
+
+
+
+** Misc
+						
+Separate (unrelated) functions in different files; compile separately using -c command, and link together
+
+g++ -c main.cpp
+g++ -c my_util.cpp
+g++ -o prog.out main.o my_util.o
+
+Collect all function prototypes together in a header file and include it in main.cpp
+
+#include “my_util.h”
+#pragma once preprocessor
+
+Assertions (debugging aid)
+
+#include <cassert>
+…
+assert (n>0); //prog. Terminates if not
+
+
+
+
+* Arrays
+
+
+One, two, and multi-dimensional arrays
+
+** Motivation
+						
+  int value0;
+  int value1;
+  int value2;
+   .
+   .
+   .
+  int value999;
+
+  cin >> value0;
+  cin >> value1;
+  cin >> value2;
+   .
+   .
+   .
+  cin >> value999;
+
+  cout << value999 << endl;
+  cout << value998 << endl;
+  cout << value997 << endl;
+   .
+   .
+   .
+  cout << value0 << endl;
+
+
+** Motivation (cont’d)
+						
+Tedious, not scalable, and error prone
+
+Solution: use aggregate data type
+homogenous components
+indexing support
+constant time access
+random access
+
+
+ int a[120000];    // Array declaration
+
+  for (int i = 0; i < 120000; i++) 
+  cin >> a[i];    // Array access             
+  for (int i = 119999; i >= 0; i--)
+  cout << a[i] << endl;
+
+** Simple arrays
+						
+
+  const int N = 120000;
+  int a[N];    // Array declaration
+
+  for (int i = 0; i < N; i++) 
+  cin >> a[i];    // Array access             
+  for (int i = N-1; i >= 0; i--)
+  cout << a[i] << endl;
+
+
+Array size must be a constant expression
+
+Easy to change size: just update N (the rest of the program remains intact)
+
+** Passing arrays as arguments
+						
+int sumArray(int a[], unsigned int n) // Array argument
+{   
+  int sum = 0;
+  for (int i = 0; i < n; i++)
+    sum += a[i];
+  return sum;
+}
+
+
+int main()
+{
+// Array initialization
+  int a[] = { 3, 24, -88, 17, -1 };  
+  cout << sumArray(a, 5) << endl;
+}
+
+Array size can be left unspecified in array initialization syntax
+
+** Passing arrays as arguments
+						
+Array arguments are always automatically passed by reference 
+no special notation is require
+
+// int sumArray(int& a[], unsigned int n) - INCORRECT
+int sumArray(int a[], unsigned int n)    // CORRECT
+{
+  ...
+}
+Works for arrays of all sizes (size is passed as a separate argument)
+Interface not safe: can modify the content of A
+
+** Passing arrays as arguments
+						
+int sumArray(int a[], unsigned int n)    // not safe, sumArray can modify A!
+
+Use the following instead:
+int sumArray(const int a[], unsigned int n)
+
+How to figure out array size when passing n if the size was left unspecified when declaring it?
+use sizeof function: 
+int a[] = {1,2,6,3,8};
+int x = sumArray(a, sizeof(a) / sizeof(int));
+
+** Play time
+						
+bool arrayIsSorted(const int a[], unsigned int n){
+for (int i = 0; i < n-1; i++){
+  if (a[i] > a[i+1])
+  return false;
+ }
+ return true;
+}
+
+
+** Play time
+						
+void swap(int &a, int &b) {
+int tmp = a;
+a = b;
+b = tmp;
+} 
+// below a[] is not a constant as want to produce side-effect
+void reverseArray(int a[], unsigned int n) {
+for (int i = 0; i < n/2; i++)
+  swap(a[i], a[n - i - 1]);
+}
+
+** Processing subarrays
+						
+// pos   : index of the first component in the subarray
+// count: total number of components in the subarray
+int sumSubarray(const int a[], unsigned int pos, unsigned int count){
+int sum = 0;
+for (int i = pos; i < pos + count; I++)
+sum += a[i];
+
+  return sum;
+}
+
+** Processing subarrays
+						
+// begin: index of first component in the subarray
+// end   : index of the last component in the subarray
+int sumSubarray(const int a[], unsigned int begin, unsigned int end){
+assert(begin <= end);
+int sum = 0;
+for (int i = begin; i <= end; I++)
+sum += a[I];
+
+return sum;
+}
+
+** Subtleties
+						
+C++ does not check if array indices are within bound 
+it’s your responsibility 
+Array Copying
+a = b // invalid
+copy cell by cell: 
+a[6]=b[9] // works!
+Array Comparison
+if(a == b) // invalid
+compare each pair of cells at a time
+No need to return array as function output, uses call by reference anyway!
+
+** Two dimensional arrays
+						
+Want to store quantity of different products sold in a store
+but for multiple locations/regions 
+
+Conceptually can store as a matrix, where rows represent different locations and columns represent different products
+sales[2][1] are the total number of items sold for location 2 and product 1
+recall item n is the (n+1)-th item as index starts from 0!
+
+** Two dimensional arrays
+						
+const unsigned int NUM_OF_REGIONS = 4;
+const unsigned int NUM_OF_PRODUCTS = 3;
+
+unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS];
+
+To access sales figure for first product in second region, use: 
+sales[1][0] // recall, indices start from 0 
+
+e.g., want to set sales figure for first product in second region to 500 
+sales[1][0] = 500;
+
+** Two dimensional arrays
+						
+// Read input stream
+ for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
+for (unsigned int product = 0; product < NUM_OF_PRODUCTS; product++)
+cin >> sales[region][product];
+
+unsigned int total_sales = 0; // total sales for a particular product (product 0)
+
+for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
+total_sales += sales[region][0]; // add up sales from all regions for product 0
+
+Can you compute total sales from region 1?
+
+** Two dimensional arrays
+						
+unsigned int sumProductSales(unsigned int 
+sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS], unsigned int product){
+unsigned int total_sales = 0;
+for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
+total_sales += sales[region][product];
+
+return total_sales;
+}
+
+Can you implement a safer interface? (see slide 7)
+
+As usual, can leave size of first dimension unspecified, e.g. int F(int arr[ ][SIZE]) 
+but not the second one (why?)
+
+** Making things more modular
+						
+// Implement a function that returns the value of one element from the sales array
+unsigned int getSales(const unsigned int 
+sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS], unsigned int r, unsigned int p){
+return sales[r][p];
+}
+// Implement a function that sets the value of one element from the sales array
+void setSales(unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS],
+unsigned int r, unsigned int p, unsigned int v){
+sales[r][p] = v;
+}
+
+** Using typedef
+						
+// too lazy to write long types? Use typedef instead!
+
+typedef unsigned int Sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS];
+
+unsigned int sumSales(const Sales sales){
+…
+}
+
+
+
+
+
+** Simulating Two-dimensional Arrays by One-dimensional Ones
+						
+unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS];
+versus
+unsigned int _sales[NUM_OF_REGIONS * NUM_OF_PRODUCTS];
+
+Issue: how to map between these two?
+row-major vs. column-major order
+e.g. sales[i][j] is the same as _sales[i * NUM_OF_PRODUCTS + j] in row-major 
+Now you know why the size of the 2nd dimension can’t be left unspecified!
+
+Can you write the formula for column-major order?
+
+** Simulating Two-dimensional Arrays by One-dimensional Ones
+						
+unsigned int totalSales = 0;
+
+for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
+for (unsigned int product = 0; product < NUM_OF_PRODUCTS; product++)
+totalSales += _sales[region * NUM_OF_PRODUCTS + product];
+
+
+** Multi-dimensional Arrays
+						
+const unsigned int NUM_YEARS = 2;
+const unsigned int NUM_REGIONS = 4;	
+const unsigned int NUM_PRODUCTS = 3;
+
+typedef unsigned int Sales[NUM_YEARS][NUM_REGIONS][NUM_PRODUCTS];
+
+unsigned int total_sales = 0;
+for (unsigned int year = 0; year < NUM_YEARS; year++)
+for (unsigned int region = 0; region < NUM_REGIONS; region++)
+for (unsigned int product = 0; product < NUM_PRODUCTS; product++)
+total_sales += sales[year][region][product];
+
+** Multi-dimensional Arrays
+						
+
+Sales[year][region][product]
+
+vs.
+
+_Sales[(year * NUM_REGS * NUM_PRODS) + (region * NUM_OF_PRODS) + product]
+
+** Multi-dimensional Arrays
+						
+In general for a d-dimensional array with dimensions S_1, S_2, …, S_d, the element at 
+
+Item[n_1][n_2]…[n_d]
+
+can be represented as a single dimensional array with the following index
+
+_Item[n_d + S_d * (n_{d-1} + S_{d-1} * (n_{d-2} + S_{d-2} * (…+S_2*n_1) … ))] 
+
+* Records
+
+
+Structs and unions
+
+** Motivation
+						
+Data in collection is heterogenous 
+
+ 
+
+
+
+
+
+
+
+Solution using arrays:
+string titles[N];
+string authors[N];
+string publishers[N];
+unsigned int publishingYears[N];
+string callNumbers[N];
+double Price[N]
+
+Poor choice of interface!
+(many arguments to pass for functions)
+
+** Motivation
+						
+Data can be heterogenous 
+Define:
+struct CatalogEntry {
+    string title;
+    string author;
+    string publisher;
+    unsigned int publishingYear;
+    string callNumber;
+};
+Only 1 argument needs to be passed
+Declare:
+struct CatalogEntry c; 
+or CatalogEntry c;
+
+Initialize:
+c.title = "Peter Pan";
+c.author = "J. M. Barrie";
+c.publisher = "Scribner";
+c.publishingYear = 1980;
+c.callNumber = "B2754 1980";
+
+** Initializing and copying a record
+						
+As with arrays 
+
+CatalogEntry c = 
+{
+  "Peter Pan",
+  "J. M. Barrie",
+  "Scribner",
+  1980,
+  "B2754 1980"
+};
+
+Copying a record:
+// initialization list
+CatalogEntry c = { ... }; 
+
+// initialization by copying
+CatalogEntry c1 = c;    
+
+// default initialization  
+CatalogEntry c2;   
+// assignment operator       
+c2 = c;                   
+
+** Functions operating on records
+						
+void printCatalogEntry(CatalogEntry c){
+     cout << "Title: " << c.title << endl;
+     cout << "Author: " << c.author << endl;
+     cout << "Publisher: " << c.publisher << endl;
+     cout << "Publishing Year: " << c.publishingYear << endl;
+     cout << "Call Number: " << c.callNumber << endl;
+}  
+
+As usual, by default arguments are passed by value (call by value)
+
+
+** Functions operating on records
+						
+For efficiency, call by reference is also supported
+
+void printCatalogEntry(const CatalogEntry &c){
+     cout << "Title: " << c.title << endl;
+     cout << "Author: " << c.author << endl;
+     cout << "Publisher: " << c.publisher << endl;
+     cout << "Publishing Year: " << c.publishingYear << endl;
+     cout << "Call Number: " << c.callNumber << endl;
+}  
+
+
+
+** Equality checking
+						
+if (c1 == c2)  // invalid
+
+As in the case for arrays, must do this each field at a time
+bool CatalogEntryEquals(const CatalogEntry& c1, const CatalogEntry& c2){
+  return
+      c1.title == c2.title &&
+      c1.author == c2.author &&
+      c1.publisher == c2.publisher && 
+      c1.publishingYear == c2.publishingYear &&
+      c1.callNumber == c2.callNumber;
+}
+
+
+
+** Complex record data structures
+						
+CatalogEntry A[3];
+
+CatalogEntry A[] = 
+{
+{"Peter Pan",
+    "J. M. Barrie",
+    "Scribner",
+    1980,
+    "B2754 1980"},
+
+
+
+{"C++ Primer",
+     "Stanley B. Lippman",
+     "Addison-Wesley",
+     1998,
+     "QA 76.73 C15 L57 1998”},
+
+   {"Anatomy of LISP",
+     "John Allen",
+     "McGraw-Hill",
+     1978,
+     "QA 76.73 L23A44"}
+ };
+
+
+
+
+
+
+** Practise!
+						
+See the very first announcement in UR Courses
+Try the exercises there
+declare a C++ struct to represent a point in the Cartesian coordinate system
+declare a C++ struct to represent a hexagon
+declare a C++ struct to represent a circle
+
+** Complex record data structures
+						
+const int MAX_NAMES = 100;
+
+struct FullName {
+      string name_component[MAX_NAMES];
+      int name_count;
+ };
+
+
+
+
+
+
+
+** Complex record data structures
+						
+const int SCREEN_HEIGHT = 768, SCREEN_WIDTH = 1024;
+ struct Screen{
+char screen_array[SCREEN_HEIGHT][SCREEN_WIDTH];
+ };
+
+…
+
+Screen my_screen;
+for (int i = 0; i < SCREEN_HEIGHT; i++){
+    my_screen.screen_array[i][0] = '*';
+ }
+
+
+
+
+
+
+
+
+** Complex record data structures
+						
+struct str1 {
+int a[2];
+int b;
+}; 
+
+void func1(str1 A[ ]){
+A[0].a[0] = 10;
+A[0].a[1] = 20;
+A[0].b = 30;
+}
+
+int main( ) {
+str1 A[ ] = {{{1,0},2}, {{3,0},4},{{0,0},9}};
+func1(A);
+
+std::cout << A[0].b<<“\n”;
+std::cout << A[0].a[1]<<“\n”;
+}
+
+What will be the output?
+
+** Enumerations
+						
+User-defined data type that consists of integral constants
+
+enum day {
+  Friday = 99,
+  Saturday,
+  Sunday = 90,
+  …,
+  Thursday 
+};
+
+day d;
+d = Thursday;
+
+if (d == Saturday || d == Sunday)
+cout << “Enjoy the weekend!”
+
+cout << d+1 ;
+
+What will be the output?
+
+** Variant records
+						
+Multiple component fields can be defined
+At most one field can be in use at one time (fields share the same memory)
+
+union Coordinates {
+  int a,
+  double b,
+  char c
+};
+
+Coordinates x;
+
+x.a = 5;
+cout << x.a;         // works, prints 5      
+
+x.b = 416.905;     // destroys the value of x.a
+x.c = `p’;              // destroys the value of x.a and x.b
+cout << x.a;         // invalid!
+cout << x.b;         // invalid!
+cout << x.c;         // works, prints p
+
+** Example
+						
+enum CatalogEntryType {
+  BookEntry,
+  DVDEntry
+};
+
+struct BookSpecificInfo {
+  unsigned int pages;
+};
+
+
+
+struct DVDSpecificInfo {
+  unsigned int discs;
+  unsigned int minutes;
+};
+
+union CatalogEntryVariantPart {
+  BookSpecificInfo book;
+  DVDSpecificInfo dvd;
+};
+
+
+** Example (cont’d)
+						
+struct CatalogEntry {
+  string title;
+  string author;
+  string publisher;
+  unsigned int publishingYear;
+  string callNumber;
+  CatalogEntryType tag;
+  CatalogEntryVariantPart variant;
+};
+
+
+** Example (cont’d)
+						
+void printCatalogEntry(const CatalogEntry& c) {
+  cout << "Title: " << c.title << endl;
+  …
+  cout << "Call Number: " << c.callNumber << endl;
+  switch (c.tag) {
+  case BookEntry:
+    cout << "Pages: " << c.variant.book.pages << endl;
+    break;
+  case DVDEntry:
+    cout << "Discs: " << c.variant.dvd.discs << endl;
+    cout << "Minutes: " << c.variant.dvd.minutes << endl;
+    break;
+  }
+} 
+
+
+** Anonymous declaration of records and variant-records
+						
+Earlier:
+union CatalogEntryVariantPart {
+  BookSpecificInfo book;
+  DVDSpecificInfo dvd;
+};
+
+Could have actually declared them in-line:
+union CatalogEntryVariantPart {
+struct BookSpecificInfo { unsigned int pages; } book;
+struct DVDSpecificInfo { unsigned int discs, minutes; } dvd;
+};
+
+** Anonymous declaration of records and variant-records
+						
+Can also anonymize:
+
+union CatalogEntryVariantPart {
+struct { unsigned int pages; } book;
+struct { unsigned int discs, minutes; } dvd;
+};
+
+
+
+** Anonymous declaration of records and variant-records
+						
+In fact, we could have done the same with the union
+
+struct CatalogEntry {
+string title;
+string author;
+string publisher;
+unsigned int publishingYear;
+string callNumber;
+CatalogEntryType tag;
+union {
+struct { unsigned int pages; } book;
+struct { unsigned int discs, minutes; } dvd;
+} variant;
+};
+
+
+* Program Organization Principles
+
+
+
+Terminology concerning program organization, interface vs. implementation, data encapsulation, information hiding, modularity, layering, design by contract, abstract data types 
+
+** Terminology concerning program organization
+						
+is a design principle for separating a computer program into distinct sections such that each section addresses a separate concern
+concern = a set of information that affects code 
+can be realized via layering and modularity
+
+Layering: use separate layers in the software, each of which addresses a different concern (e.g., presentation layer, business logic layer, data access layer, etc.)
+
+Modularity: the degree to which a system’s components can be separated and recombined
+break system into parts and to hide the complexity of each part behind an abstraction and interface
+
+** Terminology concerning program organization
+						
+Why bother?
+Simplifies development and maintenance of computer programs
+Promote software reuse 
+Modules can be developed and updated independently (can improve on one section of code without changing other sections)
+
+How to realize modularity?
+procedural programming: via functions and top-down design
+OOP: via classes and objects 
+
+** Terminology concerning program organization
+						
+Refactoring is to rewrite code in order to improve its readability, reusability, or structure without affecting its meaning or behaviour
+perhaps older version was poorly written due to time constraints etc.
+e.g., replace 416 with the constant GTA_CODE1, replace long if-then-else branches with switch/case statements, divide overly complex implementation into smaller functions, replace with efficient code, etc.
+
+** Terminology concerning program organization
+						
+Each level represents an increasingly detailed model of the software system and its processes
+at each level, the model is described using concepts appropriate to a certain domain 
+each higher, more abstract level builds on a lower, less abstract level
+
+To understand levels of abstraction better, see optional slides on Layering
+
+** Modular programming
+						
+Modular programming is a method of developing software where each section of code is a module with a carefully specified interface 
+interface makes the purpose of your code clear
+client software can focus on the interface (and ignore its implementation)
+
+A crucial aspect of modular programming is mentally separating the interface from the implementation
+we will specify the interfaces in .h files (as well-documented prototypes) 
+we will specify the implementation in .cpp files (primarily as functions)
+some functions and variables are not (directly) accessible!
+
+** Separating interface and implementation
+						
+via data encapsulation
+hide variables describing state of the module inside the module
+(static variables/functions and namespaces)
+
+by defining new abstract data types (ADT) using records and classes
+
+** The static keyword
+						
+// whatever.cpp
+
+static int foo = 5;
+int bar = 6;
+
+static void doh(int var1) {
+// do something
+}
+
+void yay(char c){
+// do something 
+}
+// main.cpp
+
+int main ( ){
+
+extern int foo; // invalid
+extern int bar; // works!
+
+doh(13); // invalid
+yay(‘a’); // works!
+
+}
+
+** The static keyword
+						
+void fun(int var1) {
+int x1=0;
+x1+=var1;
+cout << x1;
+}
+
+void funS(int var1) {
+static int x2=0;
+x2+=var1;
+cout << x2;
+}
+
+int main ( ){
+
+fun(5);
+fun(5);
+fun(7);
+
+funS(5);
+funS(5);
+funS(7);
+
+}
+
+** Namespaces
+						
+// myProg.h
+
+#pragma once
+
+namespace myNSpace{
+    void Foo();
+    int Bar();
+}
+
+
+
+
+#include "myProg.h"
+using namespace myNSpace;
+
+// use fully-qualified name here
+void myNSpace::Foo(){
+   // no qualification needed for Bar()
+   Bar();
+}
+
+int ContosoDataServer::Bar(){
+return 0;
+}
+
+** Anonymous namespaces
+						
+// myProg.h
+
+#pragma once
+
+namespace {
+    float foo;
+    double pi(){
+ return 3.141592653;
+ }
+}
+
+char bar;
+// myProg.cpp
+
+#include "myProg.h"
+
+int main(){
+foo = 2.718281828; // invalid!
+double y = pi();        // invalid!
+char c = bar;           // works 
+
+return 0;
+}
+
+** Namespaces (cont’d)
+						
+Can declare the same namespace over multiple sections
+Have to be careful about usage of identifiers
+
+Can have nested namespaces, inline namespaces, namespace aliases, etc.
+
+Also check out the global namespace
+
+** Data encapsulation
+						
+to place a barrier around the variables that represent the internal state of a software component so that these variables cannot be accessed directly by client code
+can be achieved via static variables 
+(restricts variable/function scope to file)
+hides implementation details
+clients are forced to use interface to access data
+similar effects can be achieved using namespaces 
+
+** Separating interface and implementation
+						
+Start by specifying the interface of the module
+
+// initializeCounter
+//
+// Purpose: Initialize the bounded counter module.
+// Parameter(s):
+//  <1> value1: Initial value for the counter expressed as an unsigned integer.
+//  <2> upper1: Upper bound for counter value expressed as an unsigned integer.
+// Precondition(s): value1 < upper1
+// Returns: N/A
+// Side effect: The counter is initialized, with value1 as the current counter value, and upper1 as the 
+// upper bound of counter values.
+
+** Separating interface and implementation
+						
+// getCounterValue
+//
+// Purpose: Retrieve the current value of
+// the counter.
+// Parameter(s): N/A
+// Precondition(s): N/A
+// Returns: The unsigned integer value of
+// the counter.
+// Side effect: N/A
+
+
+// incrementCounter
+//
+// Purpose: Increment the value of the 
+// counter.
+// Parameter(s): N/A
+// Precondition(s): N/A
+// Returns: N/A
+// Side effect: The counter value is 
+// incremented by one. If the incremented 
+// value reaches the upper bound, then the 
+// counter value is reset to zero.
+
+** Separating interface and implementation
+						
+// encapsulated_counter.h
+//
+// This module provides …
+// Data encapsulation is used to
+// protect the state of the bounded
+// counter from manipulation by client
+// code, except via the functions in
+// the interface.
+
+
+#pragma once
+//initializeCounter 
+//…
+void initializeCounter(unsigned int value1, unsigned int upper1);
+// getCounterValue
+//…
+unsigned int getCounterValue();
+// incrementCounter
+//…
+void incrementCounter();
+
+** Separating interface and implementation
+						
+#include <iostream>
+using namespace std;
+#include "encapsulated_counter.h"
+
+int main() {
+  initializeCounter(0, 3);
+  cout << getCounterValue() << endl;
+  incrementCounter();
+  cout << getCounterValue() << endl;
+
+  incrementCounter();
+  incrementCounter();
+  cout << getCounterValue() << endl;
+  return 0;
+}
+
+Output: 
+0
+1
+0
+
+** Separating interface and implementation
+						
+// encapsulated_counter.cpp
+//
+static unsigned int counter_value;
+static unsigned int counter_upper;
+
+void initializeCounter(unsigned int value1, unsigned int upper1) {
+  counter_value = value1;
+  counter_upper = upper1;
+}
+
+unsigned int getCounterValue(){
+  return counter_value;
+}
+void incrementCounter(){
+  ++counter_value;
+  if (counter_value == counter_upper)
+    counter_value = 0;
+}
+Note the data encapsulation, the opaqueness of the module, and the separation btw interface and implementation
+
+** Design by contract
+						
+Allows for clean division of labour
+Specifies the usage convention for a module is captured in a contract between the supplier (the developer of the module) and the client (the user of the module)
+Protects all parties by specifying
+supplier’s POV: how little is acceptable
+Client’s POV: how much is expected
+Usually specified using
+preconditions
+postconditions
+invariants 
+
+** Design by contract (example)
+						
+// initializeCounter
+//
+// Purpose: Initialize the bounded counter module.
+// Parameter(s):
+//  <1> value1: Initial value for the counter expressed as an unsigned integer.
+//  <2> upper1: Upper bound for counter value expressed as an unsigned integer.
+// Precondition(s):
+//  <1>: value1 < upper1
+// Returns: N/A
+// Side Effect: The global counter is initialized, with value1 as 
+//              the current counter value, and upper1 as the upper 
+//              bound of counter values.
+
+** Design by contract (example)
+						
+// encapsulated_counter.cpp
+#include <cassert>
+
+void initializeCounter(unsigned int value1, unsigned int upper1){
+assert(value1 < upper1);  // encapsulated_counter.cpp
+counter_value = value1;
+counter_upper = upper1;
+}
+
+** Design by contract (example)
+						
+// initializeCounter
+//
+// Module invariant: Current counter value is always strictly less than the upper 
+// bound.
+//
+
+static bool isInvariantTrue(){
+  return counter_value < counter_upper;
+}
+
+
+
+** Design by contract (example)
+						
+void initializeCounter(unsigned int value1, unsigned int upper1){
+  assert(value1 < upper1);
+  counter_value = value1;
+  counter_upper = upper1;
+  assert(isInvariantTrue());
+}
+unsigned int getCounterValue(){
+  assert(isInvariantTrue());
+  return counter_value;
+}
+void incrementCounter(){
+   assert(isInvariantTrue());
+   ++counter_value;
+   if (counter_value == counter_upper)
+    counter_value = 0;
+   assert(isInvariantTrue());
+}
+
+** Interface vs. implementation
+						
+Consider designing a timer that represents the accumulated time in [hh:mm:ss] format
+Internally can be implemented in many ways
+e.g., only store seconds
+e.g., store all hours, minutes, and seconds
+But if interface remains the same, changing implementation does not require changing client code
+
+** Abstract data types (ADT)
+						
+Motivation: returning to our example, we want to have multiple counters
+ADT:  data type defined by its possible values and operations, e.g.: counters
+// counter.h
+//
+// This module defines an abstract data type named Counter.  A counter value is maintained by 
+// each instance of the Counter type. Users may increment or retrieve the value of the counter.
+//
+// Data type invariant: Current value of a counter instance must be strictly smaller than its 
+// upper bound
+struct Counter{
+// ... details to be filled out later
+};
+
+** Abstract data types (ADT)
+						
+// counterInitialize
+//
+// Purpose: Initialize a counter instance.
+// Parameter(s):
+//  <1> counter: A counter instance to be initialized.
+//  <2> value1: Initial value for the counter specified as an unsigned integer.
+//  <3> upper1: Upper bound for counter value specified as an unsigned integer.
+// Precondition:
+//  <1> value1 < upper1
+// Side Effect: The counter instance is initialized, with value1 as 
+//              the current counter value, and upper1 as the upper 
+//              bound of counter values.
+//
+void counterInitialize(Counter& counter, unsigned int value1, unsigned int upper1);
+
+** Abstract data types (ADT)
+						
+// counterGetValue
+//
+// Purpose: Retrieve the current value of a 
+// counter instance.
+// Parameter(s):
+//   <1> counter: A counter instance
+// Returns: The unsigned integer value of the 
+// counter instance.
+
+unsigned counterGetValue(const Counter& counter);
+
+
+// counterIncrement
+//
+// Purpose: Increment a given counter 
+// instance.
+// Parameter(s):
+//   <1> counter: counter instance to be
+//    incremented
+// Side Effect: The counter value of the 
+// parameter is incremented by one. If the 
+// incremented value reaches the upper 
+// bound, then the counter value is reset to
+// zero.
+void counterIncrement(Counter& counter);
+
+** Abstract data types (ADT)
+						
+int main( ){
+  Counter c, d;
+  counterInitialize(c, 0, 3);
+  counterInitialize(d, 0, 10);
+  counterIncrement(c);  counterIncrement(c);  counterIncrement(c);
+  counterIncrement(d);  counterIncrement(d);  counterIncrement(d);
+  cout << counterGetValue(c) << endl;
+  cout << counterGetValue(d) << endl;
+  return 0;
+}
+
+
+** Abstract data types (ADT)
+						
+struct Counter {
+  unsigned int value;
+  unsigned int upper;
+};
+
+Can implement as before
+
+Problems: 
+no data encapsulation
+no initialization guarantees
+
+No encapsulation
+Counter c;
+counterInitialize(c, 0, 3);
+c.value = 999; // allowed!
+
+No initialization guarantees
+// Precondition:
+//  <1> The counter module must 
+// have been properly initialized
+Counter c;
+cout << counterGetValue(c) << endl;
+
+* Abstract Data Types via Classes
+
+
+
+Declaring ADT as classes, data representation, member functions, public vs. private functions, constructors
+
+** Classes
+						
+Classes are record types, and thus have fields, but can also declared member functions
+// counter.h
+class Counter {
+public:
+// initialize
+void initialize(unsigned int value1, unsigned int upper1);
+// getValue
+unsigned int getValue();
+// increment
+void increment();
+private:
+// Data representation to follow ...
+};
+
+** Classes (cont’d)
+						
+Public member functions can be used elsewhere
+how about public static ones?
+Private member functions have class scope 
+(cf. file scope as in static or namespaces)
+Note: member functions no longer take the counter as argument; why?
+ void initialize(unsigned int value1, unsigned int upper1)
+Public vs. private fields/member functions of a class
+how to call/invoke public member functions? 
+how to define/implement a member function?
+
+** Classes (cont’d)
+						
+#include "counter.h"
+
+int main( ) {
+Counter c, d;
+c.initialize(0, 3);
+d.initialize(0, 10);
+
+c.increment(); 
+c.increment(); 
+c.increment();
+d.increment();
+d.increment();
+d.increment();
+
+cout << c.getValue() << endl;
+cout << d.getValue() << endl;
+
+return 0;
+}
+
+** Classes (cont’d)
+						
+class Counter {
+public: 
+… … …
+private: // encapsulation
+unsigned int value; // current value of the counter
+unsigned int upper; // upper bound of valid counter values
+};
+
+int main() {
+Counter c;
+c.initialize(0, 3);
+c.value = 999; // can’t access private data, error!
+
+** Classes (cont’d)
+						
+// counter.cpp
+
+#include "counter.h"
+
+void Counter::initialize(unsigned int value1, unsigned int upper1) {
+assert(value1 < upper1);
+value = value1;
+upper = upper1;
+}
+
+unsigned int Counter::getValue() {
+return value;
+}
+
+void Counter::increment() {
+value++;
+if (value == upper)
+value = 0;
+}
+//not using Counter:: will make the 
+//declarations global!
+
+** Classes (cont’d)
+						
+// counter.h
+
+class Counter {
+public: 
+… … …
+private: // encapsulation
+// isInvariantTrue
+  bool isInvariantTrue();
+};
+
+// counter.cpp
+#include "counter.h"
+
+void Counter::initialize(unsigned int value1, unsigned int upper1) {
+assert(value1 < upper1);
+value = value1;
+upper = upper1;
+assert(isInvariantTrue());
+}
+
+** Classes (constructors)
+						
+Can declare a class constructor
+special kind of member function 
+automatically invoked when an instance of the class is created 
+intended to perform initialization (forces to initialize when creating instances!)
+// counter.h
+class Counter {
+public:
+// Constructor
+// Purpose: Initialize a counter instance
+ Counter(unsigned int value1, unsigned int upper1);
+…
+};
+
+** Constructors (cont’d)
+						
+// counter.cpp
+
+Counter::Counter(unsigned int value1, unsigned int upper1){
+
+assert(value1 < upper1);
+value = value1;
+upper = upper1;
+assert(isInvariantTrue());
+}
+// clientCode.cpp
+
+int main( ) {
+
+Counter c(0, 3);
+Counter d(0, 10);
+c.increment();
+…
+Counter x; // invalid!
+}
+
+** Another example (time accumulator)
+						
+// time.h
+Class Time{
+public:
+// Constructor
+Time(unsigned int hrs, unsigned int mins, unsigned int secs);
+// increment
+void increment(unsigned int hrs, unsigned int mins, unsigned int secs);
+// equals
+bool equals(const Time &t);  
+// lessThan
+bool lessThan(const Time &t);
+
+** Time accumulator example (cont’d)
+						
+// getComponents
+void getComponents(unsigned int &hrs, unsigned int &mins, unsigned int &secs);
+// increment
+void increment(unsigned int hrs, unsigned int mins, unsigned int secs);
+// add
+Time add(const Time &t);
+// diff
+Time diff(const Time &t);
+private:
+// Data representation to follow ...
+};
+
+** Time accumulator example (cont’d)
+						
+#include "time.h"
+int main( ) {
+unsigned int hrs, mins, secs;
+Time t1(0, 30, 45);
+t1.increment(0, 0, 15);
+Time t2(0, 30, 0);
+Time t3 = t1.add(t2);
+Time t4(0, 1, 0);
+Time t5 = t3.diff(t4);
+t5.getComponents(hrs, mins, secs);
+
+cout << hrs << ':' << mins << ':' << secs << endl;
+
+Return 0;
+}
+
+** Time accumulator example (cont’d)
+						
+// time.h
+class Time {
+public:
+…
+private:
+// Another constructor
+Time(unsigned long int secs);
+
+
+
+private:
+unsigned long int seconds;
+};
+
+
+** Time accumulator example (cont’d)
+						
+// time.cpp
+#include <cassert>
+#include "time.h"
+namespace {
+const unsigned long int SECS_IN_MIN  = 60;
+const unsigned long int MINS_IN_HOUR = 60;
+const unsigned long int SECS_IN_HOUR = SECS_IN_MIN * MINS_IN_HOUR;
+
+unsigned long int convertToSecs(unsigned hrs, unsigned mins, unsigned secs) {
+return hrs * SECS_IN_HOUR + mins * SECS_IN_MIN + secs;
+}
+}
+
+** Time accumulator example (cont’d)
+						
+// time.cpp
+Time::Time(unsigned int hrs, unsigned int mins, unsigned int secs) {
+assert(mins < 60);
+assert(secs < 60);
+seconds = convertToSecs(hrs, mins, secs);
+}
+void Time::increment(unsigned int hrs, unsigned int mins, unsigned int secs) {
+assert(mins < 60);
+assert(secs < 60);
+seconds += convertToSecs(hrs, mins, secs);
+}
+
+** Time accumulator example (cont’d)
+						
+// time.cpp
+bool Time::equals(const Time &t) {
+return seconds == t.seconds;
+}
+bool Time::lessThan(const Time &t) {
+return seconds < t.seconds;
+}
+void Time::getComponents(unsigned int &hrs, unsigned int &mins, unsigned int &secs) {
+hrs  =  seconds / SECS_IN_HOUR;
+mins = (seconds / SECS_IN_MIN) % MINS_IN_HOUR;
+secs =  seconds % SECS_IN_MIN;
+}
+
+** Time accumulator example (cont’d)
+						
+// time.cpp
+
+Time Time::add(const Time &t) {
+Time result(seconds + t.seconds);
+return result;
+}
+
+
+
+
+Time Time::diff(const Time &t) {
+assert(!lessThan(t));
+Time result(seconds - t.seconds);
+return result;
+}
+
+// second constructor!
+Time::Time(unsigned long int secs) {
+seconds = secs;
+}
+
+** Time accumulator example
+						
+Note the second (private) constructor on slide 13 and 17
+used by add( ) and diff( )
+in general, can have many
+Could have implemented add( ) and diff( ) differently
+Time Time::add(const Time &t) {
+  return Time(seconds + t.seconds);
+}
+Time Time::diff(const Time &t) {
+  assert(! lessThan(t));
+  return Time(seconds - t.seconds);
+}
+
+** Time accumulator example
+						
+Above alternative implementation creates a temporary, anonymous instance of Time and returns it right away (more efficient)
+no intermediate variables are declared 
+Another example (where 2 temporary instances are created):
+Time t = Time(1, 0, 45).add(Time(0, 30, 15));
+BTW, compilers can usually optimize your code to do this
+
+** Default constructor
+						
+Has no parameters
+Invoked by compiler if the client did not invoke another constructor 
+// time.h
+class Time {
+public:
+// Default Constructor
+Time( );
+…
+};
+// time.cpp
+Time::Time( ) {
+seconds = 0;
+}
+
+// client code in main
+Time x;
+Time y(13,13,13);
+Time z( ); // invalid!
+
+** C++ classes are records with encapsulated fields
+						
+struct Time {
+unsigned long int seconds;
+};
+
+
+
+
+
+
+
+class Time {
+public:
+…
+private:
+unsigned long int seconds;
+};
+
+
+** C++ classes are records with encapsulated fields
+						
+struct Time {
+public:
+Time();
+Time(unsigned int hrs, unsigned int mins, unsigned int secs);
+void increment(unsigned int hrs, unsigned int mins, unsigned int secs);
+Time add(const Time &t);
+Time diff(const Time &t);
+bool equals(const Time &t);
+bool lessThan(const Time &t);
+void getComponents(unsigned int &hrs, unsigned int &mins, unsigned int &secs);
+private:
+Time(unsigned long int secs);
+unsigned long int seconds;
+};
+Only difference: by default, fields are public in structures and private in classes
+
+** Thus:
+						
+class A { ... };
+void func1(A z) { ... }
+
+A x, y;
+...
+x = y;
+
+...
+func1(x);
+
+A func2( ) {
+A x;
+…
+return x;
+}
+
+A z = func2( );
+
+
+** Thus:
+						
+Just like structures, no initialization is performed by default (unless a constructor is provided)
+If no constructors are provided, the compiler supplies a dummy one that does nothing!
+
+class A {
+// no constructor declared here
+…
+};
+A x; // initialization will not be performed
+
+** Passing objects as arguments
+						
+Can be costly
+better to pass by reference
+sometimes want to ensure that the passed object is not modified via the const keyword
+
+int f(const Time &t) {
+if (t.lessThan(Time(0, 30, 0))) // valid: lessThan is const 
+t.increment(0, 30, 0);             // invalid: increment is not const
+}
+
+
+** const member functions
+						
+Time add(const Time &t); // in Time class
+Time t3 = t1.add(t2);        // in main function
+
+How to ensure that member function add doesn’t accidentally modify the reference object t1?
+
+Use the following declaration instead
+Time add(const Time &t) const; // in Time.h
+
+Time Time::add(const Time &t) const {  // in Time.cpp
+increment(1,15,30); // invalid!
+…
+}
+
+* Searching and sorting
+
+
+
+Linear search, binary search, selection sort, insertion sort
+
+** Notions related to program correctness
+						
+Soundness: is the output always as expected?
+if the program produced output, 
+then the output is correct
+
+Completeness: does the program always produce an output?
+if there exists a solution, 
+then the program will produce an output 
+
+Correct: sound and complete
+
+Partially correct: sound but not complete 
+(program may not halt on some inputs)
+
+Loop invariant: conditions that are true before the loop and after every iteration
+
+** Linear search
+						
+typedef int ItemType;
+ 
+  //
+  // Helper function: linearSearch
+  //
+  // Purpose: Locate the first occurrence of x in the array A.
+  // Parameter(s):
+  //  <1> x: An ItemType item to be sought.
+  //  <2> A: An array of ItemType in which the search is to be conducted.
+  //  <3> n: An unsigned integer indicating the scope of the search.
+  // Precondition(s): N/A
+  // Returns: If x occurs in A[0:n], then the index of the first occurrence will be returned.
+  // Otherwise, -1 will be returned.
+  // Side Effect: N/A
+
+
+** Linear search
+						
+int linearSearch(const ItemType x, const ItemType A[], unsigned int n) {
+for (unsigned int i = 0; i < n; i++){
+if (x == A[i]){
+return i;
+}
+}
+return -1;
+}
+
+Time complexity: as the name suggests, linear 
+
+** Binary search
+						
+Works correctly on sorted data only
+Will find some occurrence of searched item x (may not be the first one)
+
+Check the middle item m 
+if x == m, we have found x
+if x < m then x will not be located to the right of m, and thus x should be sought for in the subarray to the left of m
+if the x > m then x will not be located to the left of m, and thus x should be sought for in the subarray to the right of m
+
+** Binary search
+						
+ //
+  // binarySearch
+  //
+  // Purpose: To determine if an array contains the specified element.
+  // Parameter(s):
+  //  <1> x: The element to search for
+  //  <2> A: The array to search in
+  //  <3> n: The length of array A
+  // Precondition(s): N/A
+  // Returns: Whether element x is in array A.
+  // Side Effect: N/A
+
+
+** Binary search
+						
+ bool binarySearch(ItemType x, 
+const ItemType A[], unsigned int n){
+/*1*/    int low = 0;
+/*2*/    int high = n - 1;
+
+
+
+
+
+
+
+
+/*3*/    while (low <= high) {
+/*4*/         int mid = (low + high) / 2;
+/*5*/         if (x == A[mid])
+/*6*/              return true;
+/*7*/         else if (x < A[mid])           
+/*8*/              high = mid - 1;
+/*9*/         else
+/*10*/            low = mid + 1;
+             } //end while
+/*11*/   return false;
+       }
+
+** Binary search
+						
+If the array holds 32 items, needs roughly 5 steps
+If the array holds 2048 items, needs roughly 11 steps
+why?
+
+In general, in the worst case, at most ?log2(n)? + 1 steps
+
+Let’s analyze the case for 4 items
+How about 7 items?
+
+** Sorting
+						
+What is sorting?
+rearranging items in some sort of order (either ascending or descending)
+examples
+useful for many applications 
+many known sorting algorithms exist: selection sort, insertion sort, bubble sort, quick sort, merge sort, heap sort, shell sort, radix sort, etc. 
+each have different performance characteristics (e.g., quick sort is the fastest in the average case, while heap sort and merge sort are the fastest in the worst case)
+
+** The selection sort algorithm
+						
+The minimum member of the original array will be the first element of the sorted array
+If we take away the the first element, then the minimum element of the remaining subarray will be the second element in the sorted order
+If we take away the second element, then the minimum element of the remaining subarray will be the third element in the sorted order
+... so on and so forth
+So, repeatedly select the minimum element from the remaining elements and places it next in the ordering, until all elements have been ordered
+Example using 2 arrays?
+
+** The selection sort algorithm
+						
+Sort array A[n]:
+
+for (i = 0; i < n; i++){
+1. find the min element in the unsorted array
+2. remove min element from unsorted array
+3. place min element at index i of sorted array
+}
+
+
+** The selection sort algorithm
+						
+Sort array A[n]:
+
+  for (i = 0; i < n; i++){
+1. find the min element in the unsorted region of array A
+2. swap the min element with the element at index i
+  }
+
+
+** The selection sort algorithm
+						
+Recall loop invariants: at the end of each iteration i
+the subarray A[0..i-1] is a prefix of the sorted array 
+the subarray A[i..n] contains the remaining elements in some arbitrary order
+
+Refined version:
+
+  for (i = 0; i < n; i++){
+1. find the min element in A[i..n]
+2. swap the min element with A[i]
+  }
+
+
+** The selection sort algorithm
+						
+void selectionSort(ItemType A[], unsigned int n){
+for (unsigned int i = 0; i < n; i++){
+unsigned int m = min(A, i, n);
+swap(A[i], A[m]);
+}
+}
+
+
+** The selection sort algorithm
+						
+unsigned int min(const ItemType A[], unsigned int begin, unsigned int end){
+assert(begin <= end);
+unsigned int m = begin;
+for (unsigned int i = begin + 1; i < end; i++){
+if (A[m] > A[i])
+m = i;
+   }
+      return m;
+}
+
+
+** The selection sort algorithm
+						
+void swap(ItemType &x, ItemType &y) {
+ItemType tmp = x;
+x = y;
+y = tmp;
+}
+
+
+** The selection sort algorithm
+						
+void selectionSort(ItemType A[], int N){
+    int i, j, search_min;
+    ItemType temp;
+
+    for (i = 0; i < N; i++) {
+      // Find index of smallest element
+      search_min = i;
+      for (j = i + 1; j < N; j++) {
+        if (A[j] < A[search_min])
+          search_min = j;
+      }
+      // Swap items
+      temp = A[search_min];
+      A[search_min] = A[i];
+      A[i] = temp;
+    } // end for
+  }
+
+** The insertion sort algorithm
+						
+Divide the unsorted array into two regions 
+sorted "left" region/subarray
+unsorted "right" region/subarray
+Incrementally take one element from the unsorted region
+insert it into the sorted region to generate a sorted region that is one element larger
+Rinse and repeat
+
+
+Sorting happens when inserting element (and not when selecting it)
+
+** The insertion sort algorithm
+						
+Sort A[n]:
+
+for i ranging from 0 to n-1 do {
+Select x = A[i];
+Insert x into sorted region on the left;
+}
+
+Example?
+
+** The insertion sort algorithm
+						
+At the end of each iteration i:
+the subarray A[0..i] is sorted, 
+while the subarray A[i+1..n] is in some arbitrary order
+
+Sort A[n]:
+
+for i ranging from 0 to n-1 do {
+Select x = A[i];
+Insert x into subarray A[0..i];
+}
+
+** The insertion sort algorithm
+						
+void insertionSort(ItemType A[], unsigned int n) {
+for (unsigned int i = 0; i < n; i++) {
+ItemType x = A[i];
+// Find insertion point
+unsigned int j = find(x, A, i);
+// Shift elements
+shiftRight(A, j, i);
+// Store element
+A[j] = x;
+}
+  }
+
+** The insertion sort algorithm
+						
+unsigned int find(ItemType x, const ItemType A[], unsigned int n) {
+for (unsigned int i = 0; i < n; i++) {
+if (A[i] >= x)
+   return i;
+}
+    return n;
+}
+
+
+** The insertion sort algorithm
+						
+void shiftRight(ItemType A[], unsigned int begin, unsigned int end) {
+assert(0 <= begin);
+assert(begin <= end);
+
+for (unsigned int j = end; j > begin; j—)
+A[j] = A[j-1];
+    
+}
+
+
+** The insertion sort algorithm
+						
+ void insertionSort(DataType A[], int N) {
+    int i, j, insert_index;
+    DataType x;
+
+    for (int i = 0; i < N; i++) {
+      // save the element from position i
+      x = A[i];
+
+      // Find the insertion point
+      insert_index = 0;
+      while ((insert_index < i) && (x > A[insert_index]))
+        insert_index++;
+      // Shift the elements
+      for (j = i; j > insert_index; j--)
+        A[j] = A[j-1];
+
+      // Store x at the insertion point
+      A[insert_index] = x;
+    }
+  }
+
+
+* Constructors and overloading
+
+
+
+Function overloading, type coercion, operator overloading 
+
+** Default constructors (revisited)
+						
+Default constructor written by the programmer
+constructor creates an empty Multiset
+
+class Multiset {
+public:
+Multiset();
+…
+};
+
+Default constructor provided by the compiler
+
+Client code: Multiset m; // but not Multiset m( );
+
+
+
+** Constructors
+						
+Want to insert all elements of an array A of size n into Multiset
+int A[5] = { 2, 5, 4, 3, 1 };
+Multiset m;
+for (int i = 0; i < 5; i++)
+m.insert(A[i]);
+
+If frequently done, might as well write a constructor
+class Multiset {
+public:
+Multiset();
+Multiset(const ItemType A[], unsigned int n);
+…
+};
+
+** Constructors
+						
+Client code
+int A[5] = { 2, 5, 4, 3, 1 };
+Multiset m(A, 5);  // Invoking the constructor with an array argument followed 
+                            // by an integral argument
+
+If frequently done, might as well write a constructor
+Multiset::Multiset(const ItemType A[], unsigned int n) {
+assert(n <= MAX_LENGTH);
+data_count = n; // Copy size
+// Copy array
+for (unsigned int i = 0; i < n; i++)
+data[i] = A[i];
+// Sort to normalize representation
+sort(data, data_count);  // e.g., any sorting algorithm
+}
+
+** Constructors
+						
+Want to create a Multiset with n copies of the same item x
+
+Multiset(ItemType x, unsigned int n);
+
+Client code: Multiset m(999, 5);  // A multiset of 5 copies of 999
+
+implementation
+
+Multiset::Multiset(ItemType x, unsigned int n) {
+data_count = n;
+for (unsigned int i = 0; i < n; i++)
+data[i] = x;
+}
+
+** Other uses of constructors
+						
+Anonymous objects can be useful and efficient
+
+Counter c1, c2;         // ordinary variables initialized using default constructor
+Counter c3(0, 3);       // ordinary variable initialized using initializing constructor
+c1 = Counter( );         // unnamed instance constructed with default constructor
+c2 = Counter(0, 10);  // unnamed instance constructed with initializing constructor
+
+Counter ctr1[MAX];
+ctr1[5] = Counter(0,3);
+
+** Other uses of constructors (cont’d)
+						
+Creating anonymous objects for function call
+House h1(500000);
+…
+House p = h1.add(House(1000000));
+
+Creating anonymous for the purpose of returning it 
+House House::add(const House &other) const {
+if (price == 0 && other.price == 0) {
+// return instance made with default constructor
+return House( );
+}
+else
+return House(price + other.price);
+}
+
+** Overloading
+						
+int myMax(int a, int b) {
+if (a > b)
+return a;
+else 
+return b;
+}
+
+float myMax(float a, float b) {
+if (a > b)
+return a;
+else 
+return b;
+}
+int main( ) {
+
+// invoke myMax(float, float)
+cout << myMax(1.2f, 4.7f); 
+// invoke myMax(int, int)
+cout << myMax(3, 4);   
+
+return 0;
+}
+
+
+** Overloading
+						
+int myMax(int a, int b) {
+if (a > b)
+return a;
+else 
+return b;
+}
+
+int myMax(int a, int b, int c) {
+return myMax(a, myMax(b, c));
+}
+
+How about different return types only? (nope!)
+int main( ) {
+
+// invoke myMax(int, int)
+cout << myMax(3, 4);   
+
+// invoke myMax(int, int, int)
+cout << myMax(3, 4, 5);  
+
+return 0;
+}
+
+
+** Overloading
+						
+// header 
+void print( ) const;
+void print(ostream &output_stream) const;
+// client code
+L.print();
+L.print(cout);
+// definition
+void Multiset::print( ) const {
+print(cout);
+}
+void Multiset::print(ostream& output_stream) const {
+for (unsigned int i = 0; i < data_count; i++) {
+if (i != 0)
+output_stream << ", ";  // comma separation for all except the first member
+    output_stream << data[i];
+}
+}
+
+** Type coercions
+						
+AKA implicit (static or dynamic) type conversion
+Occurs when evaluating expressions, passing values to functions, and returning values from functions
+No warning produced by compiler unless has possibility of information loss
+
+Coercion order:
+double <- float <- long int <- int <- short int <- char
+No warnings are provided for type upgrade given in the above order
+``safe’’ coercion 
+
+** Type coercions (examples)
+						
+void myMax(float f1, float f2); // 1Avoid myMax(int i1, int i2); // 1BmyMax(7, 9);
+
+void zipIt(float f1); // 2Avoid zipIt(string s1); // 2BString s = "Trouble";zipIt(s);
+
+void zoom(float f1); // 3Avoid zoom(string s1); // 3Bint x = 14;zoom(x);
+void whoosh(char c1); // 4Avoid whoosh(string s1); // 4Bdouble pi = 3.14159;whoosh(pi);
+
+void crunch(string s1, string s2); // 5Avoid crunch(string s1); // 5Bdouble e = 2.71828;crunch(e);
+
+1: None (1B)               2: None (2B) 
+3: Safe (3A) 
+4: Unsafe and possibly warning (4A)
+5: Error! 
+
+** Type coercions (examples cont’d)
+						
+void mixed(int i1, double d1); // 6Avoid mixed(double d1, int i1); // 6Bint k3 = 3, k4 = 4;mixed(k3, k4);
+
+void mixed(int i1, double d1); // 7Avoid mixed(double d1, int i1); // 7Bdouble r5 = 55.5, r6 = 66.6;mixed(r5, r6);
+
+6: both safe but ambiguous 
+7: both unsafe and ambiguous
+
+** Operator overloading
+						
+Gives more than one meaning to the same operator
+Operands (arguments to operators) are new data types
+thus, overloading the operator 
+Uses keyword operator
+
+	// equality operator
+	bool operator== (const House &h) const;
+
+	// assignment operator
+	House &operator= (const House &h);
+
+** Operator overloading (example)
+						
+class House {
+	string address;
+	string owner;
+	unsigned int cost;
+	bool fireplace;
+    public:
+	// default constructor
+	House();
+
+	// initializing constructor
+	House(const string &initAddress,
+	      const string &initOwner,
+	      unsigned int initCost,
+	      bool initFireplace);
+
+
+	// copy constructor
+	House(const House &original);
+
+	// equality operator
+	bool operator== (const House &h) const;
+
+	// assignment operator
+	House &operator= (const House &h);
+
+	House &operator+= (const House &h);
+
+	House operator+ (const House &h);
+
+	void print() const;
+};
+
+** Implementing ==
+						
+Let’s say we want to implement a function called isEquals
+
+bool House::isEquals(const House &h) const {
+if (address != h.address) return false;
+if (owner != h.owner) return false;
+if (cost != h.cost) return false;
+if (fireplace != h.fireplace) return false;
+return true;
+}
+
+We could have implemented it as follows
+
+bool House::operator==(const House &h) const {
+…
+}
+
+** The == operator
+						
+Can now use it as an operator 
+
+House h1, h2;
+…  // initialize fields of h1 and h2
+
+if (h1 == h2) {
+// do something useful
+}
+
+
+** Implementing assignment operator (=) 
+						
+void House::operator=(const House &h) {
+address = h.address;
+owner = h.owner;
+cost = h.cost;
+fireplace = h.fireplace;
+}
+
+All good, works for a = b 
+But does not allow assignment statements to be chained 
+e.g. a = b = c = d won’t work
+for this, need to mutable House type object (i.e. reference)
+
+
+** Implementing assignment operator (=) 
+						
+House &House::operator=(const House &h) { // & is used for efficiency only!
+if (this != &h) {
+address = h.address;
+owner = h.owner;
+cost = h.cost;
+fireplace = h.fireplace;
+}
+return *this;
+}
+
+this is a pointer to the reference object
+*this are the ``contents’’ of the reference object
+
+
+** Assignment operator (=) 
+						
+House h1, h2, h3;
+h1.setCost(500); h2.setcost(700); h3.setCost(900);
+
+h1 = h2 = h3;  // same as h1.operator=(h2.operator=(h3));
+
+h1.printCost(); // prints 900
+
+
+
+** Implementing addition operator (+) 
+						
+House House::operator+ (const House &h) {
+
+House newHouse;
+newHouse = *this;
+
+newHouse.address += " + " + h.address;
+newHouse.owner += " + " + h.owner;
+newHouse.cost += h.cost;
+newHouse.fireplace = newHouse.fireplace || h.fireplace;
+
+return newHouse;
+}
+
+
+** Implementing increment operator (+=) 
+						
+House &House::operator+= (const House &h) {
+
+address += " + " + h.address;
+owner += " + " + h.owner;
+cost += h.cost;
+fireplace = fireplace || h.fireplace;
+
+return *this;
+
+}
+
+
+** Reimplementing addition operator (+) 
+						
+House House::operator+ (const House &h) {
+
+House newHouse;
+newHouse  = *this;
+
+newHouse += h;
+
+return newHouse;
+
+}
+
+** Overloading non-member operations
+						
+What if you did not write the House class? 
+can’t implement addition (+) as a member function of House!
+no problem, implement it as a non-member function with an additional House argument (standing for the reference object)
+
+House operator+ (const House &h1, const House &h2) {
+House newHouse;
+newHouse  = h1;
+newHouse += h2;
+return newHouse;
+}
+
+Similarly for the case when the first operand is a primitive type
+
+** Overloading non-member operations
+						
+Want to add a stream insertion operator (operator<<) to the House class
+myStream << h1;
+
+void operator<< (ostream &out, const House &h) {
+out << “HOUSE" << endl;
+out << "Location: "  << address   << endl;
+out << "Owner: "     << owner     << endl;
+out << "Cost: "      << cost      << endl;
+out << "Fireplace: " << fireplace << endl;
+out << endl;
+}
+
+One issue: fields (e.g. address) are private! 
+
+** Overloading non-member operations
+						
+class House {
+void print(ostream &out) const;
+…
+};
+
+void House::print(ostream &out) const{
+	out << "HOUSE"<< endl;
+	out << "Location: “<< address<< endl;
+	out << "Owner: “<< owner<< endl;
+	out << "Cost: “<< cost<< endl;
+	out << "Fireplace: "<< fireplace<< endl;
+	out << endl;
+}
+
+void House::print() const{
+	print(cout);
+}
+
+void operator<< (ostream &out, const House &h) {
+	h.print(out);
+}
+
+With this, cout << h2; works as intended
+
+** Overloading non-member operations
+						
+But cout << h2 << endl; will give compile time error!
+
+Use the following implementation instead:
+
+ostream &operator<< (ostream &out, const House &h) {
+h.print(out);
+return out;
+}
+
+
+* Object-oriented design
+
+
+
+Composition, inheritance, polymorphism, dynamic binding, hidden functions & operators  
+
+** Terminology
+						
+Top-down design: process of repeatedly decomposing a complicated problem into smaller, more manageable subproblems that can be solved by functions that can be implemented independently of the rest of the project
+Object-oriented design (OOD): software design technique where the problem domain is decomposed into a set of objects that together solve a software problem
+
+Classes (allows us to define ADT)
+Objects (=class instances)
+Fields (=class member fields/variables)
+Methods (=class member functions)
+Message Passing (=invocation of member functions through an object)
+
+** Composition 
+						
+Idea:
+say we want to define a class P1
+conceptually divide P1 into constituent parts
+in the definition of the P1 class, declare instances of its constituents (which are other classes, say C1, C2, and C3)
+C++ compiler will call all of the constituent classes C1, C2, and C3’s default constructors before it calls P1’s constructor 
+C++ syntax allows you to call other constructors of C1, C2, and C3 if needed, and pass the appropriate arguments in their parameters
+use the methods of C1, C2, and C3 using the declared objects while implementing the methods of P1
+
+** Composition (example)
+						
+class Bicycle {
+private:
+	Wheel front_wheel;
+	Wheel back_wheel;
+	Seat seat;
+public:
+	Bicycle ();
+	Bicycle (string wheel_manufacturer1,      
+                string wheel_product1,
+                int diameter_in_inches1, 
+                int weight_in_grams1, 
+          	    int spokeCount1,
+		          string wheel_manufacturer2, 
+                string wheel_product2,
+		 int diameter_in_inches2, 
+       int weight_in_grams2, 
+		 int spokeCount2,
+		 string seat_manufacturer1, 
+       string seat_product1,
+		 string seat_colour1);
+	Bicycle (const Bicycle& original);
+	~Bicycle ();
+	Bicycle &operator= (const Bicycle &original);
+	void read  (istream &in);
+	void print (ostream &out);
+};
+
+** Composition (example)
+						
+Bicycle::Bicycle()
+	: front_wheel(), back_wheel(),seat()
+{
+// body of default constructor
+}
+
+
+What happens when you declare a Bicycle object?
+Bicycle b;
+
+** Composition (example)
+						
+Bicycle::Bicycle (string wheel_manufacturer1, string wheel_product1, int diameter_in_inches1, 
+int weight_in_grams1, int spokeCount1, string wheel_manufacturer2, 
+string wheel_product2, int diameter_in_inches2, int weight_in_grams2, int spokeCount2,
+string seat_manufacturer1, string seat_product1, string seat_colour1)
+	: front_wheel (wheel_manufacturer1, wheel_product1,
+		 diameter_in_inches1, weight_in_grams1, spokeCount1),
+	  back_wheel (wheel_manufacturer2, wheel_product2,
+		 diameter_in_inches2, weight_in_grams2, spokeCount2),
+	  seat (seat_manufacturer1, seat_product1, seat_colour1)
+{
+// body of initializing constructor
+}
+
+** Composition (example)
+						
+class Seat {
+private:
+	string manufacturer;
+	string product;
+	string colour;
+public:
+	Seat ();
+	Seat (string manufacturer1, string product1, string colour1);
+	Seat (const Seat &original);
+	~Seat ();
+	Seat &operator= (const Seat &original);
+	void read  (istream &in);
+	void print (ostream &out);
+};
+Seat::Seat (string manufacturer1, 
+                   string product1, string colour1)
+	: manufacturer(manufacturer1), // copy cons
+	  product(product1), //copy constructor 
+	  colour(colour1) //copy constructor
+{
+	// body of initializing constructor
+}
+
+Seat::Seat (const Seat &original)
+	: manufacturer(original.manufacturer),
+	  product(original.product), 
+	  colour(original.colour) {
+// body of initializing constructor
+}
+
+
+** Composition (example)
+						
+Bicycle::Bicycle (const Bicycle &original)
+	: front_wheel (original.front_wheel),
+	  back_wheel (original.back_wheel),
+	  seat (original.seat)
+{
+// body of copy constructor
+}
+
+** Composition (another example)
+						
+typedef int ItemType;
+
+class GuardedArray {
+public:
+static const unsigned int LENGTH = 500;
+GuardedArray();
+GuardedArray(ItemType x);
+ItemType retrieve(unsigned int i) const;
+void store(unsigned int i, ItemType x);
+private:
+ItemType data_array[LENGTH];
+};
+
+** Composition (another example)
+						
+GuardedArray::GuardedArray() {
+for (unsigned int i = 0; i < LENGTH; i++)
+data_array[i] = 0;
+}
+
+GuardedArray::GuardedArray(ItemType x) {
+for (unsigned int i = 0; i < LENGTH; i++)
+data_array[i] = x;
+}
+
+ItemType GuardedArray::retrieve(unsigned int i) const {
+assert(i < LENGTH);
+return data_array[i];
+}
+
+void GuardedArray::store(unsigned int i, ItemType x) {
+assert(i < LENGTH);
+data_array[i] = x;
+}
+
+
+** Composition (another example)
+						
+class ManagedArray {
+
+public:
+static const unsigned int MAX_LENGTH = GuardedArray::LENGTH;
+
+ManagedArray();
+ManagedArray(unsigned int n);
+ManagedArray(unsigned int n, ItemType x);
+
+unsigned int length() const;
+ItemType retrieve(unsigned int i) const;
+void store(unsigned int i, ItemType x);
+void insert(unsigned int i, ItemType x);
+void remove(unsigned int i);
+
+private:
+unsigned int count;
+GuardedArray guaurded_array;
+
+};
+
+
+** Composition (another example)
+						
+ManagedArray::ManagedArray(unsigned int n, ItemType x) : guaurded_array(x) {
+assert(n <= MAX_LENGTH);
+count = n;
+}
+
+ItemType ManagedArray::retrieve(unsigned int i) const {
+assert(i < length());
+return guaurded_array.retrieve(i);
+}
+
+
+** Composition (another example)
+						
+void ManagedArray::insert(unsigned int i, ItemType x) {
+assert(i <= length());
+assert(count < MAX_LENGTH);
+
+for (unsigned int j = count; j > i; j—)
+guaurded_array.store(j, guaurded_array.retrieve(j-1));
+guaurded_array.store(i, x);
+count++;
+}
+
+
+** Composition (yet another example)
+						
+Can in turn define Multiset using ManagedArray (see notes for full details)
+
+Another approach (inheritance):
+
+start with base class (parent/super-class) that gives a vague idea of the objects that we are after
+
+define other more specialized derived classes (child/sub-classes) that ``inherits’’ everything in the parent class
+
+can create a hierarchy of classes linked by the ancestor-descendant relation  
+
+** Inheritance
+						
+Child class inherits everything in the parent class 
+when an object of the child class is instantiated, 
+all fields of the parent class will be allocated
+
+But can only directly access some fields and methods
+those that are public (and protected)
+
+Child class can re-implement some functions of the parent!
+this is called function overriding
+
+Add to this mix the hierarchy of classes
+e.g. C extends P, GC extends C 
+then all publicly inherited public fields of C will be members of GC
+
+** Inheritance (public vs. private)
+						
+class P {
+public:
+void f1();
+int f2() const;
+int f3() const;
+private:
+int v1
+int v2;
+};
+
+
+
+
+class C : public P {
+public:
+void f4();
+double f5() const;
+private:
+double v3;
+};
+
+what happens when C x is declared?
+can we access f1 from inside C or its clients? 
+can we access v1 from inside C or its clients?
+how can we access v1 from inside C or its clients?
+what if we wrote : private p?
+
+** Inheritance (hierarchy, overriding)
+						
+Can specify a hierarchy:
+class C : public P { ... };
+class GC : public C { ... };
+
+Can override an inherited function:
+class P {
+public:
+void f1();
+};
+
+void P::f1(){
+// definition 1
+}
+class C : public P {
+public: 
+void f1();
+void f2();
+};
+void C::f1(){
+// definition 2
+}
+void C::f2(){
+f1(); // which f1?
+}
+// how to call P’s f1() in C?
+
+** Inheritance (constructors)
+						
+Constructor of the base class is implicitly invoked
+Can specify constructors as well
+class C : ... { ... };
+class D : public C {
+public:
+D(...);
+...
+private:
+D1 f1;
+D2 f2;
+...
+};
+D::D(...) : C(...), f1(...), f2(...), ... 
+{
+...
+}
+
+To invoke a constructor of D:
+a constructor C is invoked (which may initiate the invocation of other constructors)
+a constructor of each member field fi is invoked (which may initiate the invocation of other constructors)
+the body of the constructor of D is invoked
+
+** Inheritance (protected)
+						
+Supports more flexibility
+
+class P {
+public:
+void f1();
+protected:
+void f2();
+private:
+int x;
+};
+
+
+
+class C : public P {
+public:
+void f3();
+private:
+int y;
+};
+
+class GC : public C {
+public:
+void f4();
+private:
+int z;
+};
+
+
+
+** Inheritance type
+						
+All permutations possible
+
+class P {
+public:
+void f1();
+protected:
+void f2();
+private:
+int x;
+};
+
+
+
+class C1 : public P {
+…
+};
+
+class C2 : protected P {
+…
+};
+
+class C3 : private P {
+…
+};
+
+// stronger qualifier ``wins’’ !
+
+
+** Inheritance type (cont’d)
+						
+
+** Inheritance type (cont’d)
+						
+class P {
+public:
+void f1();
+private:
+int x;
+};
+
+class C : protected P {
+public:
+void f3();
+};
+
+
+void C::f3(){
+f1();        // all good
+x = 7;     // error, not accessible!
+}
+
+int main(){
+P p1;
+C c1;
+p1.f1();     // works
+c1.f1();     // error, not accessible! 
+…
+}
+
+** Example: the Building (base) class
+						
+class Building {
+
+protected:
+// default constructor
+Building();
+
+// assignment constructor
+Building(const string& address1,
+           const string& owner1,
+           unsigned int cost1,
+           unsigned int area1);
+
+
+protected:
+// member variables
+string address;
+string owner;
+unsigned int cost;
+unsigned int area;
+
+};
+
+// Assumes: won’t ever create a 
+// Building object!
+
+** Example: the House (child) class
+						
+class House : public Building {
+
+public:
+// constructors
+House();
+House(const string& address1,
+        const string& owner1,
+        unsigned int cost1,
+        unsigned int area1,
+        unsigned int roomCount1,
+        bool fireplace1,
+        unsigned int applianceCount1);
+
+// print data
+void print() const;
+
+private:
+// additional member variables
+unsigned int roomCount;
+bool fireplace;
+unsigned int applianceCount;
+
+};
+
+
+** Example: implementation of House
+						
+House::House(const string& address1,
+             const string& owner1,
+             unsigned int cost1,
+             unsigned int area1,
+             unsigned int roomCount1,
+             bool fireplace1,
+             unsigned int applianceCount1)
+      : Building(address1, owner1,
+ cost1, area1) {
+  roomCount = roomCount1;
+  fireplace = fireplace1;
+  applianceCount = applianceCount1;
+}
+void House:: print() const {
+cout << "HOUSE"<< endl;
+cout << "Location: "<< address; 
+cout << endl;
+…
+cout << "Bedrooms: "<< roomCount; 
+cout << endl;
+…
+}
+
+
+** Example: the Barn (base) class
+						
+class Barn : public Building {
+public:
+// constructors
+Barn();
+
+Barn(const string& address1,
+       const string& owner1,
+       unsigned int cost1,
+       unsigned int area1,
+       float hayCapacity1);
+
+// print
+void print() const;
+private:
+// variables
+float hayCapacity;
+
+};
+
+
+** Example: client code
+						
+Barn b1("123 Farmyard Lane", "Jed", 135000, 1000, 24.3);
+b1.print();
+
+House h1("321 Walnut Ave", "Clem", 182000, 2400, 3, true, 6);
+h1.print();
+
+
+** Issues with inheritance
+						
+Implementation inheritance = examples that we have seen earlier
+allows code reuse
+
+Reuse can be done better using composition 
+easier to understand code
+encapsulation boundary are better protected 
+less interdependencies
+
+For code reuse, we will almost always use composition rather than implementation inheritance
+
+Another more powerful use of inheritance = interface inheritance
+
+** Interface inheritance
+						
+Rather than reusing implementation, reuse interface!
+program to an interface, not an implementation
+
+Say we want to develop 3 similar functions; how to rather implement one? 
+via a common interface 
+
+Key idea:
+introduce abstract interface (the base class)
+write the function in terms of this interface
+develop 3 derived classes that extend this base class and implements (virtual) functions of the base class
+c++ compiler will do the rest via dynamic binding
+
+** Example: data sources
+						
+int sumArray(const int A[], unsigned int n) {
+int sum = 0;
+unsigned int i = 0;
+while (i < n) {
+sum += A[i];
+i++;
+}
+return sum;
+}
+
+
+** Example: data sources (cont’d)
+						
+int sumManagedArray(const ManagedArray &A) {
+int sum = 0;
+unsigned i = 0;
+while (i < A.length()) {
+sum += A.retrieve(i);
+i++;
+}
+return sum;
+}
+
+
+** Example: data sources (cont’d)
+						
+int sumStandardInputStream() {
+int sum = 0;
+int next;
+cin >> next;
+while (cin) {
+sum += next;
+cin >> next;
+}
+return sum;
+}
+
+
+** Example: data sources (cont’d)
+						
+int sumDataSource(a data source) {
+int sum = 0;
+while (data source has not been exhausted) {
+sum += next entry in the data source;
+exclude the retrieved entry from future consideration;
+}
+return sum;
+}
+
+
+** Example: data sources (cont’d)
+						
+class DataSource {
+
+public:
+
+// exhausted
+virtual bool exhausted() const = 0; // pure virtual function
+
+// next
+virtual int next() = 0; // pure virtual function
+
+};
+
+Abstract class can’t be instantiated (but can be referenced)
+
+** Example: data sources (cont’d)
+						
+int sumDataSource(DataSource &ds) {
+int sum = 0;
+while (! ds.exhausted()) {
+sum += ds.next();
+}
+return sum;
+}
+
+What’s new: can be applied to instances of any derived class of DataSource
+Called a polymorphic function
+
+** Example: data sources (cont’d)
+						
+const unsigned ARRAY_DATA_SOURCE_CAPACITY = 1000;
+
+class ArrayDataSource : public DataSource {
+public:
+ArrayDataSource(const int A[], unsigned int n);
+virtual bool exhausted() const;
+virtual int next();
+private:
+int data[ARRAY_DATA_SOURCE_CAPACITY];
+unsigned length;
+unsigned i;
+};
+
+
+** Example: data sources (cont’d)
+						
+ArrayDataSource::ArrayDataSource(const int A[], unsigned int n) {
+assert(n < ARRAY_DATA_SOURCE_CAPACITY);
+for (unsigned int k = 0; k < n; k++)
+data[k] = A[k];
+length = n;
+i = 0;
+}
+bool ArrayDataSource::exhausted() const {
+return i == length;
+}
+int ArrayDataSource::next() {
+assert(! exhausted());
+i++;
+return data[i - 1];
+}
+
+
+** Example: data sources (cont’d)
+						
+// set up and initialize managed array data source
+int A[ ] = { 1, 3, 9, -2 };
+ArrayDataSource ads(A, 4);
+
+// call sumDataSouce to add up entries
+int sum = sumDataSource(ads);
+
+Which version of exhausted() and next() to use in sumDataSource(ads)?
+determined at runtime 
+depends on the exact type of object ads is bound to
+
+** Example: data sources (cont’d)
+						
+class ManagedArrayDataSource : public DataSource {
+public:
+ManagedArrayDataSource(const ManagedArray &A);
+virtual bool exhausted() const;
+virtual int next();
+private:
+ManagedArray array;
+unsigned int i;
+};
+
+
+** Example: data sources (cont’d)
+						
+ManagedArrayDataSource::ManagedArrayDataSource(const ManagedArray& A)
+  : array(A.length()) {
+for (unsigned int k = 0; k < A.length(); k++)
+array.store(k, A.retrieve(k));
+i = 0;
+}
+bool ManagedArrayDataSource::exhausted() const {
+return i == array.length();
+}
+int ManagedArrayDataSource::next() {
+assert(! exhausted());
+i++; 
+return array.retrieve(i - 1);
+}
+
+** Example: data sources (cont’d)
+						
+// set up and initialize managed array data source
+int A[] = { 1, 3, 9, -2 };
+ManagedArray ma;
+for (unsigned int i = 0; i < 4; i++)
+ma.store(i, A[i]);
+ManagedArrayDataSource mads(ma);
+
+// call sumDataSouce to add up entries
+int sum = sumDataSource(mads);
+
+
+** Static vs. dynamic binding
+						
+class C {
+public:
+void f() { /* implementation 1 */ }
+...
+};
+
+class D : public C {
+public:
+void f() { /* implementation 2 */ }
+...
+};
+
+
+
+
+void g(C &c) {
+c.f( );
+}
+
+int main() {
+D d;
+d.f();  // static binding: impl.2 invoked 
+g(d);  // static binding: impl.1 invoked 
+return 0;
+}
+
+
+** Static vs. dynamic binding (cont’d)
+						
+class C {
+public:
+virtual void f() { /* implementation 1 */ }
+...
+};
+
+class D : public C {
+public:
+// implictly virtual
+void f() { /* implementation 2 */ }
+...
+};
+
+
+
+void g(C &c) {
+c.f( );
+}
+
+int main() {
+D d;
+d.f();  // static binding: impl.2 invoked 
+g(d);  // dynamic binding: impl.2 
+         // invoked 
+return 0;
+}
+
+
+** Static vs. dynamic binding (cont’d)
+						
+class E : public C {
+public:
+// This does not override f() in class C 
+// so it is not implicitly virtual
+void f(int i) { /* implementation 3 */ }
+...
+};
+
+
+
+
+
+
+
+
+int main() {
+E e;
+e.f();  // static binding: impl.1 invoked
+e.f(4); // static binding: impl.3 invoked
+return 0;
+}
+
+
+** Hidden functions and operators
+						
+A function or operator in the base class with the same name and parameters as a function in the derived class
+can still access a hidden function using the base-class type qualifier
+void Derived1::func() {
+Base1::func(); // func() is defined in both the base and the child class Derived1
+// …
+}
+
+And similarly for operators
+Derived1 &Derived1::operator=(const Derived1 &original) {
+if (this != &original) {
+Base1::operator=(original); // = is defined in both the base and the child class
+field1 = original.field1;
+}
+	return *this;
+}
+
+
+
+* Templates
+
+
+
+Parametric polymorphism: template functions, template classes
+
+** Motivation
+						
+Want to define both uniformly
+
+int MaxInt(int a, int b) {
+if (b < a)
+return a;
+else
+return b;
+}
+
+
+
+
+
+
+double MaxDouble(double a, double b) {  
+if (b < a)
+return a;
+else
+return b;
+}
+
+
+
+** Motivation
+						
+Can define a generic function with generic parameters
+
+SomeType MaxSomeType(SomeType a, SomeType b) {
+if (b < a)
+return a;
+else
+return b;
+}
+
+
+** Motivation
+						
+Keywords: template, typename
+
+template <typename T> // can also use the keyword class rather than typename
+T Max(T a, T b) {
+if (b < a)
+return a;
+else
+return b;
+}
+
+Max<int>(3, 4); // or in most cases, simply: Max(3, 4);
+ 
+
+** Program organization
+						
+Where should we place function templates?
+inclusion compilation model vs. separate compilation model
+
+We will use inclusion compilation model (as it is supported by all compilers)
+
+Idea: 
+place template in a header file 
+the compiler will only generate code on instantiation 
+avoids ``code bloat’’ suffered by early implementations
+
+** Restrictions on template abstraction
+						
+Max(string("abc"), string("def")); // works as string class overloads <
+
+Max("abc", "def"); // WRONG, as < is not defined for C strings
+
+Similarly, won’t work for other types that do not define <
+
+struct Book {
+string author;
+string title;
+};
+
+
+** Restrictions on template abstraction
+						
+Book b1, b2;
+b1.author = "Me";
+b1.title = "BestSeller";
+b2.author="You";
+b2.title= “Whatever!";
+
+Max(b1,b2); // WRONG!
+
+
+
+
+
+Unless we also have the following:
+
+bool operator<(const Book &b1, const Book &b2) { 
+return (b1.author < b2.author) ||
+   ((b1.author==b2.author) && (b1.title <b2.title));
+}
+
+Only then:
+
+Max(b1,b2); // Works!
+
+
+** Specifying template abstraction
+						
+// Max.h
+//
+#pragma once
+//
+// Max<T>(a, b)
+// Purpose: Find the maximum of two given arguments.
+// Template Parameter(s):
+//  <1> T: A type for which the following operations are defined:
+//    -> copy constructor [usually automatically created by C++ compilers]
+//    -> binary less than comparison (<)
+// Parameter(s):
+//  <1> a: An instances of type T
+//  <2> b: An instances of type T
+// Precondition(s): N/A
+// Returns: A T-type value equivalent to the maximum of a and b.
+// Side Effect: N/A
+
+** Specifying template abstraction
+						
+Earlier, could have dropped the copy constructor requirement by passing references instead:
+
+template <typename T>
+T &Max(T &a, T &b) {
+if (b < a)
+return a;
+else
+return b;
+}
+
+Better implementation as doesn’t waste memory by creating temporary objects
+
+** Another example
+						
+typedef int ItemType;
+
+void Swap(ItemType &a, ItemType &b){
+ItemType tmp = a;
+a = b;
+b = tmp;
+}
+unsigned int FindMin(const ItemType A[], unsigned int begin, unsigned int end){
+…
+}
+void Sort(ItemType A[], unsigned int n){
+  for (unsigned int i = 0; i < n; i++){
+    unsigned int m = FindMin(A, i, n - 1);
+    Swap(A[i], A[m]);
+  }
+}
+
+** Another example
+						
+template <typename ItemType>
+void Swap(ItemType &a, ItemType &b){
+  ItemType tmp = a;        // copy constructor
+  a = b;                           // assignment operator
+  b = tmp;		  
+}
+template <typename ItemType>
+unsigned int FindMin(const ItemType A[], unsigned int begin, unsigned int end){
+  assert(begin <= end);
+  unsigned int m = begin;
+  for (unsigned int i = begin + 1; i <= end; i++){
+  if (A[i] < A[m])    // less than comparison operator
+    m = i;
+  }
+  return m;
+}
+
+** Another example
+						
+template <typename ItemType>
+void Sort(ItemType A[], unsigned int n){
+for (unsigned int i = 0; i < n; i++){
+unsigned int m = FindMin(A, i, n - 1);
+Swap(A[i], A[m]);
+}
+}
+Thus the interface should include the following requirements:
+// Template Parameter(s):
+//  <1> ItemType: A type for which the following operations are defined:
+//    -> copy constructor
+//    -> assignment operator
+//    -> binary less than comparison (<)
+
+** Misc notes
+						
+Can have multiple different type names in template arguments (separated by a comma), e.g.:  
+
+template <typename T, typename K, typename O>
+T func1(K a, O b) {
+T x, y;
+…
+if (func2(a,b)==x)
+return x;
+else
+return y;
+}
+
+** Misc notes
+						
+Could have generalized our selection sort template to sort either in ascending or in descending order by replacing < with a function
+
+template <typename T, bool compare(const T &x, const T &y)>
+unsigned int Find(const T A[], unsigned int begin, unsigned int end) {
+assert(begin <= end);
+unsigned int m = begin;
+for (unsigned int i = begin + 1; i <= end; i++){
+if (compare(A[i], A[m]))
+m = i;
+}
+return m;
+}
+
+** Misc notes
+						
+New template for sort
+
+template <typename T, bool compare(const T &x, const T &y)>
+void Sort(T A[], unsigned int n){
+for (unsigned int i = 0; i < n; i++){
+unsigned int m = Find<T, compare>(A, i, n - 1);
+Swap(A[i], A[m]);
+}
+}
+
+
+** Misc notes
+						
+bool less_than(const int &x, const int &y){
+return x < y;
+}
+...
+Sort<int, less_than>(...);
+
+bool greater_than(const int &x, const int &y){
+  return x > y;
+}
+...
+Sort<int, greater_than>(...);
+
+** Template classes
+						
+template<typename T>
+class Comparator{
+T x;
+T y;
+public:
+Comparator(T ax, T ay);
+bool isEquals();
+bool isGreaterThan();
+bool isLessThan();
+};
+template<typename T>
+Comparator<T>::Comparator(T ax, T ay){
+x = ax;
+y = ay;
+}
+template<typename T>
+bool Comparator<T>::isEquals(){
+  return x == y;
+}
+
+template<typename T>
+bool Comparator<T>::isGreaterThan(){
+  return x > y;
+}
+
+template<typename T>
+bool Comparator<T>::isLessThan(){
+  return x < y;
+}
+
+** Template classes
+						
+#include <iostream>
+#include “headerFile.h"
+
+int main() {
+Comparator<int> c1(7,3);
+std::cout << c1.isLessThan() <<"\n";
+
+Comparator<double> c2(11.9,5.0);
+std::cout << c2.isLessThan() <<"\n";
+}
+
+* Pointers
+
+
+
+
+** Motivation
+						
+Reference = alias for another variable
+
+Pointer = address of another variable stored elsewhere in memory 
+
+Like references, but much more powerful
+can be initialized to anything!
+can change over time (unlike references)
+can do pointer arithmetic (pointer arguments are evaluated when passed to functions during function invocation; see first lecture slides!)
+
+Examples of initialization, the & operator, and dereferencing (the * operator)
+x vs. &x vs. *x
+
+
+** Motivation
+						
+int *x, *y, p, q; // vs. int* x, y, p ,q; 
+
+p = 5; 
+q = 6;
+
+x = &p;
+y = &q;
+
+if(x==y){
+cout << “Yeah, and I am Cinderella!”;
+cout << “\n”; 
+}
+x = y;   
+cout << *x << “\n”;
+
+x = &p;
+cout << *x << “\n”;
+
+*x = *y;
+cout << *x << “\n”;
+cout << *&*x << “\n”; 
+cout << **&x << “\n”;
+
+** Recall value passing semantics
+						
+Call by value (arguments evaluated)
+
+void doubleV(int a){
+  a = a*2;
+}
+
+int main( ){
+  int a = 2;
+  doubleV(a+a);
+  cout << a << endl;
+
+  return 0;
+}
+Call by reference (can only send vars)
+
+void doubleR(int &a){
+  a = a*2;
+}
+
+int main() {
+  int a = 4;
+  doubleR(a);
+  cout << a << endl;
+
+  return 0;
+}
+
+
+** Recall value passing semantics
+						
+Call by address (arguments evaluated)
+
+void doubleP(int *a){
+  *a = (*a)*2;
+}
+
+int main( ){
+  int a = 4;
+  doubleP(&a);
+  cout << a << endl;
+
+  return 0;
+}
+Call by reference (can only send vars)
+
+void doubleR(int &a){
+  a = a*2;
+}
+
+int main() {
+  int a = 4;
+  doubleR(a);
+  cout << a << endl;
+
+  return 0;
+}
+
+
+** Another example
+						
+Call by address (arguments evaluated)
+
+void swap(int *a, int *b){
+int temp = *a;
+   *a = *b;
+   *b = temp;
+}
+
+int main( ){
+  int a = 4, b = 6;
+  swap(&a, &b);
+  cout << a << endl;
+  return 0;
+}
+Call by reference (can only send vars)
+
+void doubleR(int &a, int &b){
+  int temp = a;
+  a = b;
+  b = temp;
+}
+
+int main() {
+  int a = 4, b = 6;
+  swap(a, b);
+  cout << a << endl;
+  return 0;
+}
+
+** Constant pointers 
+						
+struct BigRecord {
+...
+};
+
+void f(const BigRecord *pRec1){
+…
+BigRecord pRec2;
+…
+*pRec1 = *pRec2; // Wrong!
+pRec1 = pRec2;   // No issues 
+}
+
+int main(){
+BigRecord x;
+...
+f(&x);
+...
+}
+
+// Note: f( ) can’t change x
+// but f( ) can change pRec1!
+
+// vs. BigRecord const *pRec1
+
+** Arrays and pointers
+						
+// Every array variable can be used as 
+// a pointer to the first member of the 
+// array (with certain restrictions)
+
+// Array argument
+
+int sumArray(int A[], unsigned int n){   
+int sum = 0;
+for (int i = 0; i < n; i++){
+sum += A[i];
+}
+return sum;
+}
+// This is why arrays are (by default)
+// passed by references
+
+
+// Array as pointer
+
+int sumArray(int *A, unsigned int n){  
+int sum = 0;
+for (int i = 0; i < n; i++){
+sum += A[i]; // or, *(A+i)
+}
+return sum;
+}
+
+** Arrays and pointers
+						
+int A[5] = {1, 5, 10, 15, 20};
+
+cout << A[0];
+cout << *(A+0);
+cout << *A;
+
+cout << *(A+3);
+cout << *A+3; 
+cout << *(A+3)+3;
+
+
+
+A++; // Wrong!
+
+// But this works!
+int *B = A; // or int *B = &(A[0]);
+B++; // line 11 (see below)
+cout << *B;
+
+// compiler automatically increments 
+// it to the proper location depending 
+// on the type of data B is pointing to, 
+// e.g. multiples of 4 for int/float and 8 
+// for double, etc.
+
+
+** C-strings and pointers
+						
+// computing the length of string #1
+
+unsigned int cstringLength(const char s[]) {
+unsigned int length = 0;
+while (s[length] != '\0')
+length++;
+return length;
+}
+
+
+
+
+
+// computing the length of string #2
+
+unsigned int cstringLength(const char *s) {
+unsigned int length = 0;
+while (*(s + length) != '\0')
+length++;
+return length;
+}
+
+
+** C-strings and pointers (cont’d)
+						
+// computing the length of string #3
+// how it is actually implemented!
+
+unsigned int cstringLength(const char *s) {
+const char *p = s;
+while (*p != '\0')
+p++;     
+return p - s; // pointer difference
+}
+
+In general, given two pointers p and q of the same type, (p - q) is the integer that can be added to p to obtain q.
+
+** C-strings and pointers (cont’d)
+						
+// string copy using c-string
+
+void cstringCopy(char des[], const char src[]){
+for (unsigned int int i = 0; src[i] != '\0'; i++)
+des[i] = src[i];
+des[i] = '\0';
+}
+
+
+** C-strings and pointers (cont’d)
+						
+// string concatenation
+void cstringConcat(char des[], const char src[]){
+unsigned int i;
+// find the end of the destination c-string des
+for (i = 0; des[i] != '\0'; i++)
+; // do nothing
+// append the source c-string src to the end of des
+for (unsigned int j = 0; src[j] != '\0'; j++){
+des[i] = src[j];
+i++;
+}
+// add a c-string terminator to the end of des
+des[i] = '\0';
+}
+
+
+** Programming using pointers
+						
+// Book record
+struct Book {
+string title;
+string author;
+string call_number;
+};
+
+// Global Book collection
+Book collection[] = 
+{ 
+{ "Computer Security: Art and Science", "Matt Bishop", "QA 76.9.A25 B56 2002" },
+	{ "Applied Cryptography", "Bruce Schneier","QA 76.9.A25 S35 1996"},
+	{ "Practical Software Maintenance", "Thomas M. Pigoski","QA 76.76.S64 P54 1996"}
+};
+
+** Programming using pointers
+						
+// function for printing Books
+void printBook(const Book &book){
+cout << "title: " << book.title << endl;
+cout << "author: " << book.author << endl;
+cout << "call number: " << book.call_number << endl;
+}
+
+// function for finding a Book with some title
+unsigned int findBook(const Book collection[], unsigned int n, const string &title){
+for (unsigned int i = 0; i < n; i++){
+if (collection[i].title == title)
+return i;
+}
+return n;
+}
+
+** Programming using pointers
+						
+const unsigned int COLLECTION_SIZE = sizeof(collection) / sizeof(Book);
+
+int main(){
+unsigned int i = findBook(collection, COLLECTION_SIZE, "Applied Cryptography");
+if (i == COLLECTION_SIZE)
+cout << "Book not found" << endl;
+else
+printBook(collection[i]);
+return 0;
+}
+
+
+** Programming using pointers
+						
+// function for printing Books
+void printBook(const Book &book){
+cout << "title: " << book.title << endl;
+cout << "author: " << book.author << endl;
+cout << "call number: " << book.call_number << endl;
+}
+
+void printBook(const Book *book){
+cout << "title: " << book->title << endl;
+cout << "author: " << book->author << endl;
+cout << "call number: " << book->call_number << endl;
+}
+
+** Programming using pointers
+						
+// function for finding a Book with some title
+unsigned int findBook(const Book collection[], unsigned int n, const string &title){
+for (unsigned int i = 0; i < n; i++){
+if (collection[i].title == title)
+return i;
+}
+return n;
+}
+const Book *findBook(const Book collection[], unsigned int n, const string &title){
+for (const Book *p = collection; p < collection + n; p++){
+if (p->title == title)
+      return p;
+}
+return nullptr;
+}
+
+** Programming using pointers
+						
+const unsigned int COLLECTION_SIZE = sizeof(collection) / sizeof(Book);
+
+int main(){
+const Book *b = findBook(collection, COLLECTION_SIZE, "Applied Cryptography");
+if (b == nullptr)
+cout << "Book not found" << endl;
+else
+printBook(b);
+return 0;
+}
+
+
+* Dynamic memory management
+using pointers
+
+
+
+
+** Motivation
+						
+So far used pointers for allocating space during compile-time only
+error-prone and might be difficult to understand 
+could have avoided by using arrays and references 
+
+But what if we don’t know the size of required memory at compile-time
+we can allocate memory of size MAX (a constant)
+
+Problems with this model:
+might run out of space (despite having a lot of unused memory)
+can be under-utilized (e.g. if we only use a small part of MAX)
+
+Solution: allocate memory on demand at run-time!
+
+
+
+
+** Motivation
+						
+Allocates memory in ``heap’’ (in contrast to .text, .data, and stack)
+
+Uses keyword new to allocate memory
+int *px = new int;
+*px = 777;
+cout << *px;
+ 
+Must free-up space when done, using keyword delete (otherwise memory leak can happen!); also clean up any dangling pointers using nullptr
+…
+delete px;
+px = nullptr;
+
+** Simple example
+						
+struct Book {
+string title;
+string author;
+string call_number;
+};
+
+void printBook(const Book *pBook){
+cout << "title: " << pBook->title << endl;
+cout << "author: " << pBook->author << endl;
+cout << "call number: " << pBook->call_number;
+cout << endl;
+}
+
+
+int main(){
+// allocate a Book from heap
+Book *pb = new Book; 
+
+pb->title = "Security";
+pb->author = "Matt Bishop";
+pb->call_number = “QA.420”;
+
+printBook(pb);
+
+delete pb; // explicit deallocation           
+
+return 0;
+}
+
+
+** Pictorial representation
+						
+Book *p;
+p = new Book;
+p -> title = "Emma";
+
+
+** Array of pointers
+						
+Book *pb[10];
+
+
+
+
+
+
+
+
+
+
+
+for (int i = 0; i < 10; I++){
+pb[i] = new Book;
+pb[i] -> title = "Emma";
+}
+
+
+** Array of pointers
+						
+for (int i = 0; i < 10; i++)
+delete pb[i];
+
+
+
+
+
+
+
+
+
+
+Dangling pointers!
+assign nullptr to indicate this
+
+for (int i = 0; i < 10; i++)
+pb[i] = nullptr;
+
+
+
+** Pointer to dynamic array
+						
+Book *parray = new Book[10];
+
+
+
+
+
+
+
+
+
+
+for (int i = 0; i < 10; i++)
+parray[i].title = “Emma";
+
+// could have also used:
+
+// (parray+i)->title = "Emma";
+
+// (*(parray+i)).title = "Emma";
+
+
+** Pointer to dynamic array
+						
+Book *parray = new Book[10];
+
+for (int i = 0; i < 10; i++)
+parray[i].title = "Emma";
+
+…
+
+delete [ ] parray;
+
+parray = nullptr;
+
+
+
+** Pointer to array of pointers (double pointer)
+						
+Book **pparray = new Book * [10];
+
+
+
+
+
+
+
+
+
+
+
+for (int i = 0; i < 10; i++){
+parray[i] = new Book;
+parray[i] -> title = "Emma";
+}
+
+
+** Pointer to array of pointers (double pointer)
+						
+Book **pparray = new Book * [10];
+
+for (int i = 0; i < 10; i++){
+pparray[i] = new Book;
+pparray[i] -> title = "Emma";
+}
+
+Deallocation must be done in the reverse order of allocation
+
+
+
+for (int i = 0; i < 10; i++){
+delete pparray[i];
+// following is redundant, since we 
+// are about to delete parray
+pparray[i] = nullptr; 
+}
+delete [] pparray;
+pparray = nullptr;
+
+
+
+** Collection data structures with maximum capacity
+						
+const int CAPACITY = 1000;
+
+int main(){
+int A[CAPACITY];
+int length;
+
+cin >> length;
+
+for (int i = 0; i < length; i++)
+cin >> A[i];
+
+
+for (int i = length - 1; i >= 0; i--)
+cout << A[i] << endl;
+
+return 0;
+}
+
+
+** Collection data structures w/o maximum capacity
+						
+int main(){
+int length;
+int *A;
+
+// Read length of sequence
+  cin >> length;
+
+// Allocate enough memory to hold 
+// sequence
+A = new int[length];
+
+
+for (int i = 0; i < length; i++)
+cin >> A[i];
+  
+// Write sequence in rev. order
+for (int i = length - 1; i >= 0; i--)
+cout << A[i] << endl;
+
+// Deallocate memory
+delete [] A;
+
+return 0;
+}
+
+
+** Collection data structures that dynamically expand/shrink
+						
+Initialize the array with some arbitrary capacity
+
+Insert integers into the array as usual
+
+When the array is filled up, expand the capacity of the array as follows:
+allocate a bigger array
+copy the contents of the old array to the new one
+deallocate the old array
+use the new array to store incoming integers until it is filled up again
+
+Deallocate the array when it is no longer needed
+
+** Collection data structures that dynamically expand/shrink
+						
+int main(){
+// Initialize encapsulated array
+init();
+
+// Read sequence
+int x;
+cin >> x;
+while (cin){
+append(x);
+cin >> x;
+}
+
+  // Write sequence in reverse order
+  for (unsigned int i = length(); i > 0; i--)
+  cout << retrieve(i - 1) << endl;
+
+  // Deallocate encapsulated array
+  cleanup();
+
+  return 0;
+}
+
+
+** Collection data structures that dynamically expand/shrink
+						
+// Amount of memory available
+unsigned int array_capacity = 0;   
+
+// Amount of memory used
+unsigned int array_length = 0;     
+
+// Actual memory resource
+int *array = nullptr;             
+
+bool isInitialized(){
+return (array != nullptr);
+}
+
+void init(){
+assert(! isInitialized());
+
+// Default initial capacity
+array_capacity = 4;
+
+// Array is empty initially
+array_length = 0;                    
+// Allocate array
+array = new int[array_capacity];    
+
+assert(isInitialized());
+} // end init()
+
+
+
+** Collection data structures that dynamically expand/shrink
+						
+void append(int x) {
+assert(isInitialized());
+
+// Expand capacity if full
+if (array_length == array_capacity)  
+  expand();
+
+// Append to the end  
+array[array_length] = x;              
+// Update array length
+array_length++;                      
+} 
+
+
+** Collection data structures that dynamically expand/shrink
+						
+void expand(){
+assert(isInitialized());
+assert(array_capacity > 0);
+assert(array_length == array_capacity);
+
+// Calculate new capacity
+int new_array_capacity = array_capacity*2;       
+// Allocate bigger array
+int *new_array = 
+            new int[new_array_capacity];   
+
+// Copy contents
+for (unsigned int i = 0; i < array_length; i++) 
+new_array[i] = array[i];
+// Deallocate old array
+delete [] array;                                 
+
+// Use new array and update capacity
+array = new_array;                              
+array_capacity = new_array_capacity;             
+
+assert(array_length < array_capacity);
+}
+
+
+** Collection data structures that dynamically expand/shrink
+						
+unsigned int length(){
+assert(isInitialized());
+return array_length;
+}
+
+
+int retrieve(unsigned int i){
+assert(isInitialized());
+assert(i < length());
+
+return array[i];
+}
+
+void cleanup(){
+assert(isInitialized());
+
+// Deallocate memory resource
+delete [] array;                      
+// Establish postconditions
+array = nullptr;                      
+
+array_capacity = 0;
+array_length = 0;
+
+assert(! isInitialized());
+}
+
+** Dynamically allocated 2d arrays
+						
+// allocate the 2D array
+int** pparray;
+
+
+
+
+
+pparray = nullptr;
+
+
+
+
+
+pparray = new int*[10];
+
+
+
+
+
+
+
+** Dynamically allocated 2d arrays
+						
+// allocate the 2D array
+int** pparray = nullptr;
+pparray = new int*[10];
+
+for (unsigned int i = 0; i < 10; i++){
+pparray[i] = new int[20];
+}
+
+
+
+
+
+
+** Dynamically allocated 2d arrays
+						
+// store 7 in position 6 of row 2
+pparray[2][6] = 7;
+
+How about using pointers?
+
+// when done:
+// deallocate in reverse order
+for (unsigned int i = 0; i < 10; i++)
+delete [] pparray[i];
+delete [] pparray;
+
+
+
+
+
+
+
+** Dynamic memory management and ADTs
+						
+Why handle manually when we can automate allocation using constructors and deallocation using destructors?
+
+design a wrapper class for c-strings for 
+allocating and deallocating memory for c-strings
+streamline the copying and concatenation of c-strings
+
+
+
+
+
+
+** String example (cont’d)
+						
+class String {
+public:
+...  
+unsigned int length() const;
+char member(unsigned int i) const;
+...
+private:
+const char *buf;
+};
+
+
+
+
+unsigned int String::length() const {
+return strlen(buf);
+}
+
+char String::member(unsigned int i) const {
+assert(i < length());
+
+return buf[i];
+}
+
+
+** String example (cont’d)
+						
+class String {
+public:
+String(const char *s);
+
+unsigned int length() const;
+char member(unsigned int i) const;
+
+private:
+const char *buf;
+};
+
+// Usage: String s("Hello World");
+// Alternate syntax: String s = "Hello World";
+// implementation
+
+String::String(const char *s) {
+char *newbuf 
+= new char[strlen(s) + 1];
+strcpy(newbuf, s);
+buf = newbuf;
+}
+
+
+** String example (cont’d)
+						
+class String {
+public:
+String(const char *s);
+~String();     // Destructor prototype
+
+unsigned int length() const;
+char member(unsigned int i) const;
+
+private:
+const char *buf;
+};
+
+
+// Usage
+
+{ // begin of scope
+String s = "Hello World”;
+...
+} // end of scope: memory should be 
+  // reclaimed here
+
+// Implementation 
+
+String::~String() {
+delete [] buf;
+}
+
+
+** String example (cont’d)
+						
+class String {
+public:
+String();        // Default constructor
+String(const char *s);
+~String();     // Destructor prototype
+
+unsigned int length() const;
+char member(unsigned int i) const;
+
+private:
+const char *buf;
+};
+
+
+// Implementation 
+
+String::String(){
+// Create a c-string of length 0
+char *newbuf = new char[1]; 
+newbuf[0] = '\0';
+buf = newbuf;
+}
+
+
+** String example (cont’d)
+						
+class String {
+public:
+String();
+String(const char *s);
+String(const String &original); 
+~String();
+
+unsigned int length() const;
+char member(unsigned int i) const;
+
+private:
+  const char *buf;
+};
+// deep copying intended
+
+String::String(const String &original) {
+unsigned int len = original.length();
+char* nonConstBuf 
+= new char[len + 1];
+strcpy(nonConstBuf, original.buf);
+buf = nonConstBuf;
+}
+
+// is the & before original really required?
+
+** String example (cont’d)
+						
+Three different uses:
+
+// for initializing a string object by another
+String s("Hello"); // Const. invoked
+String t(s);           // Copy const. invoked
+
+// Alternative syntax
+String s = "Hello"; // Const. invoked
+String t = s;           // Copy const. invoked
+
+// for passing String args. by value
+void f(String s){
+  ...
+}
+...
+String t = "Hello";
+f(t);    // Copy const. invoked
+
+// for returning string instances as value
+String f(…){
+String s;
+…
+// Copy const. invoked to create 
+// return value
+return s;    
+}
+
+
+
+
+
+** String example (cont’d)
+						
+Can the & before &original be left out?
+
+String::String(const String &original) {
+unsigned int len = original.length();
+char *nonConstBuf = new char[len + 1];
+strcpy(nonConstBuf, original.buf);
+buf = nonConstBuf;
+}
+
+No: The copy constructor is always invoked whenever an argument of the type is passed by value to any function
+so if & is left out, it will repeatedly call the copy constructor till the stack overflows!   
+
+
+
+** String example (cont’d)
+						
+class String {
+public:
+// it’s a good idea to follow this standard prototype for = operator
+// try (a=b)=c with a cons String & return type and you’ll see why this is important!
+String &operator=(const String &original);  // Assignment operator
+…                                                        // try (a=b)=c with a cons String & return type!
+private:
+  const char *buf;
+};  
+
+String s;                 // default constructor
+String t = "Hello";  // auxiliary constructor
+String u(t);             // copy constructor
+s = u;                    // assignment operator
+
+** String example (cont’d)
+						
+String &String::operator=(const String &original) {
+unsigned int len = original.length(); // len is length of string to be copied
+char *nonConstBuf = new char[len + 1]; // allocate new space of size len
+strcpy(nonConstBuf, original.buf); // copy original string to new space (Line 4)
+delete [] buf; // deallocate old string (Line 5)
+buf = nonConstBuf; // make old string pointer point to newly allocated space
+
+return *this;
+}
+
+// a potential issue
+String s = "Hello, World";
+s = s;   // Self assignment! Q: Is there anything wrong with this? 
+// Ans. might do extra work; even more problematic if Line 5 is moved before Line 4
+
+
+** String example (cont’d)
+						
+String &String::operator=(const String &original) {
+if (&original != this){
+unsigned int len = original.length(); // len is length of string to be copied
+char *nonConstBuf = new char[len + 1]; // allocate new space of size len
+strcpy(nonConstBuf, original.buf); // copy original string to new space
+delete [] buf; // deallocate old string
+buf = nonConstBuf; // make old string pointer point to newly allocated space
+}
+
+return *this;
+}
+
+
+
+** Concatenation
+						
+class String {
+public:
+…
+String &append(const String &s);
+…
+private:
+const char *buf;
+};
+
+// note: none of the following work
+// void append(const String &s) 
+//  String append(const String &s)
+
+String s = "Hello";
+String t = " World";
+s.append(t);            // "Hello World"
+
+String s = "Hello";
+String t = " ";
+String u = "World";
+s.append(t).append(u);
+
+
+** 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+						
+Allocate a buffer that is big enough to hold both the content of the current object and that of the argument
+
+Copy the content of the current object to the beginning of the buffer
+
+Append the content of the argument to the end of the buffer
+
+Delete the original content of the current object
+
+Install the buffer into the current object
+
+
+** Concatenation
+						
+String &String::append(const String &s){
+unsigned int len = strlen(buf) + strlen(s.buf);
+char *newbuf = new char[len + 1];
+strcpy(newbuf, buf);
+strcat(newbuf, s.buf);
+delete [] buf;
+buf = newbuf;
+
+return *this;
+}
+
+
+** Concatenation
+						
+append is a mutation operation, let’s formulate a creation version
+
+String concatenate(const String &s) const; // prototype
+
+// usage
+String s = "Hello";
+String t = " World";
+String u = s.concatenate(t);
+
+// implementation
+String String::concatenate(const String &s) const {
+return String(*this).append(s);
+}
+
+
+** Concatenation
+						
+Efficient only if supported by the compiler
+First, let’s define a private helper constructor
+
+String::String(const char *s, const char *t) {
+unsigned int len = strlen(s) + strlen(t);
+char *newbuf = new char[len + 1];
+strcpy(newbuf, s);
+strcat(newbuf, t);
+buf = newbuf;
+}
+
+String String::concatenate(const String &s) const {
+return String(buf, s.buf); // still calls the copy constructor, but some smart compilers
+}                                            // will be able to recognize and avoid this unnecessary task
+
+* Dynamic memory management
+and object-oriented design
+
+
+
+Interaction between dynamic memory management and OOD features, such as composition, inheritance, and dynamic binding
+
+** Composition and inheritance
+						
+Recall invocation seq. of const.
+
+class C : ... { 
+... 
+};
+Invocation sequence does not depend on the order in which constructors are called, but as follows:
+const. of base class
+const. of member vars, in the order they are defined
+body of the constructor 
+class D : public C {
+public:
+D(...);
+...
+private:
+D1 f1;
+D2 f2;
+...
+};
+
+D::D(...) : C(...), f2(...), f1(...), ... {
+  … // body
+}
+
+** Constructor invocation sequence example
+						
+class C {
+public:
+C();
+C(const char *s);
+};
+C::C() {
+cout << "C()" << endl;  
+}
+C::C(const char *s) {
+cout << "C(const char *)" << endl;  
+}
+class D : public C {
+public:
+D();
+};
+
+
+D::D() : C() {
+cout << "D()" << endl;  
+}
+class E : public D {
+public:
+E();
+private:
+C x;
+C z;
+};
+E::E() : D(), x("Hello"), z("Goodbye"){
+cout << "E()" << endl;  
+}
+int main() {
+    E y;
+    return 0;
+}
+
+** Destructor invocation sequence
+						
+Destructor invocation sequence is exactly the opposite of that of the constructor!
+
+class C : ... { 
+... 
+};
+
+When an object of type D goes out of scope, ~D() is called, which executes its body, then calls ~C2(), then ~C1(), and finally ~C() 
+
+
+
+class D : public C {
+public:
+...
+~D();
+private:
+C1 f1;
+C2 f2;
+...
+};
+
+D::~D() {
+… // body of ~D()
+}
+
+
+** Destructor invocation sequence (cont’d)
+						
+class C{
+public:
+~C() { cout << "~C()" << endl; }
+};
+
+class C1 : public C {
+public:
+~C1() { cout << "~C1()" << endl; }
+};
+
+class C2 : public C {
+public:
+~C2() { cout << "~C2()" << endl; }
+};
+
+class D : public C {
+public:
+~D() { cout << "~D()" << endl; }
+private:
+C1 x;
+C2 y;
+};
+
+int main() {
+D z;
+return 0;
+}
+
+
+** Constructors and destructors
+						
+String *ps = new String; // calls constructor as usual
+
+String *ps = new String(“Hello"); // can also specify which constructor to use
+
+delete ps; // (explicitly) calls the destructor
+
+
+** Recall: static vs. dynamic binding
+						
+class C {
+public:
+virtual void f() { /* implementation 1 */ }
+...
+};
+
+class D : public C {
+public:
+// implictly virtual
+void f() { /* implementation 2 */ }
+...
+};
+
+
+
+void g(C &c) {
+c.f( );
+}
+
+int main() {
+D d;
+d.f();  // static binding: impl.2 invoked 
+g(d);  // dynamic binding: impl.2 
+         // invoked 
+return 0;
+}
+
+
+** Virtual destructor
+						
+class C {
+public:
+// Say this is an abstract class
+… 
+~C();		// WRONG, use virtual ~C() instead 
+};
+
+class D : public C {
+public:
+… 
+~D();
+private:
+… 
+};
+void destroy(C *ptr) {
+… 
+delete ptr; // wanted to call ~D()
+…
+}
+
+int main() {
+C *p = new D;
+destroy(p);
+return 0;
+}
+
+** Using classes that involve dynamically allocated memory
+						
+If you craft your class properly by equipping it with: 
+a default constructor 
+a copy constructor
+an assignment operator and 
+a destructor 
+then you may simply treat the class as a built-in type
+
+** Example (using String to define Book)
+						
+class Book {
+public:
+Book(const String &a, const String &t);
+Book(const Book &b);
+~Book();
+Book &operator=(const Book &b);
+… 
+private:
+String author;
+String title;
+};
+
+Book::Book(const String &a, 
+const String &t) : author(a), title(t) { }
+Book::Book(const Book &b) : author(b.author), title(b.title) { }
+
+Book &operator=(const Book &b){
+if (&b != this){
+author = b.author;
+title = b.title;
+}
+return *this;
+}
+
+Book::~Book() { }
+
+** Polymorphism
+						
+Base class pointer = child class instance : works as expected
+Child class pointer = base class instance : WRONG
+
+class Critter { 
+… 
+};
+
+class Spider : public Critter {
+…
+};
+
+Critter *cp = new Spider(…); // works
+Spider *sp1 = new Critter(…); // WRONG!
+Spider *sp2;	
+sp2 = cp; // WRONG!
+
+
+** Polymorphism with pure virtual functions
+						
+class Critter { 
+private:
+int legCount;
+public:
+Critter(int n);
+virtual void print() = 0;
+};
+
+Critter::Critter(int n){
+legCount = n;
+}
+
+// Note: there is no implementation for the 
+// pure virtual function named print
+
+
+class Spider:  public Critter{ 
+private:
+bool poisonous;
+public:
+Spider(bool poisonous1);
+virtual void print();
+};
+
+void Spider::print(){
+// body implements virtual func.
+}
+
+Spider *sp = new Spider(true);
+sp->print();
+Critter *cp = sp;
+cp->print(); // dynamic binding
+
+** Polymorphism and dynamic arrays
+						
+Critter *critter_array[100];
+for (int i = 0; i < 100; i++) {
+		if (i % 2 == 0)
+		critter_array[i] = new Spider(false);
+		else
+		critter_array[i] = new Ant(6, 50);
+	}
+
+
+
+
+
+
+Critter **critter_array = new Critter*[100];
+for (int i = 0; i < 100; i++) {
+		if (i % 2 == 0)
+		critter_array[i] = new Spider(false);
+		else
+		critter_array[i] = new Ant(6, 50);
+	}
+
+
+* Canonical forms for C++ classes
+
+
+
+
+** Canonical form (definition)
+						
+A C++ class is in canonical form if it provides the following four member functions/operators:
+default constructor
+copy constructor
+destructor
+assignment operator
+
+These are otherwise provided by default
+unless some constructor other than the copy constructor is provided for a class, then the default constructor is not provided by default!
+
+The reason for putting a class in canonical form: to avoid memory leaks and to make call by value and return from functions work as expected
+
+
+
+** How to write a copy constructor
+						
+MyClass::MyClass(const MyClass &original)
+     : MyBaseClass(original), // delegate copying of base class fields to its own cc
+       field1(original.field1),    // delegate copying of field1 to its own cc, etc.  
+       field2(original.field2),
+       field3(original.field3)
+       // ...
+{
+
+// do everything that is required to perform a deep copy of original fields to the 
+// reference object fields
+
+}
+
+
+** How to write a destructor
+						
+MyClass::~MyClass()
+{
+// usually empty (unless code performed dynamic allocation)
+
+// free/deallocate all dynamically allocated memory in the reverse order of their 
+// allocation order
+}
+
+A virtual destructor should be used for any class that is involved in inheritance, i.e., for any base class or any derived class (see week 10 slide 46)
+if in doubt, make it virtual
+virtual ~MyClass();
+never make it purely virtual, however (provide implementation regardless)
+don’t attempt to invoke base-class destructor (will be done automatically)
+
+** How to write an assignment operator
+						
+MyClass &MyClass::operator=(const MyClass &original){
+     if(&original != this) // don't assign to itself
+     {
+           // 1. everything in destructor (to get rid of the existing value of this reference instance)
+ // 2. Everything in the copy constructor (to copy original’s fields to reference instance) 
+           // 2a. if this is a derived class, add this line
+           MyBaseClass::operator=(original);
+ 
+           // 2b. if the copy constructor copies fields using the ":" syntax (i.e., an initializer list), 
+           // add these lines
+           field1 = original.field1;
+           field2 = original.field2;
+           field3 = original.field3;
+ 
+           // 2c. everything in copy constructor body
+     } 
+     return *this;
+}
+
+
+** Example: the Committee class
+						
+class Committee { // a class with dynamic allocation
+   private:
+     float *pbudget;
+     string *pmembers[10];
+ 
+   public:
+     // Default Constructor
+     Committee();
+ 
+     // Copy Constructor
+     Committee(const Committee &original);
+
+     // Destructor
+     ~Committee();
+
+     // Assignment Operator
+     Committee &operator=(const Committee &original);
+};
+
+** The Committee class (default constructor)
+						
+// Default Constructor
+
+Committee::Committee() {
+
+     pbudget = new float(0.0f);
+
+     for (int i = 0; i < 10; i++) {
+           pmembers[i] = new string;
+     }
+
+}
+
+
+** The Committee class (copy constructor)
+						
+// Copy Constructor
+Committee::Committee(const Committee &original)
+     :  pbudget(new float(*(original.pbudget))) // put this line (delegate copying to cc of float)
+{
+     // OR these 2 lines (i.e. copy manually)
+     // pbudget = new float;                     
+     // *pbudget = *(original.pbudget);
+ 
+     // OR this one line (again, copy manually)
+     // pbudget = new float(*(original.pbudget)); 
+ 
+     for (int i = 0; i < 10; i++) {
+           pmembers[i] = new string(*(original.pmembers[i]));
+     }
+}
+
+
+** The Committee class (destructor)
+						
+// Destructor
+Committee::~Committee()
+{
+     // optional for tracing execution:
+     // cout << "Destructor for Committee class" << endl;
+ 
+     delete pbudget;
+     for (int i = 0; i < 10; i++)
+     {
+           delete pmembers[i];
+ 
+           // optional for tracing execution:
+           // cout << "Deleting array... " << 10 - i << endl;
+     }
+}
+
+** The Committee class (assignment operator)
+						
+Committee &Committee::operator=(const Committee &original) {
+     if (&original != this) {
+           // from destructor
+           delete pbudget;
+           for (int i = 0; i < 10; i++)
+                delete pmembers[i];
+ 
+           // no base class from which to call operator
+ 
+           // from copy constructor
+           pbudget = new float(*(original.pbudget));
+           for (int i = 0; i < 10; i++)
+                pmembers[i] = new string(*(original.pmembers[i]));
+     }
+     return *this;
+}
+
+
+** New C++ features to support canonical classes
+						
+Class A {
+     A() = default; // default constructor has default implementation (i.e. does nothing)
+     A(const A &original) = default; // copy const. has default impl. (i.e. shallow copies)
+     ~A() = default; // destructor has default implementation (i.e. does nothing)
+     A &operator=(const A &other) = default; // shallow copy again
+     ...
+};
+
+// tells compiler that no implementation is desired (rarely a good idea)
+Class B{
+     B() = delete; // e.g., prevents arrays from being declared
+     B(const B &original) = delete; // prevent instances from being passed by value
+     ~B() = delete; // prevents instances from being deallocated (can’t use delete on B)
+     B &operator=(const B &other) = delete; // can’t use assignment operator
+     ...
+};
+
+
+* Linked lists
+
+
+
+A bare-bones version
+
+** Motivation
+						
+Want to allocate memory on demand, but only 1 node at a time 
+Idea: dynamically allocate only a single node when requested
+problem: but then we will need an arbitrary number of static (i.e. allocated at compile-time) pointers to handle these — back to square one!
+one solution: why not use just 1 static pointer to dynamically allocate the first node, but rather than allocating just for the data, allocate enough space for a compound node structure consisting of the data as well as a pointer to some potential next node 
+i.e. let’s change the definition of a node
+if the next node does not exist, indicate this by assigning the pointer to null pointer
+This allows us to gradually develop a linked data structure that can dynamically grow and shrink as needed
+
+
+
+** Node definition
+						
+struct Node{
+int data;       // the actual data
+Node *next; // pointer to potential next node
+};
+
+// We only need 1 pointer to handle this linked list
+// It points to the first node of the list
+
+Node *head; // let’s make it global for now (can be generalized if needed)
+// Initially, there are no nodes, i.e. the list is empty
+
+head = nullptr;
+
+** Adding a new node to the list
+						
+void insert(int data){
+
+Node *temp = head;
+
+if(temp == nullptr){
+temp = new Node;
+temp->data = data;
+temp->next = nullptr;
+head = temp;
+  }  
+
+
+
+else{
+while(temp->next != nullptr)
+temp = temp->next;
+temp->next = new Node;
+temp = temp->next;
+temp->data = data;
+temp->next = nullptr;
+}
+
+} // end insert
+
+** Adding a new node to the list
+						
+void insertS(int data){
+
+Node *curr = head;
+Node *prev = nullptr;
+
+while(curr!=nullptr && curr->data<data){
+prev = curr;
+curr = curr->next;
+}
+
+
+
+
+if(prev == nullptr){
+    prev = new Node;
+    prev->data = data;
+    prev->next = curr;
+    head = prev;
+}
+else{  
+    prev->next = new Node;
+    prev = prev->next;
+    prev->data = data;
+    prev->next = curr;
+    }  
+} // end insertS
+
+** Traversing the list
+						
+bool isEmpty(){
+return head == nullptr;
+}
+
+
+void print(){
+Node *temp = head;
+while(temp != nullptr){
+cout << temp->data <<" ";
+temp = temp->next;
+}
+}
+
+
+int count() {
+Node *temp = head;
+int ctr=0;
+while(temp != nullptr){
+ctr++;
+temp = temp->next;
+}
+return ctr;
+}
+
+** Deleting the entire list
+						
+void deleteLinkedList(){
+
+Node *current = head, *previous = nullptr; 
+
+while(current != nullptr){
+previous = current;
+current = current->next;
+delete previous;
+}
+
+head = nullptr;
+
+}
+
+** Removing a node
+						
+void remove(int x){
+Node *prev = nullptr;
+Node *curr = head;
+
+if(isEmpty())
+return;
+while(curr != nullptr){
+if(curr->data == x)
+break;
+else{
+prev = curr;
+curr = curr->next;
+}
+} // end while
+// found: 1st node needs removing
+if(prev == nullptr){
+Node *temp = head;
+head = head->next;
+delete temp;
+}
+
+// found: curr needs removing
+if(curr != nullptr && prev != nullptr){
+prev->next = curr->next;
+delete curr;
+}
+
+} // end remove
+
+** Testing it all out
+						
+int main() {
+
+insert(5);
+insert(6);
+insert(7);
+
+// try out every possibility
+remove(8); // 5, 7, empty list
+
+insert(3);
+
+print();
+
+cout << "\nCount=" << count(); cout << “\n";
+
+deleteLinkedList();
+
+cout << "\nCount=" << count(); cout << “\n";
+
+return 0;
+}
+
+* Linked lists
+
+
+
+An application: Multiset Revisited
+
+** ADT Multiset
+						
+Domain: items from ItemType
+
+Structure: arbitrarily many members, possibly with duplicates
+
+Operations supported:
+empty: check if a Multiset instance is empty.
+memberCount: get the number of items in a Multiset instance
+insert: insert an item of type ItemType into a Multiset instance
+remove: remove the first occurrence of an item of type ItemType from a Multiset instance
+member: test if an item of type ItemType is in a Multiset instance
+print: print the members of a Multiset instance in ascending order
+
+** ADT Multiset
+						
+// multiset-linkedlist.h
+typedef int ItemType;
+struct Node {
+	ItemType datum;
+	Node *pNext;
+};
+
+class Multiset {
+public:
+// Default constructor
+Multiset();
+// Copy constructor
+Multiset(const Multiset &original);
+// Destructor
+~Multiset();
+// Assignment operator
+Multiset &operator=(const Multiset &original);
+// Other functions
+bool empty() const;
+unsigned int memberCount() const;
+void insert(ItemType x);
+void remove(ItemType x);
+bool member(ItemType x) const;
+void print() const;
+private:
+Node *pHead;
+}; // end Multiset
+
+
+
+** Traversing and managing a linked list
+						
+Traversing: 
+
+bool empty() const;
+unsigned int memberCount() const;
+void print() const;
+
+Managing (both are private helper member functions):
+
+void deleteLL(Node *pHead) const;
+Node *duplicateLinkedList(const Node *pOldHead) const;
+
+** Implementing duplicateLL
+						
+Node *duplicateLL(const Node *pHead1) const{
+
+// empty list
+if (pHead1 == nullptr)
+return nullptr;
+
+// handle the first node separately
+Node *pHead2 = new Node;
+pHead2->data = pHead1->data;
+  
+// Copy the rest of the linked list
+const Node *p1 = pHead1;
+Node           *p2 = pHead2;
+
+
+
+  // still Nodes to copy
+  while (p1->pNext != nullptr) {
+// make a new Node for our copy
+p2->pNext = new Node;
+
+// advance both linked lists
+p1 = p1->pNext;
+p2 = p2->pNext;
+
+// copy the data
+p2->data = p1->data;
+  }
+  // set the end of the new list to nullptr
+  p2->pNext = nullptr;
+
+  return pHead2;
+}
+
+** Constructors and destructors
+						
+// default constructor
+Multiset::Multiset(){
+pHead = nullptr;
+}
+
+// copy constructor
+Multiset::Multiset(const Multiset &original){
+pHead = duplicateLL(original.pHead);
+}
+
+// destructor
+Multiset::~Multiset(){
+deleteLL(pHead);
+}
+
+
+
+** Assignment operator
+						
+Multiset &Multiset::operator=(const Multiset &original){
+if (&original != this){
+deleteLL(pHead);
+pHead = duplicateLL(original.pHead);
+}
+return *this;
+}
+
+
+** Managing a linked list (cont’d)
+						
+Membership checking, Inserting, and removing
+
+bool Multiset::member(ItemType x) const; 
+void Multiset::insert(ItemType x); 
+void Multiset::remove(ItemType x); 
+
+Helper function used in notes to implement insert, remove, and member
+essentially returns ``prev’’
+
+Node *searchLinkedList(Node *pHead, ItemType x) const;
+
+
+** Implementing member
+						
+bool Multiset::member(ItemType x) const {
+
+Node *pPrev = searchLinkedList(pHead, x);
+
+if (pPrev != nullptr) // must be the next item, it at all
+return pPrev->pNext != nullptr && pPrev->pNext->data == x;
+else // must be the first item if even exists
+return pHead != nullptr && pHead->data == x;
+
+}
+
+
