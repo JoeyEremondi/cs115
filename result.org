@@ -933,10 +933,10 @@ string authors[N];
 string publishers[N];
 unsigned int publishingYears[N];
 string callNumbers[N];
+double Price[N];
+ 
 #+end_src
 
-double Price[N]
- 
 Poor choice of interface!
 (many arguments to pass for functions)
  
@@ -1088,34 +1088,22 @@ CatalogEntry A[] =
 #+begin_src c++
 {
 {"Peter Pan",
-#+end_src
-
-    "J. M. Barrie",
-    "Scribner",
-    1980,
-
-#+begin_src c++
+    "J. M. Barrie",//
+    "Scribner",//
+    1980,//
     "B2754 1980"},
  
  
  
 {"C++ Primer",
-#+end_src
-
-     "Stanley B. Lippman",
-     "Addison-Wesley",
-     1998,
-
-#+begin_src c++
+     "Stanley B. Lippman",//
+     "Addison-Wesley",//
+     1998,//
  
    {"Anatomy of LISP",
-#+end_src
-
-     "John Allen",
-     "McGraw-Hill",
-     1978,
-
-#+begin_src c++
+     "John Allen",//
+     "McGraw-Hill",//
+     1978,//
      "QA 76.73 L23A44"}
  };
  
@@ -1211,27 +1199,19 @@ User-defined data type that consists of integral constants
 
 #+begin_src c++
 enum day {
-#+end_src
-
-  Friday = 99,
-  Saturday,
-  Sunday = 90,
+  Friday = 99,//
+  Saturday,//
+  Sunday = 90,//
   ...,
-  Thursday 
-
-#+begin_src c++
+  Thursday //
 };
  
 day d;
 d = Thursday;
  
 if (d == Saturday || d == Sunday)
-#+end_src
-
-cout << Enjoy the weekend!
+cout << Enjoy the weekend! ;
  
-
-#+begin_src c++
 cout << d+1 ;
  
 #+end_src
@@ -1246,13 +1226,9 @@ At most one field can be in use at one time (fields share the same memory)
 
 #+begin_src c++
 union Coordinates {
-#+end_src
-
-  int a,
-  double b,
-  char c
-
-#+begin_src c++
+  int a, //
+  double b, //
+  char c //
 };
  
 Coordinates x;
@@ -1272,12 +1248,8 @@ cout << x.c;         // works, prints p
 
 #+begin_src c++
 enum CatalogEntryType {
-#+end_src
-
-  BookEntry,
-  DVDEntry
-
-#+begin_src c++
+  BookEntry, //
+  DVDEntry //
 };
  
 struct BookSpecificInfo {

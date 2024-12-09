@@ -816,23 +816,23 @@ CatalogEntry A[3];
 CatalogEntry A[] = 
 {
 {"Peter Pan",
-    "J. M. Barrie",
-    "Scribner",
-    1980,
+    "J. M. Barrie",//
+    "Scribner",//
+    1980,//
     "B2754 1980"},
 
 
 
 {"C++ Primer",
-     "Stanley B. Lippman",
-     "Addison-Wesley",
-     1998,
+     "Stanley B. Lippman",//
+     "Addison-Wesley",//
+     1998,//
      "QA 76.73 C15 L57 1998Ó},
 
    {"Anatomy of LISP",
-     "John Allen",
-     "McGraw-Hill",
-     1978,
+     "John Allen",//
+     "McGraw-Hill",//
+     1978,//
      "QA 76.73 L23A44"}
  };
 
@@ -913,18 +913,18 @@ What will be the output?
 User-defined data type that consists of integral constants
 
 enum day {
-  Friday = 99,
-  Saturday,
-  Sunday = 90,
+  Friday = 99,//
+  Saturday,//
+  Sunday = 90,//
   É,
-  Thursday 
+  Thursday //
 };
 
 day d;
 d = Thursday;
 
 if (d == Saturday || d == Sunday)
-cout << ÒEnjoy the weekend!Ó
+cout << ÒEnjoy the weekend!Ó ;
 
 cout << d+1 ;
 
@@ -936,9 +936,9 @@ Multiple component fields can be defined
 At most one field can be in use at one time (fields share the same memory)
 
 union Coordinates {
-  int a,
-  double b,
-  char c
+  int a, //
+  double b, //
+  char c //
 };
 
 Coordinates x;
@@ -955,8 +955,8 @@ cout << x.c;         // works, prints p
 ** Example
 						
 enum CatalogEntryType {
-  BookEntry,
-  DVDEntry
+  BookEntry, //
+  DVDEntry //
 };
 
 struct BookSpecificInfo {
