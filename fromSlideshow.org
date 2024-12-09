@@ -713,7 +713,7 @@ string authors[N];
 string publishers[N];
 unsigned int publishingYears[N];
 string callNumbers[N];
-double Price[N]
+double Price[N];
 
 Poor choice of interface!
 (many arguments to pass for functions)
