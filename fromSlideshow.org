@@ -393,25 +393,19 @@ One, two, and multi-dimensional arrays
   int value0;
   int value1;
   int value2;
-   .
-   .
-   .
+  // ...
   int value999;
 
   cin >> value0;
   cin >> value1;
   cin >> value2;
-   .
-   .
-   .
+  // ...
   cin >> value999;
 
   cout << value999 << endl;
   cout << value998 << endl;
   cout << value997 << endl;
-   .
-   .
-   .
+  // ...
   cout << value0 << endl;
 
 

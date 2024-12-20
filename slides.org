@@ -1,9 +1,73 @@
+
+#+title: University of Regina, CS 115, Winter 2025
+#+subtitle: CS 115
+#+AUTHOR: Dr. Joseph Eremondi, adapted from Dr. Shakil Khan, Dr. Philip Fong, and Dr. Howard Hamilton
+#+DATE: Last updated: \today{}
+
+
+
+#+OPTIONS: toc:nil H:2 TODO:nil eval:yes
+
+#+BEAMER_HEADER: \usepackage[sfdefault]{atkinson} %% Option 'sfdefault' if the base
+#+BEAMER_HEADER: \usepackage{FiraMono}
+#+BEAMER_HEADER: \usepackage[T1]{fontenc}
+
+
+
+
+#+EXPORT_FILE_NAME: slides_all.pdf
+#+startup: beamer
+#+LaTeX_CLASS:beamer
+#+LaTeX_CLASS_OPTIONS: [bigger, aspectratio=169, dvipsnames]
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col)
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+
+
+# -*- org-latex-packages-alist: nil; -*-
+
+# #+BEAMER_HEADER: \renewcommand{\pageword}{}
+
+
+# #+BEAMER_HEADER: \usetheme[customfont,nofooter]{pureminimalistic}
+#+BEAMER_HEADER: \usetheme{moloch}
+# #+BEAMER_HEADER:\definecolor{textcolor}{RGB}{0, 0, 0}
+#+BEAMER_HEADER:\definecolor{title}{RGB}{2, 71, 49}
+# #+BEAMER_HEADER:\renewcommand{\beamertextcolor}{textcolor}
+# #+BEAMER_HEADER:\renewcommand{\beamerfootertextcolor}{footercolor}
+# #+BEAMER_HEADER:\renewcommand{\beamertitlecolor}{title}
+# #+BEAMER_HEADER:\setbeamertemplate{frametitle}{\\setbeamercolor{alerted text}{fg=black}
+#+BEAMER_HEADER: \setbeamercolor{alerted text}{fg=black}
+#+BEAMER_HEADER: \setbeamerfont{alerted text}{series=\bfseries}
+#+BEAMER_HEADER: \newcommand{\colored}[2]{{\color{#1} #2}}
+
+#+BEAMER_HEADER: \usepackage[utf8]{inputenc}
+#+BEAMER_HEADER: \usepackage[libertine]{newtxmath}
+#+BEAMER_HEADER: \DeclareUnicodeCharacter{03BB}{${\lambda}$}
+#+BEAMER_HEADER: \usepackage{semantic}
+#+BEAMER_HEADER: \usepackage{stmaryrd}
+#+BEAMER_HEADER: \mathlig{=>}{\Rightarrow}
+#+BEAMER_HEADER: \definecolor{LightGray}{gray}{0.9}
+#+BEAMER_HEADER: \usepackage[outputdir=pdf]{minted}
+#+BEAMER_HEADER: \usepackage{etoolbox}
+#+BEAMER_HEADER: \usepackage{hyphenat}
+#+BEAMER_HEADER: \AtBeginEnvironment{minted}{\pause}
+#+BEAMER_HEADER: \setminted[racket]{escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
+#+BEAMER_HEADER: \setminted[c++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
+#+BEAMER_HEADER: \setminted[C++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
+
+* Contents :noexport:
 * Review
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides001-review.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
 
  
- - Basic program structure, local/global variables, value passing semantics, strings, program dev. process
+** Basic program structure, local/global variables, value passing semantics, strings, program dev. process
  
-** Hello world!
+*** Hello world!
  
 
 #+begin_src C++
@@ -25,7 +89,7 @@ int main( ){
  - loops
  - function invocations 
  
-** Functional abstraction
+*** Functional abstraction
  
 
 #+begin_src c++
@@ -57,7 +121,7 @@ int triple(int x) {
  
  - Can a function call itself?!
  
-** Local and global variables and constants
+*** Local and global variables and constants
  
 
 #+begin_src c++
@@ -87,7 +151,7 @@ void tripleGlobal( ){
 
  - Use ``extern'' to access global variables declared in other files
  
-** Conditionals (if-then-else branching)
+*** Conditionals (if-then-else branching)
  
 
 #+begin_src c++
@@ -109,7 +173,7 @@ int main( ){
 
 #+end_src
 
-** Conditionals (ternary operator cond ? b1 : b2)
+*** Conditionals (ternary operator cond ? b1 : b2)
  
  - Compare the following:
  
@@ -128,8 +192,12 @@ int max(int a, int b) {
 
  #+end_src
 
+
+
+*** Conditionals (nesting)
+
  - Can be nested:
- 
+
 
  #+begin_src c++
 int inRange(int num, int low, int high) {
@@ -141,9 +209,9 @@ int inRange(int num, int low, int high) {
 
  #+end_src
 
- - Note: could have used a compound conditional statement instead 
- 
-** Conditionals (else-if and switch cases)
+ - Note: could have used a compound conditional statement instead
+
+*** Conditionals (else-if and switch cases)
  
  - Can have multiple branches:
  
@@ -162,9 +230,11 @@ int sign(int a){
 
  #+end_src
 
- - Switch cases?
- 
 
+*** Conditionals (else-if and switch cases)
+
+
+ - Switch cases?
  #+begin_src c++
 switch (month){
  case 1: case 2: case 3: case 4:
@@ -182,7 +252,7 @@ switch (month){
 
  #+end_src
 
-** Repetition structures (loops)
+*** Repetition structures (loops)
  
  - Want to compute: 
  - f(n) = 1 + 2 + 3 + ... + n
@@ -205,7 +275,7 @@ unsigned int triangular(unsigned int n){
  
  
  
-** Repetition structures (loops)
+*** Repetition structures (loops)
  
 
 #+begin_src c++
@@ -231,7 +301,7 @@ unsigned int sumOfDigits(unsigned int m){
  
  - Loops can be nested
  
-** Value passing semantics
+*** Value passing semantics
  
  - Call by value (arguments evaluated)
  
@@ -269,7 +339,7 @@ int main() {
 
  #+end_src
 
-** Value passing semantics
+*** Value passing semantics
  
  - Call by address (arguments evaluated)
  
@@ -307,13 +377,13 @@ int main() {
 
  #+end_src
 
-** Side effects
+*** Side effects
  
  - Any computational effects of a function other than the generation of a value to be returned
  - those that persist
  - e.g., printing stuff using cout, changing a global variable, changing a local variable via call by reference/pointer, etc.  
  
-** Strings
+*** Strings
  
  - C++ libraries provide string facilities
  
@@ -325,9 +395,7 @@ int main( ){
   string h = "hello";
   string w = "world";
   string msg = h + ' ' + w;
-
   cout << msg << endl;
-
   return 0;
 }
 string s = "hello world";
@@ -336,8 +404,11 @@ for (int i = 0; i < s.length(); i++)
 
  #+end_src
 
+
+*** Strings
+
  - Characters are integer values
- 
+
 
  #+begin_src c++
 char charToUpper(char c){
@@ -349,7 +420,7 @@ char charToUpper(char c){
 
  #+end_src
 
-** Strings
+*** Strings
  
  - Passing a parameter by reference can be more efficient than passing by value for very large strings
  - But not safe as modifying the passed string also modifies the original one
@@ -364,11 +435,9 @@ string capitalize(const string &s);
  #+end_src
 
  - Occasionally, you may want to return a value by constant reference (meh!)
- 
- - const string &chooseFirst(const string &s1, const string &s2)
 
  #+begin_src c++
-    {
+   const string &chooseFirst(const string &s1, const string &s2) {
       if (s1 < s2)
         return s1;
       else
@@ -378,17 +447,24 @@ string capitalize(const string &s);
 
  #+end_src
 
-** Strings
- 
- - string &chooseFirst(string &s1, string &s2)
+*** Code as Communication
+- Passing by constant reference doesn't add any power to the language
+  + We can do /less/ things with a const reference
+- This is *good*
+- Code communicates an intention
+  + "This function shouldn't change this string"
+- Compiler /checks/ this intention
+  + Gives you an error if you violate it
 
+*** Strings
  #+begin_src c++
-    {
-      if (s1 < s2)
-        return s1;
-      else
-        return s2;
-    }
+string &chooseFirst(string &s1, string &s2)
+{
+  if (s1 < s2)
+    return s1;
+  else
+    return s2;
+}
 
 
  #+end_src
@@ -396,23 +472,25 @@ string capitalize(const string &s);
  - chooseFirst( ) returns reference to lexicographically smaller string
  
  - main( ) prints PQR! since s1=PQR!
- - int main( )
+
+*** Strings
 
  #+begin_src C++
-    {
-      string s1 ="ABC!";
-      string s2 = "XYZ!";
+int main( )
+{
+  string s1 ="ABC!";
+  string s2 = "XYZ!";
 
-      chooseFirst(s1, s2) = "PQR!";
+  chooseFirst(s1, s2) = "PQR!";
 
-      cout << s1;
+  cout << s1;
 
-      return 0;
-    }
+  return 0;
+}
 
  #+end_src
 
-** Modular vs. Application programs (115 vs. 110)
+*** Modular vs. Application programs (115 vs. 110)
  
  - Top-down design is the process of repeatedly decomposing a complicated problem into smaller, more manageable subproblems
  - each can be implemented independently
@@ -424,38 +502,32 @@ string capitalize(const string &s);
  - Reuse reduces the overhead of solving a recurring problem over and over again, saves us from redoing testing and documentation for similar code, and in general improves the comprehensibility of source code
  
 
- #+begin_src c++
-Code structured into modules; separates interface from implementation
+ - Code structured into modules; separates interface from implementation
 
- #+end_src
-
-** Standard input and output
+*** Standard input and output
  
  - Can redirect standard input and output from and to files resp.
  
- - myProg < inFile > outFile
+ - ~myProg < inFile > outFile~
  
  - Can pipe the standard output of a program to the standard input of another
  
- - myProg1 | myProg2
+ - ~myProg1 | myProg2~
  
  
  - See notes for how 
- - getline(cin, <string>) and cin.get(<char>) can be used to read input from a file
+ - ~getline(cin, <string>)~ and ~cin.get(<char>)~ can be used to read input from a file
  
  
  
-** Misc
+*** Misc
  
 
-#+begin_src c++
-Separate (unrelated) functions in different files; compile separately using -c command, and link together
+- Separate (unrelated) functions in different files; compile separately using -c command, and link together
 
-#+end_src
-
- - g++ -c main.cpp
- - g++ -c my_util.cpp
- - g++ -o prog.out main.o my_util.o
+ - ~g++ -c main.cpp~
+ - ~g++ -c my_util.cpp~
+ - ~g++ -o prog.out main.o my_util.o~
  
  - Collect all function prototypes together in a header file and include it in main.cpp
  
@@ -473,18 +545,20 @@ Separate (unrelated) functions in different files; compile separately using -c c
 #include <cassert>
 ...
 assert (n>0); //prog. Terminates if not
-
-
-
-
  #+end_src
 
 * Arrays
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides002-arrays.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
- - One, two, and multi-dimensional arrays
+**   One, two, and multi-dimensional arrays
  
-** Motivation
+*** Motivation
  
 
 #+begin_src c++
@@ -509,7 +583,7 @@ cout << value0 << endl;
 
 #+end_src
 
-** Motivation (cont'd)
+*** Motivation (cont'd)
  
  - Tedious, not scalable, and error prone
  
@@ -531,7 +605,7 @@ for (int i = 119999; i >= 0; i--)
 
  #+end_src
 
-** Simple arrays
+*** Simple arrays
  
  
 
@@ -551,7 +625,7 @@ for (int i = N-1; i >= 0; i--)
  
  - Easy to change size: just update N (the rest of the program remains intact)
  
-** Passing arrays as arguments
+*** Passing arrays as arguments
  
 
 #+begin_src c++
@@ -562,7 +636,6 @@ int sumArray(int a[], unsigned int n) // Array argument
     sum += a[i];
   return sum;
 }
-
 
 int main()
 {
@@ -575,7 +648,7 @@ int main()
 
  - Array size can be left unspecified in array initialization syntax
  
-** Passing arrays as arguments
+*** Passing arrays as arguments
  
  - Array arguments are always automatically passed by reference 
  - no special notation is require
@@ -592,27 +665,30 @@ int sumArray(int a[], unsigned int n)    // CORRECT
  - Works for arrays of all sizes (size is passed as a separate argument)
  - Interface not safe: can modify the content of A
  
-** Passing arrays as arguments
+*** Passing arrays as arguments
  
 
 #+begin_src c++
-int sumArray(int a[], unsigned int n)    // not safe, sumArray can modify A!
+int sumArray(int a[], unsigned int n)
+// not safe, sumArray can modify A!
 
 #+end_src
 
- - Use the following instead:
- - int sumArray(const int a[], unsigned int n)
- 
- - How to figure out array size when passing n if the size was left unspecified when declaring it?
- - use sizeof function: 
+- Use the following instead:
+#+begin_src C++
+   int sumArray(const int a[], unsigned int n)
+#+end_src
 
- #+begin_src c++
+- How to figure out array size when passing n if the size was left unspecified when declaring it?
+- use sizeof function:
+
+ #+begin_src C++
 int a[] = {1,2,6,3,8};
 int x = sumArray(a, sizeof(a) / sizeof(int));
 
  #+end_src
 
-** Play time
+*** Play time
  
 
 #+begin_src c++
@@ -627,7 +703,7 @@ bool arrayIsSorted(const int a[], unsigned int n){
 
 #+end_src
 
-** Play time
+*** Play time
  
 
 #+begin_src c++
@@ -644,15 +720,17 @@ void reverseArray(int a[], unsigned int n) {
 
 #+end_src
 
-** Processing subarrays
+*** Processing subarrays
  
 
 #+begin_src c++
 // pos   : index of the first component in the subarray
 // count: total number of components in the subarray
-int sumSubarray(const int a[], unsigned int pos, unsigned int count){
+int sumSubarray(const int a[],
+                unsigned int pos,
+                unsigned int count){
   int sum = 0;
-  for (int i = pos; i < pos + count; I++)
+  for (int i = pos; i < pos + count; i++)
     sum += a[i];
 
   return sum;
@@ -660,24 +738,26 @@ int sumSubarray(const int a[], unsigned int pos, unsigned int count){
 
 #+end_src
 
-** Processing subarrays
+*** Processing subarrays
  
 
 #+begin_src c++
 // begin: index of first component in the subarray
 // end   : index of the last component in the subarray
-int sumSubarray(const int a[], unsigned int begin, unsigned int end){
+int sumSubarray(const int a[],
+                unsigned int begin,
+                unsigned int end){
   assert(begin <= end);
   int sum = 0;
-  for (int i = begin; i <= end; I++)
-    sum += a[I];
+  for (int i = begin; i <= end; i++)
+    sum += a[i];
 
   return sum;
 }
 
 #+end_src
 
-** Subtleties
+*** Subtleties
  
  - C++ does not check if array indices are within bound 
  - it's your responsibility 
@@ -693,6 +773,8 @@ a = b // invalid
 a[6]=b[9] // works!
  #+end_src
 
+
+*** Subtleties
  - Array Comparison
 
  #+begin_src c++
@@ -701,8 +783,46 @@ if(a == b) // invalid
 
  - compare each pair of cells at a time
  - No need to return array as function output, uses call by reference anyway!
- 
-** Two dimensional arrays
+
+*** Joey's Aside
+- C++ arrays are /unsafe/
+- This is /terrible/ language design
+  + Billions of dollars and many security incidents caused by unsafe memory access
+  + Error cost outweighs performance cost of checking array bounds
+  + Most checks can be optimized out by the compiler
+- C++ will never change
+  + Backwards compatibility
+  + ~std::array~ is safe but isn't the default
+- Languages like Rust make sure that these errors are /impossible/
+  + Unless you explicitly disable safety
+
+
+*** Example
+#+begin_src C++ :results code :exports both
+#include <iostream>
+using namespace std;
+int main(){
+  char passwd[8] = "secret";
+  char username[8] = "bob101";
+  string toPrint = "";
+  // Oops reading past end of array!
+  for (int i = 0; i < 16; i++){
+    toPrint += username[i];
+  }
+  cout << toPrint << endl;
+}
+#+end_src
+
+#+RESULTS:
+#+begin_src C++
+bob101  secret  
+#+end_src
+
+
+
+
+
+*** Two dimensional arrays
  
  - Want to store quantity of different products sold in a store
  - but for multiple locations/regions 
@@ -711,7 +831,7 @@ if(a == b) // invalid
  - sales[2][1] are the total number of items sold for location 2 and product 1
  - recall item n is the (n+1)-th item as index starts from 0!
  
-** Two dimensional arrays
+*** Two dimensional arrays
  
 
 #+begin_src c++
@@ -736,7 +856,7 @@ sales[1][0] = 500;
 
  #+end_src
 
-** Two dimensional arrays
+*** Two dimensional arrays
  
 
 #+begin_src c++
@@ -745,27 +865,29 @@ for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
   for (unsigned int product = 0; product < NUM_OF_PRODUCTS; product++)
     cin >> sales[region][product];
 
-unsigned int total_sales = 0; // total sales for a particular product (product 0)
+// total sales for a particular product (product 0)
+unsigned int total_sales = 0;
 
 for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
-  total_sales += sales[region][0]; // add up sales from all regions for product 0
+  // add up sales from all regions for product 0
+  total_sales += sales[region][0];
 
 #+end_src
 
    + Can you compute total sales from region 1? 
  
-** Two dimensional arrays
+*** Two dimensional arrays
  
- - unsigned int sumProductSales(unsigned int 
-
  #+begin_src c++
-sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS], unsigned int product){
+unsigned int sumProductSales(
+        unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS],
+        unsigned int product){
   unsigned int total_sales = 0;
   for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
     total_sales += sales[region][product];
 
   return total_sales;
-                                                             }
+}
 
  #+end_src
 
@@ -774,32 +896,27 @@ sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS], unsigned int product){
  - As usual, can leave size of first dimension unspecified, e.g. int F(int arr[ ][SIZE]) 
  - but not the second one (why?)
  
-** Making things more modular
+*** Making things more modular
  
 
 #+begin_src c++
-// Implement a function that returns the value of one element from the sales array
+// Implement a function that returns
+// the value of one element from the sales array
+unsigned int getSales(
+        const unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS],
+        unsigned int r, unsigned int p){
+  return sales[r][p];
+}
+// Implement a function that sets the value
+// of one element from the sales array
+void setSales(unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS],
+              unsigned int r, unsigned int p, unsigned int v){
+  sales[r][p] = v;
+}
+
 #+end_src
 
- - unsigned int getSales(const unsigned int 
-
- #+begin_src c++
-sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS], unsigned int r, unsigned int p){
-  return sales[r][p];
-                                                                       }
-// Implement a function that sets the value of one element from the sales array
- #+end_src
-
- - void setSales(unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS],
-
- #+begin_src c++
-unsigned int r, unsigned int p, unsigned int v){
-  sales[r][p] = v;
-                                               }
-
- #+end_src
-
-** Using typedef
+*** Using typedef
  
 
 #+begin_src c++
@@ -817,7 +934,7 @@ unsigned int sumSales(const Sales sales){
 
 #+end_src
 
-** Simulating Two-dimensional Arrays by One-dimensional Ones
+*** Simulating Two-dimensional Arrays by One-dimensional Ones
  
 
 #+begin_src c++
@@ -833,25 +950,28 @@ unsigned int _sales[NUM_OF_REGIONS * NUM_OF_PRODUCTS];
 
  - Issue: how to map between these two?
    + row-major vs. column-major order 
-e.g. sales[i][j] is the same as _sales[i * NUM_OF_PRODUCTS + j] in row-major 
+   + e.g. ~sales[i][j]~
+     -  same as ~_sales[i * NUM_OF_PRODUCTS + j]~ in row-major
  - Now you know why the size of the 2nd dimension can't be left unspecified!
+   + Can you write the formula for column-major order?
  
-   + Can you write the formula for column-major order? 
- 
-** Simulating Two-dimensional Arrays by One-dimensional Ones
+*** Simulating Two-dimensional Arrays by One-dimensional Ones
  
 
 #+begin_src c++
 unsigned int totalSales = 0;
 
 for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
-  for (unsigned int product = 0; product < NUM_OF_PRODUCTS; product++)
+  for (unsigned int product = 0;
+       product < NUM_OF_PRODUCTS;
+       product++){
     totalSales += _sales[region * NUM_OF_PRODUCTS + product];
+  }
 
 
 #+end_src
 
-** Multi-dimensional Arrays
+*** Multi-dimensional Arrays
  
 
 #+begin_src c++
@@ -869,35 +989,36 @@ for (unsigned int year = 0; year < NUM_YEARS; year++)
 
 #+end_src
 
-** Multi-dimensional Arrays
+*** Multi-dimensional Arrays
  
  
- - Sales[year][region][product]
+ - ~Sales[year][region][product]~
  
- - vs.
+ - vs ~_Sales[(year * NUM_REGS * NUM_PRODS) + (region * NUM_OF_PRODS) + product]~
  
-_Sales[(year * NUM_REGS * NUM_PRODS) + (region * NUM_OF_PRODS) + product]
+*** Multi-dimensional Arrays
  
-** Multi-dimensional Arrays
- 
- - In general for a d-dimensional array with dimensions S_1, S_2, ..., S_d, the element at 
- 
- - Item[n_1][n_2]...[n_d]
- 
- - can be represented as a single dimensional array with the following index
+ - In general for a d-dimensional array with dimensions S_1, S_2, ..., S_d, the element at ~Item[n_1][n_2]...[n_d]~ can be represented as a single dimensional array with the following index
  
 
  #+begin_src c++
-_Item[n_d + S_d * (n_{d-1} + S_{d-1} * (n_{d-2} + S_{d-2} * (...+S_2*n_1) ... ))] 
+ _Item[n_d + S_d * (n_{d-1} + S_{d-1}
+    * (n_{d-2} + S_{d-2} * (...+S_2*n_1) ... ))]
  
  #+end_src
 
 * Records
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides003-records.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
- - Structs and unions
+**  Structs and unions
  
-** Motivation
+*** Motivation
  
  - Data in collection is heterogenous 
  
@@ -924,7 +1045,7 @@ double Price[N];
  - Poor choice of interface!
  - (many arguments to pass for functions)
  
-** Motivation
+*** Motivation
  
  - Data can be heterogenous 
  - Define:
@@ -959,7 +1080,7 @@ c.callNumber = "B2754 1980";
 
  #+end_src
 
-** Initializing and copying a record
+*** Initializing and copying a record
  
  - As with arrays 
  
@@ -996,7 +1117,7 @@ c2 = c;
 
  #+end_src
 
-** Functions operating on records
+*** Functions operating on records
  
 
 #+begin_src c++
@@ -1013,7 +1134,7 @@ void printCatalogEntry(CatalogEntry c){
  - As usual, by default arguments are passed by value (call by value)
  
  
-** Functions operating on records
+*** Functions operating on records
  
  - For efficiency, call by reference is also supported
  
@@ -1031,7 +1152,7 @@ void printCatalogEntry(const CatalogEntry &c){
 
  #+end_src
 
-** Equality checking
+*** Equality checking
  
 
 #+begin_src c++
@@ -1059,7 +1180,7 @@ c1.callNumber == c2.callNumber;
 
  #+end_src
 
-** Complex record data structures
+*** Complex record data structures
  
 
 #+begin_src c++
@@ -1099,7 +1220,7 @@ CatalogEntry A[3];
 
  #+end_src
 
-** Practise!
+*** Practise!
  
  - See the very first announcement in UR Courses
  - Try the exercises there
@@ -1107,7 +1228,7 @@ CatalogEntry A[3];
    + declare a C++ struct to represent a hexagon 
    + declare a C++ struct to represent a circle 
  
-** Complex record data structures
+*** Complex record data structures
  
 
 #+begin_src c++
@@ -1126,7 +1247,7 @@ struct FullName {
 
 #+end_src
 
-** Complex record data structures
+*** Complex record data structures
  
 
 #+begin_src c++
@@ -1151,7 +1272,7 @@ for (int i = 0; i < SCREEN_HEIGHT; i++){
 
 #+end_src
 
-** Complex record data structures
+*** Complex record data structures
  
 
 #+begin_src c++
@@ -1178,7 +1299,7 @@ int main( ) {
 
  - What will be the output?
  
-** Enumerations
+*** Enumerations
  
  - User-defined data type that consists of integral constants
  
@@ -1204,7 +1325,7 @@ cout << d+1 ;
 
  - What will be the output?
  
-** Variant records
+*** Variant records
  
  - Multiple component fields can be defined
  - At most one field can be in use at one time (fields share the same memory)
@@ -1230,7 +1351,7 @@ cout << x.c;         // works, prints p
 
  #+end_src
 
-** Example
+*** Example
  
 
 #+begin_src c++
@@ -1258,7 +1379,7 @@ union CatalogEntryVariantPart {
 
 #+end_src
 
-** Example (cont'd)
+*** Example (cont'd)
  
 
 #+begin_src c++
@@ -1275,7 +1396,7 @@ struct CatalogEntry {
 
 #+end_src
 
-** Example (cont'd)
+*** Example (cont'd)
  
 
 #+begin_src c++
@@ -1297,7 +1418,7 @@ void printCatalogEntry(const CatalogEntry& c) {
 
 #+end_src
 
-** Anonymous declaration of records and variant-records
+*** Anonymous declaration of records and variant-records
  
  - Earlier:
 
@@ -1319,7 +1440,7 @@ union CatalogEntryVariantPart {
 
  #+end_src
 
-** Anonymous declaration of records and variant-records
+*** Anonymous declaration of records and variant-records
  
  - Can also anonymize:
  
@@ -1334,7 +1455,7 @@ union CatalogEntryVariantPart {
 
  #+end_src
 
-** Anonymous declaration of records and variant-records
+*** Anonymous declaration of records and variant-records
  
  - In fact, we could have done the same with the union
  
@@ -1357,6 +1478,12 @@ struct CatalogEntry {
  #+end_src
 
 * Program Organization Principles
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides004-organization.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
  
@@ -1445,7 +1572,7 @@ int main ( ){
   extern int bar; // works!
 
   doh(13); // invalid
-  yay(Ôa'); // works!
+  yay(Ã”a'); // works!
 
 }
 
@@ -1912,6 +2039,12 @@ cout << counterGetValue(c) << endl;
  #+end_src
 
 * Abstract Data Types via Classes
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides005-adt-classes.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
  
@@ -2440,7 +2573,13 @@ Time Time::add(const Time &t) const {  // in Time.cpp
  #+end_src
 
 * Searching and sorting
- 
+
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides006-searchsort.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
  - Linear search, binary search, selection sort, insertion sort
@@ -2838,6 +2977,12 @@ void insertionSort(DataType A[], int N) {
 #+end_src
 
 * Constructors and overloading
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides007-ctors.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
  
@@ -3415,6 +3560,12 @@ ostream &operator<< (ostream &out, const House &h) {
  #+end_src
 
 * Object-oriented design
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides008-oop-design.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
  
@@ -4437,6 +4588,12 @@ Derived1 &Derived1::operator=(const Derived1 &original) {
  #+end_src
 
 * Templates
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides009-templates.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
  
@@ -4839,6 +4996,12 @@ int main() {
 #+end_src
 
 * Pointers
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides010-pointers.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
  
@@ -5310,6 +5473,12 @@ int main(){
 #+end_src
 
 * Dynamic memory management
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides011-dyn-pointers.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  - using pointers
  
  
@@ -6469,6 +6638,12 @@ String String::concatenate(const String &s) const {
  #+end_src
 
 * Dynamic memory management
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides012-dyn-oop.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  - and object-oriented design
  
  
@@ -6834,6 +7009,12 @@ for (int i = 0; i < 100; i++) {
 #+end_src
 
 * Canonical forms for C++ classes
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides013-canonical.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
  
@@ -7073,6 +7254,12 @@ Class B{
 #+end_src
 
 * Linked lists
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides014-list.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
  
@@ -7286,6 +7473,12 @@ int main() {
 #+end_src
 
 * Linked lists
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides015-multiset.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
  
  
  
@@ -7477,3 +7670,10 @@ bool Multiset::member(ItemType x) const {
 
 }
 #+end_src
+
+
+
+* Emacs Variables (please ignore) :noexport:
+Local Variables:
+org-latex-packages-alist: nil
+End:
