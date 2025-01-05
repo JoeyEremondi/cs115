@@ -54,7 +54,23 @@
 #+BEAMER_HEADER: \setminted[c++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 #+BEAMER_HEADER: \setminted[C++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 
-* Contents :noexport:
+* Contents :TOC_1_gh:
+- [[#introduction][Introduction]]
+- [[#review][Review]]
+- [[#arrays][Arrays]]
+- [[#records][Records]]
+- [[#program-organization-principles][Program Organization Principles]]
+- [[#abstract-data-types-via-classes][Abstract Data Types via Classes]]
+- [[#searching-and-sorting][Searching and sorting]]
+- [[#constructors-and-overloading][Constructors and overloading]]
+- [[#object-oriented-design][Object-oriented design]]
+- [[#templates][Templates]]
+- [[#pointers][Pointers]]
+- [[#dynamic-memory-management][Dynamic memory management]]
+- [[#dynamic-memory-management-1][Dynamic memory management]]
+- [[#canonical-forms-for-c-classes][Canonical forms for C++ classes]]
+- [[#linked-lists][Linked lists]]
+- [[#linked-lists-1][Linked lists]]
 
 * Introduction
 :PROPERTIES:
