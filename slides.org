@@ -57,20 +57,6 @@
 * Contents :TOC_1_gh:
 - [[#introduction][Introduction]]
 - [[#review][Review]]
-- [[#arrays][Arrays]]
-- [[#records][Records]]
-- [[#program-organization-principles][Program Organization Principles]]
-- [[#abstract-data-types-via-classes][Abstract Data Types via Classes]]
-- [[#searching-and-sorting][Searching and sorting]]
-- [[#constructors-and-overloading][Constructors and overloading]]
-- [[#object-oriented-design][Object-oriented design]]
-- [[#templates][Templates]]
-- [[#pointers][Pointers]]
-- [[#dynamic-memory-management][Dynamic memory management]]
-- [[#dynamic-memory-management-1][Dynamic memory management]]
-- [[#canonical-forms-for-c-classes][Canonical forms for C++ classes]]
-- [[#linked-lists][Linked lists]]
-- [[#linked-lists-1][Linked lists]]
 
 * Introduction
 :PROPERTIES:
@@ -675,7 +661,7 @@ int main( )
 assert (n>0); //prog. Terminates if not
  #+end_src
 
-* Arrays
+* Arrays :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides002-arrays.pdf
 :END:
@@ -1134,7 +1120,7 @@ for (unsigned int year = 0; year < NUM_YEARS; year++)
  
  #+end_src
 
-* Records
+* Records :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides003-records.pdf
 :END:
@@ -1603,7 +1589,7 @@ struct CatalogEntry {
 
  #+end_src
 
-* Program Organization Principles
+* Program Organization Principles :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides004-organization.pdf
 :END:
@@ -2163,7 +2149,7 @@ cout << counterGetValue(c) << endl;
 
  #+end_src
 
-* Abstract Data Types via Classes
+* Abstract Data Types via Classes :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides005-adt-classes.pdf
 :END:
@@ -2695,8 +2681,8 @@ Time Time::add(const Time &t) const {  // in Time.cpp
     }
 
  #+end_src
-
-* Searching and sorting
+ :noexport:
+* Searching and sorting :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides006-searchsort.pdf
 :END:
@@ -3098,7 +3084,7 @@ void insertionSort(DataType A[], int N) {
 
 #+end_src
 
-* Constructors and overloading
+* Constructors and overloading :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides007-ctors.pdf
 :END:
@@ -3680,7 +3666,7 @@ ostream &operator<< (ostream &out, const House &h) {
 
  #+end_src
 
-* Object-oriented design
+* Object-oriented design :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides008-oop-design.pdf
 :END:
@@ -4707,7 +4693,7 @@ Derived1 &Derived1::operator=(const Derived1 &original) {
 
  #+end_src
 
-* Templates
+* Templates :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides009-templates.pdf
 :END:
@@ -5114,7 +5100,7 @@ int main() {
 
 #+end_src
 
-* Pointers
+* Pointers :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides010-pointers.pdf
 :END:
@@ -5590,7 +5576,7 @@ int main(){
 
 #+end_src
 
-* Dynamic memory management
+* Dynamic memory management :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides011-dyn-pointers.pdf
 :END:
@@ -6754,7 +6740,7 @@ String String::concatenate(const String &s) const {
 
  #+end_src
 
-* Dynamic memory management
+* Dynamic memory management :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides012-dyn-oop.pdf
 :END:
@@ -7124,7 +7110,7 @@ for (int i = 0; i < 100; i++) {
 
 #+end_src
 
-* Canonical forms for C++ classes
+* Canonical forms for C++ classes :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides013-canonical.pdf
 :END:
@@ -7368,7 +7354,7 @@ Class B{
 
 #+end_src
 
-* Linked lists
+* Linked lists :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides014-list.pdf
 :END:
@@ -7586,7 +7572,7 @@ int main() {
 
 #+end_src
 
-* Linked lists
+* Linked lists :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides015-multiset.pdf
 :END:
