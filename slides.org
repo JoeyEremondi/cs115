@@ -928,7 +928,7 @@ int main(){
 
 #+RESULTS:
 #+begin_src C++
-bob101  secret  
+bob101secret
 #+end_src
 
 
@@ -1683,7 +1683,7 @@ int main ( ){
   extern int bar; // works!
 
   doh(13); // invalid
-  yay(Ôa'); // works!
+  yay('a'); // works!
 
 }
 
@@ -3338,14 +3338,28 @@ void Multiset::print(ostream& output_stream) const {
  
 
 #+begin_src C++
-void myMax(float f1, float f2); // 1Avoid myMax(int i1, int i2); // 1BmyMax(7, 9);
+void myMax(float f1, float f2); // 1A
+void myMax(int i1, int i2); // 1B
+myMax(7, 9);
 
-void zipIt(float f1); // 2Avoid zipIt(string s1); // 2BString s = "Trouble";zipIt(s);
+void zipIt(float f1); // 2A
+void zipIt(string s1); // 2B
+String s = "Trouble";
+zipIt(s);
 
-void zoom(float f1); // 3Avoid zoom(string s1); // 3Bint x = 14;zoom(x);
-void whoosh(char c1); // 4Avoid whoosh(string s1); // 4Bdouble pi = 3.14159;whoosh(pi);
+void zoom(float f1); // 3A
+void zoom(string s1); // 3B
+int x = 14;
+zoom(x);
+void whoosh(char c1); // 4A
+void whoosh(string s1); // 4B
+double pi = 3.14159;
+whoosh(pi);
 
-void crunch(string s1, string s2); // 5Avoid crunch(string s1); // 5Bdouble e = 2.71828;crunch(e);
+void crunch(string s1, string s2); // 5A
+void crunch(string s1); // 5B
+double e = 2.71828;
+crunch(e);
 
 #+end_src
 
@@ -3358,9 +3372,15 @@ void crunch(string s1, string s2); // 5Avoid crunch(string s1); // 5Bdouble e 
  
 
 #+begin_src C++
-void mixed(int i1, double d1); // 6Avoid mixed(double d1, int i1); // 6Bint k3 = 3, k4 = 4;mixed(k3, k4);
+void mixed(int i1, double d1); // 6A
+void mixed(double d1, int i1); // 6B
+int k3 = 3, k4 = 4;
+mixed(k3, k4);
 
-void mixed(int i1, double d1); // 7Avoid mixed(double d1, int i1); // 7Bdouble r5 = 55.5, r6 = 66.6;mixed(r5, r6);
+void mixed(int i1, double d1); // 7A
+void mixed(double d1, int i1); // 7B
+double r5 = 55.5, r6 = 66.6;
+mixed(r5, r6);
 
 #+end_src
 
@@ -3398,14 +3418,11 @@ public:
   House();
 
   // initializing constructor
-#+end_src
 
- - 	House(const string &initAddress,
- - 	      const string &initOwner,
- - 	      unsigned int initCost,
-
- #+begin_src C++
-bool initFireplace);
+  House(const string &initAddress,
+  const string &initOwner,
+  unsigned int initCost,
+        bool initFireplace);
 
 
 // copy constructor
@@ -3711,17 +3728,17 @@ public:
   Bicycle ();
 #+end_src
 
- - 	Bicycle (string wheel_manufacturer1,      
+ -  Bicycle (string wheel_manufacturer1,
  -                 string wheel_product1,
  -                 int diameter_in_inches1, 
  -                 int weight_in_grams1, 
- -           	    int spokeCount1,
- - 		          string wheel_manufacturer2, 
+ -                int spokeCount1,
+ -             string wheel_manufacturer2,
  -                 string wheel_product2,
- - 		 int diameter_in_inches2, 
+ -    int diameter_in_inches2,
  -        int weight_in_grams2, 
- - 		 int spokeCount2,
- - 		 string seat_manufacturer1, 
+ -    int spokeCount2,
+ -    string seat_manufacturer1,
  -        string seat_product1,
 
  #+begin_src C++
@@ -3738,7 +3755,7 @@ void print (ostream &out);
 ** Composition (example)
  
  - Bicycle::Bicycle()
- - 	: front_wheel(), back_wheel(),seat()
+ -  : front_wheel(), back_wheel(),seat()
 
  #+begin_src C++
     {
@@ -3761,11 +3778,11 @@ Bicycle b;
  - int weight_in_grams1, int spokeCount1, string wheel_manufacturer2, 
  - string wheel_product2, int diameter_in_inches2, int weight_in_grams2, int spokeCount2,
  - string seat_manufacturer1, string seat_product1, string seat_colour1)
- - 	: front_wheel (wheel_manufacturer1, wheel_product1,
- - 		 diameter_in_inches1, weight_in_grams1, spokeCount1),
- - 	  back_wheel (wheel_manufacturer2, wheel_product2,
- - 		 diameter_in_inches2, weight_in_grams2, spokeCount2),
- - 	  seat (seat_manufacturer1, seat_product1, seat_colour1)
+ -  : front_wheel (wheel_manufacturer1, wheel_product1,
+ -    diameter_in_inches1, weight_in_grams1, spokeCount1),
+ -    back_wheel (wheel_manufacturer2, wheel_product2,
+ -    diameter_in_inches2, weight_in_grams2, spokeCount2),
+ -    seat (seat_manufacturer1, seat_product1, seat_colour1)
 
  #+begin_src C++
     {
@@ -3808,8 +3825,8 @@ public:
  #+end_src
 
  - Seat::Seat (const Seat &original)
- - 	: manufacturer(original.manufacturer),
- - 	  product(original.product), 
+ -  : manufacturer(original.manufacturer),
+ -    product(original.product),
 
  #+begin_src C++
 colour(original.colour) {
@@ -3822,9 +3839,9 @@ colour(original.colour) {
 ** Composition (example)
  
  - Bicycle::Bicycle (const Bicycle &original)
- - 	: front_wheel (original.front_wheel),
- - 	  back_wheel (original.back_wheel),
- - 	  seat (original.seat)
+ -  : front_wheel (original.front_wheel),
+ -    back_wheel (original.back_wheel),
+ -    seat (original.seat)
 
  #+begin_src C++
     {
@@ -5471,7 +5488,7 @@ struct Book {
  #+begin_src C++
     {
       { "Computer Security: Art and Science", "Matt Bishop", "QA 76.9.A25 B56 2002" },
-    	{ "Applied Cryptography", "Bruce Schneier","QA 76.9.A25 S35 1996"},
+     { "Applied Cryptography", "Bruce Schneier","QA 76.9.A25 S35 1996"},
           { "Practical Software Maintenance", "Thomas M. Pigoski","QA 76.76.S64 P54 1996"}
     };
 
@@ -6951,7 +6968,7 @@ class C {
 public:
   // Say this is an abstract class
   ...
-~C();		// WRONG, use virtual ~C() instead
+~C();  // WRONG, use virtual ~C() instead
 };
 
 class D : public C {
