@@ -59,7 +59,6 @@
 * Introduction
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides000-intro.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -179,7 +178,6 @@
 * Review
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides001-review.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -664,7 +662,6 @@ assert (n>0); //prog. Terminates if not
 * Arrays
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides002-arrays.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -1124,7 +1121,6 @@ for (unsigned int year = 0; year < NUM_YEARS; year++)
 * Records
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides003-records.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -1594,7 +1590,6 @@ struct CatalogEntry {
 * Program Organization Principles
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides004-organization.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -2155,7 +2150,6 @@ cout << counterGetValue(c) << endl;
 * Abstract Data Types via Classes
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides005-adt-classes.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -2687,10 +2681,8 @@ Time Time::add(const Time &t) const {  // in Time.cpp
  #+end_src
 
 * Searching and sorting
-
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides006-searchsort.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -3093,7 +3085,6 @@ void insertionSort(DataType A[], int N) {
 * Constructors and overloading
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides007-ctors.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -3676,7 +3667,6 @@ ostream &operator<< (ostream &out, const House &h) {
 * Object-oriented design
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides008-oop-design.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -4704,7 +4694,6 @@ Derived1 &Derived1::operator=(const Derived1 &original) {
 * Templates
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides009-templates.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -5112,7 +5101,6 @@ int main() {
 * Pointers
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides010-pointers.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -5589,7 +5577,6 @@ int main(){
 * Dynamic memory management
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides011-dyn-pointers.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -6754,7 +6741,6 @@ String String::concatenate(const String &s) const {
 * Dynamic memory management
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides012-dyn-oop.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -7125,7 +7111,6 @@ for (int i = 0; i < 100; i++) {
 * Canonical forms for C++ classes
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides013-canonical.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -7370,7 +7355,6 @@ Class B{
 * Linked lists
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides014-list.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -7589,7 +7573,6 @@ int main() {
 * Linked lists
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides015-multiset.pdf
-:CUSTOM_ID: introduction
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
