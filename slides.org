@@ -1,4 +1,3 @@
-
 #+title: University of Regina, CS 115, Winter 2025
 #+subtitle: CS 115
 #+AUTHOR: Dr. Joseph Eremondi, adapted from Dr. Shakil Khan, Dr. Philip Fong, and Dr. Howard Hamilton
@@ -56,6 +55,127 @@
 #+BEAMER_HEADER: \setminted[C++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 
 * Contents :noexport:
+
+* Introduction
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides000-intro.pdf
+:CUSTOM_ID: introduction
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
+
+** Welcome to CS 115
+
+*** What is this course all about?
+
+
+**** Objectives
+- Various concepts of object oriented programming. Topics include: two-dimensional arrays, records, data abstraction, classes, composition and inheritance, type systems, subtyping, dynamic binding, polymorphism, pointers/references, dynamic memory management, and searching and sorting algorithms. Along the way, we may also discuss software engineering concepts, including comprehensibility, correctness, efficiency, and refactoring.
+
+*** What is this course all about?
+
+**** Major theme: Types
+- This course gives you your first real look at /types/ in programming
+  + How to define your own types
+  + How to use types to structure programs
+- More than just ~int~ and ~bool~
+
+*** What is this course all about?
+
+**** Major theme: Software Engineering
+- CS 110 is how to write code
+- CS 115 is how to write *good* code
+- i.e. How to write code that is easy to:
+  + Understand
+  + Maintain
+  + Re-use
+  + Extend
+- /Intentionally limiting/ the ways we are allowed to use parts of our program
+  +  Abstraction is at the heart of computer science
+*** Tentative Outline
+- Review
+- 2D arrays, records (structs), abstract data types
+- Searching and sorting
+- Object Oriented Design
+  + Classes and constructors
+  + Overloading and coercion
+  + Composition and inheritance
+- Pointers and dynamic memory management
+- Program organization
+
+*** Learning Objectives
+**** By the end of this course, you should be understand
+  + Data abstraction, encapsulation, polymorphism
+  + Solving real world problems with object-oriented principles
+  + Using composite types and abstract types to solve real-world problems
+  + Approaches to searching and sorting
+  + C++ OOP features
+    - Operator overloading, type coercions, constructors, destructors
+  + Pointers, dynamic memory management, and linked data structures
+  + Modular programming with inheritance and composition
+
+
+*** Grading
+- 20% assignments
+- 15% labs
+- 20% midterm
+- 45% final
+  + Must pass final to pass the class
+
+*** Midterm
+- In-class, Friday March 7
+  + Might be split into two rooms
+
+*** Labs
+- See [[https://www.labs.cs.uregina.ca/115/]]
+
+*** Assignments
+- 4 Assignments
+- Submitted on URCourses
+- Sample based marking
+  + You submit the whole thing, we mark part of it
+
+*** Office Hours
+- Tuesdays 11:30-12:30
+- Thursdays 10:30-11:30
+- In RIC 317
+  + Take the elevator then go across the bridge
+  + or, take the stairs by the vending machines
+
+*** Course Communication
+- In lectures
+- Announcements on URCourses
+- Course email on URCourses
+  + For privately contacting instructor
+  + Save for things that need to be private
+    - Personal circumstances
+    - Assignment solutions
+
+*** Course Discussion Forum
+- Ask questions on URCourses!
+  + Can be asked anonymously
+  + If you're wondering, then other students probably are too
+  + Don't post partial or complete assignment solutions on the forum
+- Good for
+  + Clarification on assignments
+  + Understanding course material
+  + General curiosity/information beyond the lectures
+
+*** Academic Honesty
+**** Students are expected to complete assignments /independently/
+- No sharing solutions
+- No copying from the internet
+- No using ChatGPT, Copilot, Claude, or any other Generative AI tool.
+**** You need to pass the final, so set yourself up for success and do the assignments
+
+*** Other Logistics
+- Attendance expected
+  + You're responsible for anything you miss
+- There are detailed course notes on URCourses
+  + by Howard Hamilton and Phillip Fong
+  + Excellent *free* resource
+- Lectures are a great time to *ask questions*
+
 * Review
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides001-review.pdf
@@ -91,7 +211,10 @@ int main( ){
  
 *** Functional abstraction
  
-
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src c++
 // Declaration of the triple function
 int triple(int x);
@@ -104,15 +227,16 @@ int main( ){
   return 0;
 }
 
-
-
 // Definition of the triple function
 int triple(int x) {
   return 3 * x;
 }
-
 #+end_src
 
+**** Declaration vs. Definition :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
  - Must declare functions before referencing them
  - use function prototype /header
  - OR declare before 1st use
@@ -122,8 +246,11 @@ int triple(int x) {
  - Can a function call itself?!
  
 *** Local and global variables and constants
- 
 
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src c++
 // Declaration of a global variable
 int g;
@@ -140,7 +267,13 @@ int main( ){
   cout << g << endl;
   return 0;
 }
+#+end_src
 
+**** ctd. :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src c++
 void tripleGlobal( ){
   // The local var loc is not acc.
   // The global var g is accessible
@@ -150,7 +283,7 @@ void tripleGlobal( ){
 #+end_src
 
  - Use ``extern'' to access global variables declared in other files
- 
+
 *** Conditionals (if-then-else branching)
  
 
@@ -295,9 +428,9 @@ unsigned int sumOfDigits(unsigned int m){
 
  - Trace it!
  
- - More readable than for loops
+ - More explicit than for loops
  
- - Do-while executes at least once
+ - Do-while: like while, but executes at least once
  
  - Loops can be nested
  
@@ -320,6 +453,8 @@ int main( ){
 }
  #+end_src
 
+*** Value passing semantics
+
  - Call by reference (can only send vars)
  
 
@@ -335,18 +470,19 @@ int main() {
 
   return 0;
 }
-
-
  #+end_src
 
 *** Value passing semantics
  
  - Call by address (arguments evaluated)
+   + We'll see more of this later
+   + Have to explicitly get dereference
+     - i.e. get value from the address
  
 
  #+begin_src c++
 void doubleP(int *a){
-  ,*a = (*a)*2;
+  *a = (*a)*2;
 }
 
 int main( ){
@@ -358,29 +494,11 @@ int main( ){
 }
  #+end_src
 
- - Call by reference (can only send vars)
- 
-
- #+begin_src C++
-void doubleR(int &a){
-  a = a*2;
-}
-
-int main() {
-  int a = 4;
-  doubleR(a);
-  cout << a << endl;
-
-  return 0;
-}
-
-
- #+end_src
 
 *** Side effects
  
- - Any computational effects of a function other than the generation of a value to be returned
- - those that persist
+ - Effects of a function other than the generation of a value to be returned
+   + those that persist
  - e.g., printing stuff using cout, changing a global variable, changing a local variable via call by reference/pointer, etc.  
  
 *** Strings
@@ -422,16 +540,12 @@ char charToUpper(char c){
 
 *** Strings
  
- - Passing a parameter by reference can be more efficient than passing by value for very large strings
- - But not safe as modifying the passed string also modifies the original one
+ - Passing by reference: faster than pass-by-value for large strings
+ - Not safe: modifying the passed string also modifies the original one
  - Solution: pass by constant reference 
- 
- - For example: 
 
  #+begin_src c++
 string capitalize(const string &s);
-
-
  #+end_src
 
  - Occasionally, you may want to return a value by constant reference (meh!)
@@ -443,9 +557,7 @@ string capitalize(const string &s);
       else
         return s2;
     }
-
-
- #+end_src
+#+end_src
 
 *** Code as Communication
 - Passing by constant reference doesn't add any power to the language
@@ -491,18 +603,20 @@ int main( )
  #+end_src
 
 *** Modular vs. Application programs (115 vs. 110)
- 
- - Top-down design is the process of repeatedly decomposing a complicated problem into smaller, more manageable subproblems
- - each can be implemented independently
- - e.g., decomposing a function into many smaller ones
- 
- - cf. the bottom-up approach
- - the program development process can be seen as a process of building reusable tools, and then using those tools to build even more powerful tools, eventually leading to a solution to the original problem
- 
- - Reuse reduces the overhead of solving a recurring problem over and over again, saves us from redoing testing and documentation for similar code, and in general improves the comprehensibility of source code
- 
-
- - Code structured into modules; separates interface from implementation
+ - Top-down design
+   + repeatedly decomposing a complicated problem into smaller, easier subproblems
+   + each can be implemented independently
+   + e.g., decomposing a function into many smaller ones
+ - Alternative is bottom-up approach
+   + building reusable tools
+   + then using those tools to build even powerful tools
+   + eventually solve original problem
+ - Reuse
+   + reduces the overhead of solving a problem over and over again,
+   + saves us from redoing testing and documentation for similar code
+   + Easier to understand code
+   + Code structured into modules
+     - separates interface from implementation
 
 *** Standard input and output
  
