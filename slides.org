@@ -58,6 +58,7 @@
 - [[#introduction][Introduction]]
 - [[#review][Review]]
 - [[#arrays][Arrays]]
+- [[#records][Records]]
 
 * Introduction
 :PROPERTIES:
@@ -1121,7 +1122,7 @@ for (unsigned int year = 0; year < NUM_YEARS; year++)
 
  #+end_src
 
-* Records :noexport:
+* Records
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides003-records.pdf
 :END:
@@ -1263,7 +1264,7 @@ void printCatalogEntry(CatalogEntry c){
  - As usual, by default arguments are passed by value (call by value)
  
  
-*** Functions operating on records
+*** Passing References
  
  - For efficiency, call by reference is also supported
  
@@ -1283,7 +1284,7 @@ void printCatalogEntry(const CatalogEntry &c){
 
 *** Equality checking
  
-
+- Not supported by default
 #+begin_src c++
 if (c1 == c2)  // invalid
 
@@ -1292,61 +1293,33 @@ if (c1 == c2)  // invalid
  - As in the case for arrays, must do this each field at a time
 
  #+begin_src c++
-bool CatalogEntryEquals(const CatalogEntry& c1, const CatalogEntry& c2){
- #+end_src
-
- -   return
- -       c1.title == c2.title &&
- -       c1.author == c2.author &&
- -       c1.publisher == c2.publisher && 
- -       c1.publishingYear == c2.publishingYear &&
-
- #+begin_src c++
-c1.callNumber == c2.callNumber;
+bool CatalogEntryEquals(const CatalogEntry &c1, const CatalogEntry &c2) {
+  return c1.title == c2.title && c1.author == c2.author &&
+         c1.publisher == c2.publisher &&
+         c1.publishingYear == c2.publishingYear &&
+         c1.callNumber == c2.callNumber;
 }
-
-
-
  #+end_src
 
 *** Complex record data structures
- 
-
+- Arrays of records
 #+begin_src c++
 CatalogEntry A[3];
-
-#+end_src
-
- - CatalogEntry A[] = 
-
- #+begin_src c++
-    {
-      {"Peter Pan",
-          "J. M. Barrie",//
-          "Scribner",//
-          1980,//
-          "B2754 1980"},
-
-
-
-        {"C++ Primer",
-            "Stanley B. Lippman",//
-            "Addison-Wesley",//
-            1998,//
-            "QA 76.73 C15 L57 1998"},
-
-          {"Anatomy of LISP",
-              "John Allen",//
-              "McGraw-Hill",//
-              1978,//
-              "QA 76.73 L23A44"}
-    };
-
-
-
-
-
-
+CatalogEntry A[] = {{"Peter Pan",
+                     "J. M. Barrie",
+                     "Scribner",
+                     1980,
+                     "B2754 1980"},
+                    {"C++ Primer",
+                     "Stanley B. Lippman",
+                     "Addison-Wesley",
+                     1998,
+                     "QA 76.73 C15 L57 1998"},
+                    {"Anatomy of LISP",
+                     "John Allen",
+                     "McGraw-Hill",
+                     1978,
+                     "QA 76.73 L23A44"}};
  #+end_src
 
 *** Practise!
@@ -1357,9 +1330,9 @@ CatalogEntry A[3];
    + declare a C++ struct to represent a hexagon 
    + declare a C++ struct to represent a circle 
  
-*** Complex record data structures
+*** Arrays inside of records
  
-
+- Can put arrays as fields of records
 #+begin_src c++
 const int MAX_NAMES = 100;
 
@@ -1367,17 +1340,9 @@ struct FullName {
   string name_component[MAX_NAMES];
   int name_count;
 };
-
-
-
-
-
-
-
 #+end_src
 
-*** Complex record data structures
- 
+*** Multi-Dimensional Arrays in Records
 
 #+begin_src c++
 const int SCREEN_HEIGHT = 768, SCREEN_WIDTH = 1024;
@@ -1391,19 +1356,14 @@ Screen my_screen;
 for (int i = 0; i < SCREEN_HEIGHT; i++){
   my_screen.screen_array[i][0] = '*';
  }
-
-
-
-
-
-
-
-
 #+end_src
 
-*** Complex record data structures
- 
+*** Mix and Match
 
+**** Col1 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.7
+:END:
 #+begin_src c++
 struct str1 {
   int a[2];
@@ -1426,12 +1386,20 @@ int main( ) {
 
 #+end_src
 
- - What will be the output?
- 
+
+**** Col2 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.3
+:END:
+- What will the ouput be?
+
 *** Enumerations
- 
- - User-defined data type that consists of integral constants
- 
+
+**** Col1 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.7
+:END:
+
 
  #+begin_src c++
 enum day {
@@ -1452,37 +1420,55 @@ cout << d+1 ;
 
  #+end_src
 
- - What will be the output?
+**** Col2 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.3
+:END:
+ - User-defined data type that consists of integral constants
+ - What will the output be?
  
 *** Variant records
- 
+
+
+**** Col1 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.3
+:END:
+ - Called ~union~ in C++
  - Multiple component fields can be defined
  - At most one field can be in use at one time (fields share the same memory)
  
 
+**** Col2 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.7
+:END:
  #+begin_src c++
 union Coordinates {
-  int a, //
-  double b, //
-  char c //
+  int a,
+      double b,
+      char c
 };
 
 Coordinates x;
 
 x.a = 5;
-cout << x.a;         // works, prints 5
+cout << x.a; // works, prints 5
 
-x.b = 416.905;     // destroys the value of x.a
-x.c = `p';              // destroys the value of x.a and x.b
-cout << x.a;         // invalid!
-cout << x.b;         // invalid!
-cout << x.c;         // works, prints p
-
+x.b = 416.905; // destroys the value of x.a
+x.c = 'p';     // destroys the value of x.a and x.b
+cout << x.a;   // invalid!
+cout << x.b;   // invalid!
+cout << x.c;   // works, prints p
  #+end_src
 
 *** Example
  
 
+**** Col1 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src c++
 enum CatalogEntryType {
   BookEntry, //
@@ -1492,9 +1478,14 @@ enum CatalogEntryType {
 struct BookSpecificInfo {
   unsigned int pages;
 };
+#+end_src
 
 
-
+**** Col2 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src c++
 struct DVDSpecificInfo {
   unsigned int discs;
   unsigned int minutes;
@@ -1507,6 +1498,7 @@ union CatalogEntryVariantPart {
 
 
 #+end_src
+
 
 *** Example (cont'd)
  
@@ -1546,6 +1538,18 @@ void printCatalogEntry(const CatalogEntry& c) {
 
 
 #+end_src
+
+
+*** Prof's Aside
+- C++ unions are unsafe
+  + Without the tag, there's no way to know which type a union contains
+  + C++ doesn't require the tag to be there
+    - You have to make sure it's there
+    - You have to make sure the tag actually matches the data
+- Other languages have safe combinations of tags and unions
+  + ~enum~ in Rust and Swift
+  + Sealed Classes in Java/Kotlin
+  + Algebraic datatypes in functional languages (CS 350)
 
 *** Anonymous declaration of records and variant-records
  
@@ -1602,8 +1606,6 @@ struct CatalogEntry {
     struct { unsigned int discs, minutes; } dvd;
   } variant;
 };
-
-
  #+end_src
 
 * Program Organization Principles :noexport:
