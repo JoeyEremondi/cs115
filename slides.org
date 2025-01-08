@@ -660,6 +660,466 @@ assert (n>0); //prog. Terminates if not
  #+end_src
 
 * Arrays
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides002-arrays.pdf
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
+
+
+**   One, two, and multi-dimensional arrays
+
+*** Motivation
+- Print 1000 numbers in reverse order
+
+#+begin_src c++
+int value0;
+int value1;
+int value2;
+// ...
+int value999;
+
+cin >> value0;
+cin >> value1;
+// ...
+cin >> value999;
+
+cout << value999 << endl;
+cout << value998 << endl;
+// ...
+cout << value0 << endl;
+#+end_src
+
+*** Motivation (cont'd)
+ - How about 1000000 numbers?
+ - Tedious, not scalable, and error prone
+
+ - Solution: use aggregate data type
+   + homogenous components
+   + indexing support
+   + constant time access
+   + random access
+
+
+ #+begin_src c++
+int a[120000];    // Array declaration
+
+for (int i = 0; i < 120000; i++)
+  cin >> a[i];    // Array access
+for (int i = 119999; i >= 0; i--)
+  cout << a[i] << endl;
+
+ #+end_src
+
+*** Array Operations
+- Call the things we store in the array /elements/
+- Get the ith element's value: ~array[i]~
+- Set the ith element: ~array[i] = someValue;~
+
+*** Simple arrays
+
+
+
+#+begin_src c++
+const int N = 120000;
+int a[N];    // Array declaration
+
+for (int i = 0; i < N; i++)
+  cin >> a[i];    // Array access
+for (int i = N-1; i >= 0; i--)
+  cout << a[i] << endl;
+
+
+#+end_src
+
+ - Array size must be a constant expression
+
+ - Easy to change size: just update N (the rest of the program remains intact)
+
+*** Passing arrays as arguments
+
+
+#+begin_src c++
+int sumArray(int a[], unsigned int n) // Array argument
+{
+  int sum = 0;
+  for (int i = 0; i < n; i++)
+    sum += a[i];
+  return sum;
+}
+
+int main()
+{
+  // Array initialization
+  int a[] = { 3, 24, -88, 17, -1 };
+  cout << sumArray(a, 5) << endl;
+}
+
+#+end_src
+
+ - Array size can be left unspecified in array initialization syntax
+
+*** Passing arrays as arguments
+
+ - Array arguments are always automatically passed by reference
+ - no special notation is require
+
+
+ #+begin_src c++
+// int sumArray(int& a[], unsigned int n) - INCORRECT
+int sumArray(int a[], unsigned int n)    // CORRECT
+{
+  ...
+    }
+ #+end_src
+
+ - Works for arrays of all sizes (size is passed as a separate argument)
+ - Interface not safe: can modify the content of A
+
+*** A Safer Interface
+
+
+#+begin_src c++
+int sumArray(int a[], unsigned int n)
+// not safe, sumArray can modify A!
+
+#+end_src
+
+- Use the following instead:
+#+begin_src C++
+   int sumArray(const int a[], unsigned int n)
+#+end_src
+
+- How to figure out array size when passing n if the size was left unspecified when declaring it?
+- use sizeof function:
+
+ #+begin_src C++
+int a[] = {1,2,6,3,8};
+int x = sumArray(a, sizeof(a) / sizeof(int));
+
+ #+end_src
+
+*** Play time
+
+
+- Check if integer array sorted
+#+begin_src c++
+bool arrayIsSorted(const int a[], unsigned int n){
+  for (int i = 0; i < n-1; i++){
+    if (a[i] > a[i+1])
+      return false;
+  }
+  return true;
+}
+
+
+#+end_src
+
+*** Play time
+- Reversing items in integer array
+#+begin_src c++
+void swap(int &a, int &b) {
+  int tmp = a;
+  a = b;
+  b = tmp;
+}
+// below a[] is not a constant as want to produce side-effect
+void reverseArray(int a[], unsigned int n) {
+  for (int i = 0; i < n/2; i++)
+    swap(a[i], a[n - i - 1]);
+}
+
+#+end_src
+
+*** Processing subarrays
+
+- Compute the sum of an array segment
+#+begin_src c++
+// pos   : index of the first component in the subarray
+// count: total number of components in the subarray
+int sumSubarray(const int a[],
+                unsigned int pos,
+                unsigned int count){
+  int sum = 0;
+  for (int i = pos; i < pos + count; i++)
+    sum += a[i];
+
+  return sum;
+}
+
+#+end_src
+
+*** Processing subarrays
+
+- Another way to do the same thing
+#+begin_src c++
+// begin: index of first component in the subarray
+// end   : index of the last component in the subarray
+int sumSubarray(const int a[],
+                unsigned int begin,
+                unsigned int end){
+  assert(begin <= end);
+  int sum = 0;
+  for (int i = begin; i <= end; i++)
+    sum += a[i];
+
+  return sum;
+}
+
+#+end_src
+
+*** Subtleties
+
+ - C++ does not check if array indices are within bound
+ - it's your responsibility
+ - Array Copying
+
+ #+begin_src c++
+a = b // invalid
+ #+end_src
+
+ - copy cell by cell:
+
+ #+begin_src c++
+a[6]=b[9] // works!
+ #+end_src
+
+
+*** Subtleties
+ - Array Comparison
+
+ #+begin_src c++
+if(a == b) // invalid
+ #+end_src
+
+ - compare each pair of cells at a time
+ - No need to return array as function output, uses call by reference anyway!
+
+*** Prof's Aside
+- C++ arrays are /unsafe/
+- This is /terrible/ language design
+  + Billions of dollars and many security incidents caused by unsafe memory access
+  + Error cost outweighs performance cost of checking array bounds
+  + Most checks can be optimized out by the compiler
+- C++ will never change
+  + Backwards compatibility
+  + ~std::array~ is safe but isn't the default
+- Languages like Rust make sure that these errors are /impossible/
+  + Unless you explicitly disable safety
+
+
+*** Example
+#+begin_src C++ :results code :exports both
+#include <iostream>
+using namespace std;
+int main(){
+  char passwd[8] = "secret";
+  char username[8] = "bob101";
+  string toPrint = "";
+  // Oops reading past end of array!
+  for (int i = 0; i < 16; i++){
+    toPrint += username[i];
+  }
+  cout << toPrint << endl;
+}
+#+end_src
+
+#+RESULTS:
+#+begin_src C++
+bob101secret
+#+end_src
+
+
+
+
+
+** Two Dimensional Arrays
+
+*** Motivation
+
+
+ - Want to store quantity of different products sold in a store
+ - but for multiple locations/regions
+
+ - Conceptually can store as a matrix, where rows represent different locations and columns represent different products
+ - ~sales[2][1]~ are the total number of items sold for location 2 and product 1
+ - recall item n is the (n+1)-th item
+   + index starts from 0!
+
+*** Declaration and Access
+
+
+#+begin_src c++
+const unsigned int NUM_OF_REGIONS = 4;
+const unsigned int NUM_OF_PRODUCTS = 3;
+
+unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS];
+
+#+end_src
+
+ - To access sales figure for first product in second region, use:
+
+ #+begin_src c++
+sales[1][0] // recall, indices start from 0
+
+ #+end_src
+
+ - e.g., want to set sales figure for first product in second region to 500
+
+ #+begin_src c++
+sales[1][0] = 500;
+
+ #+end_src
+
+*** Populating and Accessing
+
+#+begin_src c++
+// Read input stream
+for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
+  for (unsigned int product = 0; product < NUM_OF_PRODUCTS; product++)
+    cin >> sales[region][product];
+
+// total sales for a particular product (product 0)
+unsigned int total_sales = 0;
+
+for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
+  // add up sales from all regions for product 0
+  total_sales += sales[region][0];
+
+#+end_src
+
+   + Can you compute total sales from region 1?
+
+*** Passing 2D Arrays
+
+ #+begin_src c++
+unsigned int sumProductSales(
+        unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS],
+        unsigned int product)
+{
+  unsigned int total_sales = 0;
+  for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
+    total_sales += sales[region][product];
+
+  return total_sales;
+}
+
+ #+end_src
+
+ - Can you implement a safer interface?
+
+ - As usual, can leave size of first dimension unspecified, e.g. ~int F(int arr[ ][SIZE])~
+ - but not the second one (why?)
+
+*** Making things more modular
+- So we can change internal representation without changing interface
+
+#+begin_src c++
+// Implement a function that returns
+// the value of one element from the sales array
+unsigned int getSales(
+        const unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS],
+        unsigned int r, unsigned int p){
+  return sales[r][p];
+}
+// Implement a function that sets the value
+// of one element from the sales array
+void setSales(unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS],
+              unsigned int r, unsigned int p, unsigned int v){
+  sales[r][p] = v;
+}
+
+#+end_src
+
+*** Using typedef
+
+
+#+begin_src c++
+// too lazy to write long types? Use typedef instead!
+
+typedef unsigned int Sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS];
+
+unsigned int sumSales(const Sales sales){
+  ...
+    }
+
+
+
+
+
+#+end_src
+
+*** Simulating Two-dimensional Arrays by One-dimensional Ones
+
+
+#+begin_src c++
+unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS];
+#+end_src
+
+ - versus
+
+ #+begin_src c++
+unsigned int _sales[NUM_OF_REGIONS * NUM_OF_PRODUCTS];
+ #+end_src
+
+ - Issue: how to map between these two?
+   + row-major vs. column-major order
+   + e.g. ~sales[i][j]~
+     -  same as ~_sales[i * NUM_OF_PRODUCTS + j]~ in row-major
+ - Now you know why the size of the 2nd dimension can't be left unspecified!
+   + Can you write the formula for column-major order?
+
+*** Using Row-Major Order
+
+
+#+begin_src c++
+unsigned int totalSales = 0;
+
+for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
+  for (unsigned int product = 0;
+       product < NUM_OF_PRODUCTS;
+       product++){
+    totalSales += _sales[region * NUM_OF_PRODUCTS + product];
+  }
+#+end_src
+- This is why we need to know the size of the second dimension
+  + To calculate offset
+
+*** Multi-dimensional Arrays
+
+#+begin_src c++
+const unsigned int NUM_YEARS = 2;
+const unsigned int NUM_REGIONS = 4;
+const unsigned int NUM_PRODUCTS = 3;
+
+typedef unsigned int Sales[NUM_YEARS][NUM_REGIONS][NUM_PRODUCTS];
+
+unsigned int total_sales = 0;
+for (unsigned int year = 0; year < NUM_YEARS; year++)
+  for (unsigned int region = 0; region < NUM_REGIONS; region++)
+    for (unsigned int product = 0; product < NUM_PRODUCTS; product++)
+      total_sales += sales[year][region][product];
+
+#+end_src
+
+*** Simulating 3d with 1d
+
+
+ - ~Sales[year][region][product]~
+
+ - vs ~_Sales[(year * NUM_REGS * NUM_PRODS) + (region * NUM_OF_PRODS) + product]~
+#+attr_latex: :width 225px
+[[./img/all-40_1.png]]
+*** Simulating Multi-dimensional Arrays
+
+ - In general for a d-dimensional array with dimensions S_1, S_2, ..., S_d, the element at ~Item[n_1][n_2]...[n_d]~ can be represented as a single dimensional array with the following index
+
+
+ #+begin_src c++
+ _Item[n_d + S_d * (n_{d-1} + S_{d-1}
+    * (n_{d-2} + S_{d-2} * (...+S_2*n_1) ... ))]
+
+ #+end_src
 
 * Records :noexport:
 :PROPERTIES:
@@ -672,17 +1132,31 @@ assert (n>0); //prog. Terminates if not
 **  Structs and unions
  
 *** Motivation
+
+**** Catalog :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+
+ - E.g. Catalog information in a library
+ - Data in collection is heterogenous
  
- - Data in collection is heterogenous 
+|-------------+--------------|
+| *Title*       | string       |
+| *Author*      | string       |
+| *Publisher*   | string       |
+| *Year*        | unsigned int |
+| *Call Number* | string       |
+| *Price*       | double       |
+|-------------+--------------|
+
  
  
- 
- 
- 
- 
- 
- 
- 
+**** Soln  :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+
  - Solution using arrays:
 
  #+begin_src c++
@@ -698,8 +1172,15 @@ double Price[N];
  - Poor choice of interface!
  - (many arguments to pass for functions)
  
-*** Motivation
- 
+*** Use a record instead!
+:PROPERTIES:
+:BEAMER_env: column
+:END:
+
+**** Col 1 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
  - Data can be heterogenous 
  - Define:
 
@@ -713,13 +1194,17 @@ struct CatalogEntry {
 };
  #+end_src
 
+**** Col 2 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
  - Only 1 argument needs to be passed
  - Declare:
 
  #+begin_src c++
 struct CatalogEntry c;
-or CatalogEntry c;
-
+// or, equivalently this:
+CatalogEntry c;
  #+end_src
 
  - Initialize:
@@ -733,28 +1218,19 @@ c.callNumber = "B2754 1980";
 
  #+end_src
 
-*** Initializing and copying a record
+*** Initializing a Record
+ - As with arrays
  
- - As with arrays 
- 
- - CatalogEntry c = 
 
- #+begin_src c++
-    {
+ #+begin_src C++
+CatalogEntry c = {"Peter Pan",
+                  "J. M. Barrie",
+                  "Scribner",
+                  1980,
+                  "B2754 1980"};
  #+end_src
 
- -   "Peter Pan",
- -   "J. M. Barrie",
- -   "Scribner",
- -   1980,
- -   "B2754 1980"
-
- #+begin_src c++
-};
-
- #+end_src
-
- - Copying a record:
+*** Copying a Record
 
  #+begin_src c++
 // initialization list
