@@ -669,7 +669,7 @@ assert (n>0); //prog. Terminates if not
 **   One, two, and multi-dimensional arrays
  
 *** Motivation
- 
+- Print 1000 numbers in reverse order
 
 #+begin_src c++
 int value0;
@@ -680,21 +680,17 @@ int value999;
 
 cin >> value0;
 cin >> value1;
-cin >> value2;
 // ...
 cin >> value999;
 
 cout << value999 << endl;
 cout << value998 << endl;
-cout << value997 << endl;
 // ...
 cout << value0 << endl;
-
-
 #+end_src
 
 *** Motivation (cont'd)
- 
+ - How about 1000000 numbers?
  - Tedious, not scalable, and error prone
  
  - Solution: use aggregate data type
@@ -702,8 +698,7 @@ cout << value0 << endl;
    + indexing support 
    + constant time access 
    + random access 
- 
- 
+
 
  #+begin_src c++
 int a[120000];    // Array declaration
@@ -714,6 +709,11 @@ for (int i = 119999; i >= 0; i--)
   cout << a[i] << endl;
 
  #+end_src
+
+*** Array Operations
+- Call the things we store in the array /elements/
+- Get the ith element's value: ~array[i]~
+- Set the ith element: ~array[i] = someValue;~
 
 *** Simple arrays
  
@@ -759,7 +759,7 @@ int main()
  - Array size can be left unspecified in array initialization syntax
  
 *** Passing arrays as arguments
- 
+
  - Array arguments are always automatically passed by reference 
  - no special notation is require
  
@@ -775,7 +775,7 @@ int sumArray(int a[], unsigned int n)    // CORRECT
  - Works for arrays of all sizes (size is passed as a separate argument)
  - Interface not safe: can modify the content of A
  
-*** Passing arrays as arguments
+*** A Safer Interface
  
 
 #+begin_src c++
@@ -801,6 +801,7 @@ int x = sumArray(a, sizeof(a) / sizeof(int));
 *** Play time
  
 
+- Check if integer array sorted
 #+begin_src c++
 bool arrayIsSorted(const int a[], unsigned int n){
   for (int i = 0; i < n-1; i++){
@@ -814,8 +815,7 @@ bool arrayIsSorted(const int a[], unsigned int n){
 #+end_src
 
 *** Play time
- 
-
+- Reversing items in integer array
 #+begin_src c++
 void swap(int &a, int &b) {
   int tmp = a;
@@ -832,7 +832,7 @@ void reverseArray(int a[], unsigned int n) {
 
 *** Processing subarrays
  
-
+- Compute the sum of an array segment
 #+begin_src c++
 // pos   : index of the first component in the subarray
 // count: total number of components in the subarray
@@ -850,7 +850,7 @@ int sumSubarray(const int a[],
 
 *** Processing subarrays
  
-
+- Another way to do the same thing
 #+begin_src c++
 // begin: index of first component in the subarray
 // end   : index of the last component in the subarray
@@ -894,7 +894,7 @@ if(a == b) // invalid
  - compare each pair of cells at a time
  - No need to return array as function output, uses call by reference anyway!
 
-*** Joey's Aside
+*** Prof's Aside
 - C++ arrays are /unsafe/
 - This is /terrible/ language design
   + Billions of dollars and many security incidents caused by unsafe memory access
@@ -932,16 +932,20 @@ bob101secret
 
 
 
-*** Two dimensional arrays
+** Two Dimensional Arrays
+
+*** Motivation
+
  
  - Want to store quantity of different products sold in a store
  - but for multiple locations/regions 
  
  - Conceptually can store as a matrix, where rows represent different locations and columns represent different products
- - sales[2][1] are the total number of items sold for location 2 and product 1
- - recall item n is the (n+1)-th item as index starts from 0!
+ - ~sales[2][1]~ are the total number of items sold for location 2 and product 1
+ - recall item n is the (n+1)-th item
+   + index starts from 0!
  
-*** Two dimensional arrays
+*** Declaration and Access
  
 
 #+begin_src c++
@@ -966,8 +970,7 @@ sales[1][0] = 500;
 
  #+end_src
 
-*** Two dimensional arrays
- 
+*** Populating and Accessing
 
 #+begin_src c++
 // Read input stream
@@ -986,12 +989,13 @@ for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
 
    + Can you compute total sales from region 1? 
  
-*** Two dimensional arrays
+*** Passing 2D Arrays
  
  #+begin_src c++
 unsigned int sumProductSales(
         unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS],
-        unsigned int product){
+        unsigned int product)
+{
   unsigned int total_sales = 0;
   for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
     total_sales += sales[region][product];
@@ -1001,13 +1005,13 @@ unsigned int sumProductSales(
 
  #+end_src
 
- - Can you implement a safer interface? (see slide 7)
+ - Can you implement a safer interface?
  
- - As usual, can leave size of first dimension unspecified, e.g. int F(int arr[ ][SIZE]) 
+ - As usual, can leave size of first dimension unspecified, e.g. ~int F(int arr[ ][SIZE])~
  - but not the second one (why?)
  
 *** Making things more modular
- 
+- So we can change internal representation without changing interface
 
 #+begin_src c++
 // Implement a function that returns
@@ -1055,7 +1059,6 @@ unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS];
 
  #+begin_src c++
 unsigned int _sales[NUM_OF_REGIONS * NUM_OF_PRODUCTS];
- 
  #+end_src
 
  - Issue: how to map between these two?
@@ -1065,7 +1068,7 @@ unsigned int _sales[NUM_OF_REGIONS * NUM_OF_PRODUCTS];
  - Now you know why the size of the 2nd dimension can't be left unspecified!
    + Can you write the formula for column-major order?
  
-*** Simulating Two-dimensional Arrays by One-dimensional Ones
+*** Using Row-Major Order
  
 
 #+begin_src c++
@@ -1077,13 +1080,12 @@ for (unsigned int region = 0; region < NUM_OF_REGIONS; region++)
        product++){
     totalSales += _sales[region * NUM_OF_PRODUCTS + product];
   }
-
-
 #+end_src
+- This is why we need to know the size of the second dimension
+  + To calculate offset
 
 *** Multi-dimensional Arrays
  
-
 #+begin_src c++
 const unsigned int NUM_YEARS = 2;
 const unsigned int NUM_REGIONS = 4;
@@ -1099,14 +1101,15 @@ for (unsigned int year = 0; year < NUM_YEARS; year++)
 
 #+end_src
 
-*** Multi-dimensional Arrays
+*** Simulating 3d with 1d
  
  
  - ~Sales[year][region][product]~
  
  - vs ~_Sales[(year * NUM_REGS * NUM_PRODS) + (region * NUM_OF_PRODS) + product]~
- 
-*** Multi-dimensional Arrays
+
+
+*** Simulating Multi-dimensional Arrays
  
  - In general for a d-dimensional array with dimensions S_1, S_2, ..., S_d, the element at ~Item[n_1][n_2]...[n_d]~ can be represented as a single dimensional array with the following index
  
