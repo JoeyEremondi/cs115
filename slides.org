@@ -1107,8 +1107,8 @@ for (unsigned int year = 0; year < NUM_YEARS; year++)
  - ~Sales[year][region][product]~
  
  - vs ~_Sales[(year * NUM_REGS * NUM_PRODS) + (region * NUM_OF_PRODS) + product]~
-
-
+#+attr_latex: :width 225px
+[[./img/all-40_1.png]]
 *** Simulating Multi-dimensional Arrays
  
  - In general for a d-dimensional array with dimensions S_1, S_2, ..., S_d, the element at ~Item[n_1][n_2]...[n_d]~ can be represented as a single dimensional array with the following index
