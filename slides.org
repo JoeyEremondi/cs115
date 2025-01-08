@@ -137,7 +137,7 @@
   + You submit the whole thing, we mark part of it
 
 *** Office Hours
-- Tuesdays 11:30-12:30
+- Tuesdays 11:00-12:00
 - Thursdays 10:30-11:30
 - In RIC 317
   + Take the elevator then go across the bridge
@@ -204,10 +204,10 @@ int main( ){
 #+end_src
 
  - 4 types of control structures: 
- - sequences (see above)
- - conditionals
- - loops
- - function invocations 
+   + sequences (see above)
+   + conditionals
+   + loops
+   + function invocations
  
 *** Functional abstraction
  
@@ -380,7 +380,7 @@ switch (month){
    cout << "Fall";
    break;
  default:
-   cout << "What are we smoking today?";
+   cout << "Error, universe broken";
  }
 
  #+end_src
@@ -426,8 +426,6 @@ unsigned int sumOfDigits(unsigned int m){
 }
 #+end_src
 
- - Trace it!
- 
  - More explicit than for loops
  
  - Do-while: like while, but executes at least once
@@ -502,8 +500,8 @@ int main( ){
  - e.g., printing stuff using cout, changing a global variable, changing a local variable via call by reference/pointer, etc.  
  
 *** Strings
- 
- - C++ libraries provide string facilities
+ - Overloading ~+~ and ~[]~ operators
+   + C++ libraries provide string facilities
  
 
  #+begin_src c++
@@ -569,6 +567,12 @@ string capitalize(const string &s);
   + Gives you an error if you violate it
 
 *** Strings
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+
+- Function returning with non-constant reference
  #+begin_src c++
 string &chooseFirst(string &s1, string &s2)
 {
@@ -577,30 +581,24 @@ string &chooseFirst(string &s1, string &s2)
   else
     return s2;
 }
-
-
- #+end_src
-
- - chooseFirst( ) returns reference to lexicographically smaller string
- 
- - main( ) prints PQR! since s1=PQR!
-
-*** Strings
-
- #+begin_src C++
-int main( )
-{
-  string s1 ="ABC!";
-  string s2 = "XYZ!";
-
-  chooseFirst(s1, s2) = "PQR!";
-
+int main(){
+  string s1 ; "ABC";
+  string s2 = "XYZ";
+  chooseFirst(s1,s2) = "PQR"
   cout << s1;
-
   return 0;
 }
 
+
  #+end_src
+
+**** Ctd :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+ - chooseFirst( ) returns reference to lexicographically smaller string
+
+ - main( ) prints PQR! since s1=PQR!
 
 *** Modular vs. Application programs (115 vs. 110)
  - Top-down design
@@ -639,11 +637,11 @@ int main( )
 
 - Separate (unrelated) functions in different files; compile separately using -c command, and link together
 
- - ~g++ -c main.cpp~
- - ~g++ -c my_util.cpp~
- - ~g++ -o prog.out main.o my_util.o~
+  - ~g++ -c main.cpp~
+  - ~g++ -c my_util.cpp~
+  - ~g++ -o prog.out main.o my_util.o~
  
- - Collect all function prototypes together in a header file and include it in main.cpp
+- Collect all function prototypes together in a header file and include it in main.cpp
  
 
  #+begin_src c++
@@ -651,9 +649,8 @@ int main( )
 #pragma once preprocessor
 
  #+end_src
-
+*** Misc
  - Assertions (debugging aid)
- 
 
  #+begin_src c++
 #include <cassert>
