@@ -14,10 +14,10 @@
 
 
 
-#+EXPORT_FILE_NAME: slides_all.pdf
-#+startup: beamer
-#+LaTeX_CLASS:beamer
-#+LaTeX_CLASS_OPTIONS: [bigger, aspectratio=169, dvipsnames]
+#+EXPORT_FILE_NAME: pdf/slides_all.pdf
+# #+startup: beamer
+# #+LaTeX_CLASS:beamer
+#+BEAMER_CLASS_OPTIONS: [bigger, aspectratio=169, dvipsnames]
 #+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col)
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 
@@ -39,9 +39,12 @@
 #+BEAMER_HEADER: \setbeamerfont{alerted text}{series=\bfseries}
 #+BEAMER_HEADER: \newcommand{\colored}[2]{{\color{#1} #2}}
 
+
+#+LATEX_HEADER: \newcommand{\colored}[2]{{\color{#1} #2}}
+
+
 #+BEAMER_HEADER: \usepackage[utf8]{inputenc}
 #+BEAMER_HEADER: \usepackage[libertine]{newtxmath}
-#+BEAMER_HEADER: \DeclareUnicodeCharacter{03BB}{${\lambda}$}
 #+BEAMER_HEADER: \usepackage{semantic}
 #+BEAMER_HEADER: \usepackage{stmaryrd}
 #+BEAMER_HEADER: \mathlig{=>}{\Rightarrow}
@@ -54,11 +57,26 @@
 #+BEAMER_HEADER: \setminted[c++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 #+BEAMER_HEADER: \setminted[C++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 
-* Contents :TOC_1_gh:
-- [[#introduction][Introduction]]
-- [[#review][Review]]
-- [[#arrays][Arrays]]
-- [[#records][Records]]
+
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage[libertine]{newtxmath}
+#+LATEX_HEADER: \usepackage{semantic}
+#+LATEX_HEADER: \usepackage{stmaryrd}
+#+LATEX_HEADER: \mathlig{=>}{\Rightarrow}
+# #+LATEX_HEADER: \definecolor{LightGray}{gray}{0.9}
+#+LATEX_HEADER: \usepackage[outputdir=pdf]{minted}
+#+LATEX_HEADER: \usepackage{etoolbox}
+#+LATEX_HEADER: \usepackage{hyphenat}
+#+LATEX_HEADER: \AtBeginEnvironment{minted}{\pause}
+# #+LATEX_HEADER: \setminted[racket]{escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
+# #+LATEX_HEADER: \setminted[c++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
+# #+LATEX_HEADER: \setminted[C++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
+
+# * Contents :TOC_1_gh:
+# - [[#introduction][Introduction]]
+# - [[#review][Review]]
+# - [[#arrays][Arrays]]
+# - [[#records][Records]]
 
 * Introduction
 :PROPERTIES:
@@ -1034,7 +1052,7 @@ void setSales(unsigned int sales[NUM_OF_REGIONS][NUM_OF_PRODUCTS],
 
 *** Using typedef
 
-
+- Gives a new name to an existing type
 #+begin_src c++
 // too lazy to write long types? Use typedef instead!
 
@@ -1364,7 +1382,9 @@ for (int i = 0; i < SCREEN_HEIGHT; i++){
 :PROPERTIES:
 :BEAMER_col: 0.7
 :END:
-#+begin_src c++
+#+begin_src C++
+#include <iostream>
+using namespace std;
 struct str1 {
   int a[2];
   int b;
@@ -1377,7 +1397,7 @@ void func1(str1 A[ ]){
 }
 
 int main( ) {
-  str1 A[ ] = {{{1,0},2}, {{3,0},4},{{0,0},9}};
+  str1 A[3] = {{{1,0},2}, {{3,0},4},{{0,0},9}};
   func1(A);
 
   std::cout << A[0].b<<"\n";
@@ -1385,6 +1405,8 @@ int main( ) {
 }
 
 #+end_src
+
+#+RESULTS:
 
 
 **** Col2 :BMCOL:
@@ -1400,25 +1422,31 @@ int main( ) {
 :BEAMER_col: 0.7
 :END:
 
+ #+begin_src C++ :results output
+#include <iostream>
+using namespace std;
 
- #+begin_src c++
 enum day {
-  Friday = 99,//
-  Saturday,//
-  Sunday = 90,//
-  ...,
-  Thursday //
+  Sunday = 0,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday
 };
 
-day d;
-d = Thursday;
+int main() {
+  day d;
+  d = Thursday;
+  d = 1001;
 
-if (d == Saturday || d == Sunday)
-  cout << "Enjoy the weekend!" ;
+  if (d == Saturday || d == Sunday)
+    cout << "Enjoy the weekend!";
 
-cout << d+1 ;
-
- #+end_src
+  cout << d + 1;
+}
+#+end_src
 
 **** Col2 :BMCOL:
 :PROPERTIES:
@@ -1443,24 +1471,35 @@ cout << d+1 ;
 :PROPERTIES:
 :BEAMER_col: 0.7
 :END:
- #+begin_src c++
+ #+begin_src C++ :results output
+#include <iostream>
+using namespace std;
+
 union Coordinates {
-  int a,
-      double b,
-      char c
+  char a;
+  double b;
+  char c;
 };
 
-Coordinates x;
+int main() {
+  Coordinates x;
 
-x.a = 5;
-cout << x.a; // works, prints 5
+  x.a = 5;
+  cout << x.a << endl; // works, prints 5
 
-x.b = 416.905; // destroys the value of x.a
-x.c = 'p';     // destroys the value of x.a and x.b
-cout << x.a;   // invalid!
-cout << x.b;   // invalid!
-cout << x.c;   // works, prints p
- #+end_src
+  x.b = 0.0;           // destroys the value of x.a
+  x.c = 'p';           // destroys the value of x.a and x.b
+  cout << x.a << endl; // invalid!
+  cout << x.b << endl; // invalid!
+  cout << x.c;         // works, prints p
+}
+#+end_src
+
+#+RESULTS:
+: 
+: p
+: 5.53354e-322
+: p
 
 *** Example
  
@@ -1616,10 +1655,9 @@ struct CatalogEntry {
 #+OPTIONS: todo:nil
  
  
+** Terminology concerning program organization, interface vs. implementation, data encapsulation, information hiding, modularity, layering, design by contract, abstract data types
  
- - Terminology concerning program organization, interface vs. implementation, data encapsulation, information hiding, modularity, layering, design by contract, abstract data types 
- 
-** Terminology concerning program organization
+*** Separation of Concerns
  
  - is a design principle for separating a computer program into distinct sections such that each section addresses a separate concern
  - concern = a set of information that affects code 
@@ -1630,7 +1668,7 @@ struct CatalogEntry {
  - Modularity: the degree to which a system's components can be separated and recombined
  - break system into parts and to hide the complexity of each part behind an abstraction and interface
  
-** Terminology concerning program organization
+*** Modularity
  
  - Why bother?
  - Simplifies development and maintenance of computer programs
@@ -1641,7 +1679,7 @@ struct CatalogEntry {
    + procedural programming: via functions and top-down design 
  - OOP: via classes and objects 
  
-** Terminology concerning program organization
+*** Modularity and Refactoring
  
  - Refactoring is to rewrite code in order to improve its readability, reusability, or structure without affecting its meaning or behaviour
  - perhaps older version was poorly written due to time constraints etc.
@@ -1651,7 +1689,7 @@ e.g., replace 416 with the constant GTA_CODE1, replace long if-then-else branche
 
  #+end_src
 
-** Terminology concerning program organization
+*** Layers of Abstraction
  
  - Each level represents an increasingly detailed model of the software system and its processes
  - at each level, the model is described using concepts appropriate to a certain domain 
@@ -1659,27 +1697,28 @@ e.g., replace 416 with the constant GTA_CODE1, replace long if-then-else branche
  
  - To understand levels of abstraction better, see optional slides on Layering
  
-** Modular programming
+*** Modular programming
+ - Interface vs. Implementation
+   + Modular programming is a method of developing software where each section of code is a module with a carefully specified interface
+   + interface makes the purpose of your code clear
+   + client software can focus on the interface (and ignore its implementation)
  
- - Modular programming is a method of developing software where each section of code is a module with a carefully specified interface 
- - interface makes the purpose of your code clear
- - client software can focus on the interface (and ignore its implementation)
+   + A crucial aspect of modular programming is mentally separating the interface from the implementation
+   + we will specify the interfaces in .h files (as well-documented prototypes)
+   + we will specify the implementation in .cpp files (primarily as functions)
+   + some functions and variables are not (directly) accessible!
  
- - A crucial aspect of modular programming is mentally separating the interface from the implementation
- - we will specify the interfaces in .h files (as well-documented prototypes) 
- - we will specify the implementation in .cpp files (primarily as functions)
- - some functions and variables are not (directly) accessible!
+*** Separating interface and implementation
+ - Two Approaches
+   + via data encapsulation
+     - hide variables describing state of the module inside the module
+     - (static variables/functions and namespaces)
  
-** Separating interface and implementation
+   + by defining new abstract data types (ADT) using records and classes
  
- - via data encapsulation
- - hide variables describing state of the module inside the module
- - (static variables/functions and namespaces)
+*** The static keyword
  
- - by defining new abstract data types (ADT) using records and classes
- 
-** The static keyword
- 
+- On global variables and functions
 
 #+begin_src c++
 // whatever.cpp
@@ -1694,6 +1733,8 @@ static void doh(int var1) {
 void yay(char c){
   // do something
 }
+
+
 // main.cpp
 
 int main ( ){
@@ -1708,9 +1749,9 @@ int main ( ){
 
 #+end_src
 
-** The static keyword
+*** The static keyword
  
-
+- On local variables
 #+begin_src c++
 void fun(int var1) {
   int x1=0;
@@ -1738,9 +1779,9 @@ int main ( ){
 
 #+end_src
 
-** Namespaces
+*** Namespaces
  
-
+- Scope for identifiers
 #+begin_src c++
 // myProg.h
 
@@ -1750,9 +1791,6 @@ namespace myNSpace{
   void Foo();
   int Bar();
 }
-
-
-
 
 #include "myProg.h"
 using namespace myNSpace;
@@ -1769,9 +1807,9 @@ int ContosoDataServer::Bar(){
 
 #+end_src
 
-** Anonymous namespaces
+*** Anonymous namespaces
  
-
+- Hiding identifiers
 #+begin_src c++
 // myProg.h
 
@@ -1799,7 +1837,7 @@ int main(){
 
 #+end_src
 
-** Namespaces (cont'd)
+*** Other Namespace Issues
  
  - Can declare the same namespace over multiple sections
  - Have to be careful about usage of identifiers
@@ -1808,7 +1846,7 @@ int main(){
  
  - Also check out the global namespace
  
-** Data encapsulation
+*** Data encapsulation
  
  - to place a barrier around the variables that represent the internal state of a software component so that these variables cannot be accessed directly by client code
  - can be achieved via static variables 
@@ -1817,8 +1855,8 @@ int main(){
  - clients are forced to use interface to access data
  - similar effects can be achieved using namespaces 
  
-** Separating interface and implementation
- 
+*** Separating interface and implementation
+ - e.g. A Bounded Counter
  - Start by specifying the interface of the module
  
 
@@ -1836,7 +1874,7 @@ int main(){
 
  #+end_src
 
-** Separating interface and implementation
+*** Separating interface and implementation
  
 
 #+begin_src c++
@@ -1865,7 +1903,7 @@ int main(){
 
 #+end_src
 
-** Separating interface and implementation
+*** Separating interface and implementation
  
 
 #+begin_src c++
@@ -1892,7 +1930,7 @@ void incrementCounter();
 
 #+end_src
 
-** Separating interface and implementation
+*** Separating interface and implementation
  
 
 #+begin_src c++
@@ -1919,7 +1957,7 @@ int main() {
  - 1
  - 0
  
-** Separating interface and implementation
+*** Separating interface and implementation
  
 
 #+begin_src c++
@@ -1945,7 +1983,7 @@ void incrementCounter(){
 
  - Note the data encapsulation, the opaqueness of the module, and the separation btw interface and implementation
  
-** Design by contract
+*** Design by contract
  
  - Allows for clean division of labour
  - Specifies the usage convention for a module is captured in a contract between the supplier (the developer of the module) and the client (the user of the module)
@@ -1957,7 +1995,7 @@ void incrementCounter(){
  - postconditions
  - invariants 
  
-** Design by contract (example)
+*** Design by contract (example)
  
 
 #+begin_src c++
@@ -1976,7 +2014,7 @@ void incrementCounter(){
 
 #+end_src
 
-** Design by contract (example)
+*** Design by contract (example)
  
 
 #+begin_src c++
@@ -1991,7 +2029,7 @@ void initializeCounter(unsigned int value1, unsigned int upper1){
 
 #+end_src
 
-** Design by contract (example)
+*** Design by contract (example)
  
 
 #+begin_src c++
@@ -2009,7 +2047,7 @@ static bool isInvariantTrue(){
 
 #+end_src
 
-** Design by contract (example)
+*** Design by contract (example)
  
 
 #+begin_src c++
@@ -2033,7 +2071,7 @@ void incrementCounter(){
 
 #+end_src
 
-** Interface vs. implementation
+*** Interface vs. implementation
  
  - Consider designing a timer that represents the accumulated time in [hh:mm:ss] format
  - Internally can be implemented in many ways
@@ -2041,7 +2079,7 @@ void incrementCounter(){
  - e.g., store all hours, minutes, and seconds
  - But if interface remains the same, changing implementation does not require changing client code
  
-** Abstract data types (ADT)
+*** Abstract data types (ADT)
  
  - Motivation: returning to our example, we want to have multiple counters
  - ADT:  data type defined by its possible values and operations, e.g.: counters
@@ -2060,7 +2098,7 @@ struct Counter{
 
  #+end_src
 
-** Abstract data types (ADT)
+*** Abstract data types (ADT)
  
 
 #+begin_src c++
@@ -2081,7 +2119,7 @@ void counterInitialize(Counter& counter, unsigned int value1, unsigned int upper
 
 #+end_src
 
-** Abstract data types (ADT)
+*** Abstract data types (ADT)
  
 
 #+begin_src c++
@@ -2113,7 +2151,7 @@ void counterIncrement(Counter& counter);
 
 #+end_src
 
-** Abstract data types (ADT)
+*** Abstract data types (ADT)
  
 
 #+begin_src c++
@@ -2131,7 +2169,7 @@ int main( ){
 
 #+end_src
 
-** Abstract data types (ADT)
+*** Abstract data types (ADT)
  
 
 #+begin_src c++
@@ -7811,4 +7849,5 @@ bool Multiset::member(ItemType x) const {
 * Emacs Variables (please ignore) :noexport:
 Local Variables:
 org-latex-packages-alist: nil
+org-export-with-tags: nil
 End:
