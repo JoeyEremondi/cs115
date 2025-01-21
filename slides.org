@@ -52,7 +52,7 @@
 #+BEAMER_HEADER: \usepackage[outputdir=pdf]{minted}
 #+BEAMER_HEADER: \usepackage{etoolbox}
 #+BEAMER_HEADER: \usepackage{hyphenat}
-#+BEAMER_HEADER: \AtBeginEnvironment{minted}{\pause}
+# #+BEAMER_HEADER: \AtBeginEnvironment{minted}{\pause}
 #+BEAMER_HEADER: \setminted[racket]{escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 #+BEAMER_HEADER: \setminted[c++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 #+BEAMER_HEADER: \setminted[C++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
@@ -67,19 +67,18 @@
 #+LATEX_HEADER: \usepackage[outputdir=pdf]{minted}
 #+LATEX_HEADER: \usepackage{etoolbox}
 #+LATEX_HEADER: \usepackage{hyphenat}
-#+LATEX_HEADER: \AtBeginEnvironment{minted}{\pause}
+# #+LATEX_HEADER: \AtBeginEnvironment{minted}{\pause}
 # #+LATEX_HEADER: \setminted[racket]{escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 # #+LATEX_HEADER: \setminted[C++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 # #+LATEX_HEADER: \setminted[C++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 
-# * Contents :TOC_1_gh:
-# - [[#introduction][Introduction]]
-# - [[#review][Review]]
-# - [[#arrays][Arrays]]
-# - [[#records][Records]]
-
-
-#+PROPERTY: header-args  :includes <iostream> :prologue "using namespace std;" :results output
+* Contents :TOC_1_gh:
+- [[#introduction][Introduction]]
+- [[#review][Review]]
+- [[#arrays][Arrays]]
+- [[#records][Records]]
+- [[#program-organization-principles][Program Organization Principles]]
+- [[#abstract-data-types-via-classes][Abstract Data Types via Classes]]
 
 * Introduction
 :PROPERTIES:
@@ -2315,7 +2314,7 @@ cout << counterGetValue(c) << endl;
 
  #+end_src
 
-* Abstract Data Types via Classes :noexport:
+* Abstract Data Types via Classes
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides005-adt-classes.pdf
 :END:
@@ -2324,9 +2323,12 @@ cout << counterGetValue(c) << endl;
  
  
  
- - Declaring ADT as classes, data representation, member functions, public vs. private functions, constructors
+** Declaring ADT as classes, data representation, member functions, public vs. private functions, constructors
+:PROPERTIES:
+:BMCOL:
+:END:
  
-** Classes
+*** Counter Example Continued: Interface
  
  - Classes are record types, and thus have fields, but can also declared member functions
 
@@ -2346,25 +2348,24 @@ private:
 
  #+end_src
 
-** Classes (cont'd)
+*** Classes (cont'd)
  
  - Public member functions can be used elsewhere
- - how about public static ones?
- - Private member functions have class scope 
- - (cf. file scope as in static or namespaces)
+   + how about public static ones?
+ - Private member functions have class scope
+   + (cf. file scope as in static or namespaces)
 
- #+begin_src C++
-Note: member functions no longer take the counter as argument; why?
- #+end_src
-
- -  void initialize(unsigned int value1, unsigned int upper1)
+ - Note: member functions no longer take the counter as argument; why?
+   + ~void initialize(unsigned int value1, unsigned int upper1)~
  - Public vs. private fields/member functions of a class
- - how to call/invoke public member functions? 
- - how to define/implement a member function?
+   + how to call/invoke public member functions?
+   + how to define/implement a member function?
  
-** Classes (cont'd)
- 
-
+*** Client Code :BMCOL:
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 #include "counter.h"
 
@@ -2376,6 +2377,15 @@ int main( ) {
   c.increment();
   c.increment();
   c.increment();
+
+#+end_src
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
+
   d.increment();
   d.increment();
   d.increment();
@@ -2388,7 +2398,8 @@ int main( ) {
 
 #+end_src
 
-** Classes (cont'd)
+
+*** Data Representation
  
 
 #+begin_src C++
@@ -2407,12 +2418,11 @@ int main() {
 
 #+end_src
 
-** Classes (cont'd)
+*** Implementing Methods
  
 
 #+begin_src C++
 // counter.cpp
-
 #include "counter.h"
 
 void Counter::initialize(unsigned int value1, unsigned int upper1) {
@@ -2435,7 +2445,7 @@ void Counter::increment() {
 
 #+end_src
 
-** Classes (cont'd)
+*** Private Member Functions
  
 
 #+begin_src C++
@@ -2461,11 +2471,11 @@ void Counter::initialize(unsigned int value1, unsigned int upper1) {
 
 #+end_src
 
-** Classes (constructors)
+*** Constructors
  
  - Can declare a class constructor
- - special kind of member function 
- - automatically invoked when an instance of the class is created 
+   + special kind of member function
+   + automatically invoked when an instance of the class is created
    + intended to perform initialization (forces to initialize when creating instances!) 
 
  #+begin_src C++
@@ -2480,7 +2490,7 @@ public:
 
  #+end_src
 
-** Constructors (cont'd)
+*** The Initialization Guarantee
  
 
 #+begin_src C++
@@ -2506,7 +2516,7 @@ int main( ) {
 
 #+end_src
 
-** Another example (time accumulator)
+*** Another example (time accumulator)
  
 
 #+begin_src C++
@@ -2514,9 +2524,13 @@ int main( ) {
 Class Time{
  public:
  // Constructor
- Time(unsigned int hrs, unsigned int mins, unsigned int secs);
+ Time(unsigned int hrs,
+      unsigned int mins,
+      unsigned int secs);
  // increment
- void increment(unsigned int hrs, unsigned int mins, unsigned int secs);
+ void increment(unsigned int hrs,
+                unsigned int mins,
+                unsigned int secs);
  // equals
  bool equals(const Time &t);
  // lessThan
@@ -2524,14 +2538,18 @@ Class Time{
 
 #+end_src
 
-** Time accumulator example (cont'd)
+*** Interface ctd.
  
 
 #+begin_src C++
 // getComponents
-void getComponents(unsigned int &hrs, unsigned int &mins, unsigned int &secs);
+void getComponents(unsigned int &hrs,
+                   unsigned int &mins,
+                   unsigned int &secs);
 // increment
-void increment(unsigned int hrs, unsigned int mins, unsigned int secs);
+void increment(unsigned int hrs,
+               unsigned int mins,
+               unsigned int secs);
 // add
 Time add(const Time &t);
 // diff
@@ -2542,7 +2560,7 @@ private:
 
 #+end_src
 
-** Time accumulator example (cont'd)
+*** Client Code
  
 
 #+begin_src C++
@@ -2564,7 +2582,7 @@ int main( ) {
 
 #+end_src
 
-** Time accumulator example (cont'd)
+*** Data Representation and Private Constructor
  
 
 #+begin_src C++
@@ -2585,7 +2603,7 @@ private:
 
 #+end_src
 
-** Time accumulator example (cont'd)
+*** Implementation
  
 
 #+begin_src C++
@@ -2604,17 +2622,21 @@ namespace {
 
 #+end_src
 
-** Time accumulator example (cont'd)
+*** Implementation
  
 
 #+begin_src C++
 // time.cpp
-Time::Time(unsigned int hrs, unsigned int mins, unsigned int secs) {
+Time::Time(unsigned int hrs,
+           unsigned int mins,
+           unsigned int secs) {
   assert(mins < 60);
   assert(secs < 60);
   seconds = convertToSecs(hrs, mins, secs);
 }
-void Time::increment(unsigned int hrs, unsigned int mins, unsigned int secs) {
+void Time::increment(unsigned int hrs,
+                     unsigned int mins,
+                     unsigned int secs) {
   assert(mins < 60);
   assert(secs < 60);
   seconds += convertToSecs(hrs, mins, secs);
@@ -2622,7 +2644,7 @@ void Time::increment(unsigned int hrs, unsigned int mins, unsigned int secs) {
 
 #+end_src
 
-** Time accumulator example (cont'd)
+*** Implementation
  
 
 #+begin_src C++
@@ -2633,7 +2655,9 @@ bool Time::equals(const Time &t) {
 bool Time::lessThan(const Time &t) {
   return seconds < t.seconds;
 }
-void Time::getComponents(unsigned int &hrs, unsigned int &mins, unsigned int &secs) {
+void Time::getComponents(unsigned int &hrs,
+                         unsigned int &mins,
+                         unsigned int &secs) {
   hrs  =  seconds / SECS_IN_HOUR;
   mins = (seconds / SECS_IN_MIN) % MINS_IN_HOUR;
   secs =  seconds % SECS_IN_MIN;
@@ -2641,7 +2665,7 @@ void Time::getComponents(unsigned int &hrs, unsigned int &mins, unsigned int &se
 
 #+end_src
 
-** Time accumulator example (cont'd)
+*** Implementation
  
 
 #+begin_src C++
@@ -2651,9 +2675,6 @@ Time Time::add(const Time &t) {
   Time result(seconds + t.seconds);
   return result;
 }
-
-
-
 
 Time Time::diff(const Time &t) {
   assert(!lessThan(t));
@@ -2668,12 +2689,12 @@ Time::Time(unsigned long int secs) {
 
 #+end_src
 
-** Time accumulator example
+*** Remarks
  
  - Note the second (private) constructor on slide 13 and 17
- - used by add( ) and diff( )
- - in general, can have many
- - Could have implemented add( ) and diff( ) differently
+   + used by ~add( )~ and ~diff( )~
+   + in general, can have many
+ - Could have implemented ~add( )~ and ~diff( )~ differently
 
  #+begin_src C++
 Time Time::add(const Time &t) {
@@ -2686,21 +2707,22 @@ Time Time::diff(const Time &t) {
 
  #+end_src
 
-** Time accumulator example
+*** More Remarks
  
  - Above alternative implementation creates a temporary, anonymous instance of Time and returns it right away (more efficient)
- - no intermediate variables are declared 
+   + no intermediate variables are declared
  - Another example (where 2 temporary instances are created):
 
  #+begin_src C++
 Time t = Time(1, 0, 45).add(Time(0, 30, 15));
  #+end_src
 
- - BTW, compilers can usually optimize your code to do this
+ - Compilers can usually optimize your code to do this
  
-** Default constructor
+*** Default constructor
  
- - Has no parameters
+ - Can give default initial values
+ - Constructor with no parameters
  - Invoked by compiler if the client did not invoke another constructor 
 
  #+begin_src C++
@@ -2723,20 +2745,23 @@ Time z( ); // invalid!
 
  #+end_src
 
-** C++ classes are records with encapsulated fields
+*** C++ classes are records with encapsulated fields :BMCOL:
  
-
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 struct Time {
   unsigned long int seconds;
 };
+#+end_src
 
-
-
-
-
-
-
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 class Time {
 public:
   ...
@@ -2747,29 +2772,44 @@ private:
 
 #+end_src
 
-** C++ classes are records with encapsulated fields
- 
 
+*** Structs with Functions :BMCOL:
+**** Col1
+:PROPERTIES:
+:BEAMER_col: 0.35
+:END:
+ - Only difference: by default, fields are public in structures and private in classes
+
+
+**** Col2
+:PROPERTIES:
+:BEAMER_col: 0.65
+:END:
 #+begin_src C++
 struct Time {
 public:
   Time();
-  Time(unsigned int hrs, unsigned int mins, unsigned int secs);
-  void increment(unsigned int hrs, unsigned int mins, unsigned int secs);
+  Time(unsigned int hrs,
+       unsigned int mins,
+       unsigned int secs);
+  void increment(unsigned int hrs,
+                 unsigned int mins,
+                 unsigned int secs);
   Time add(const Time &t);
   Time diff(const Time &t);
   bool equals(const Time &t);
   bool lessThan(const Time &t);
-  void getComponents(unsigned int &hrs, unsigned int &mins, unsigned int &secs);
+  void getComponents(unsigned int &hrs,
+                     unsigned int &mins,
+                     unsigned int &secs);
 private:
   Time(unsigned long int secs);
   unsigned long int seconds;
 };
 #+end_src
 
- - Only difference: by default, fields are public in structures and private in classes
- 
-** Thus:
+
+*** Initializing, Assignment, Copying
  
 
 #+begin_src C++
@@ -2794,7 +2834,7 @@ A z = func2( );
 
 #+end_src
 
-** Thus:
+*** Default Initialization
  
  - Just like structures, no initialization is performed by default (unless a constructor is provided)
  - If no constructors are provided, the compiler supplies a dummy one that does nothing!
@@ -2809,23 +2849,21 @@ A x; // initialization will not be performed
 
  #+end_src
 
-** Passing objects as arguments
+*** Passing objects as arguments
  
  - Can be costly
  - better to pass by reference
- - sometimes want to ensure that the passed object is not modified via the const keyword
+ - sometimes want to ensure that the passed object is not modified via the ~const~ keyword
  
 
  #+begin_src C++
 int f(const Time &t) {
   if (t.lessThan(Time(0, 30, 0))) // valid: lessThan is const
-    t.increment(0, 30, 0);             // invalid: increment is not const
+    t.increment(0, 30, 0);   // invalid: increment is not const
 }
-
-
  #+end_src
 
-** const member functions
+*** const member functions
  
 
 #+begin_src C++
@@ -2835,8 +2873,8 @@ Time t3 = t1.add(t2);        // in main function
 #+end_src
 
  - How to ensure that member function add doesn't accidentally modify the reference object t1?
- 
  - Use the following declaration instead
+   + Note ~const~ keyword /after/ parameter list
 
  #+begin_src C++
 Time add(const Time &t) const; // in Time.h
@@ -2847,14 +2885,13 @@ Time Time::add(const Time &t) const {  // in Time.cpp
     }
 
  #+end_src
- :noexport:
 * Searching and sorting :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides006-searchsort.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
- 
+
  
  - Linear search, binary search, selection sort, insertion sort
  
