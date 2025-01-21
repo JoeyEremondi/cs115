@@ -2890,29 +2890,25 @@ Time Time::add(const Time &t) const {  // in Time.cpp
 :EXPORT_FILE_NAME: pdf/slides006-searchsort.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
-#+OPTIONS: todo:nil
 
+** Linear search, binary search, selection sort, insertion sort
  
- - Linear search, binary search, selection sort, insertion sort
- 
-** Notions related to program correctness
+*** Notions related to program correctness
  
  - Soundness: is the output always as expected?
- - if the program produced output, 
- - then the output is correct
+   + if the program produced output, then the output is correct
  
  - Completeness: does the program always produce an output?
- - if there exists a solution, 
- - then the program will produce an output 
+   + if there exists a solution, then the program will produce an output
  
  - Correct: sound and complete
  
  - Partially correct: sound but not complete 
- - (program may not halt on some inputs)
+   + program may not halt on some inputs
  
  - Loop invariant: conditions that are true before the loop and after every iteration
  
-** Linear search
+*** Linear search: Interface
  
 
 #+begin_src C++
@@ -2924,21 +2920,25 @@ typedef int ItemType;
 // Purpose: Locate the first occurrence of x in the array A.
 // Parameter(s):
 //  <1> x: An ItemType item to be sought.
-//  <2> A: An array of ItemType in which the search is to be conducted.
+//  <2> A: An array of ItemType in which the search
+//     is to be conducted.
 //  <3> n: An unsigned integer indicating the scope of the search.
 // Precondition(s): N/A
-// Returns: If x occurs in A[0:n], then the index of the first occurrence will be returned.
+// Returns: If x occurs in A[0:n], then the index of
+//    the first occurrence will be returned.
 // Otherwise, -1 will be returned.
 // Side Effect: N/A
 
 
 #+end_src
 
-** Linear search
+*** Linear search: Implementation
  
 
 #+begin_src C++
-int linearSearch(const ItemType x, const ItemType A[], unsigned int n) {
+int linearSearch(const ItemType x,
+                 const ItemType A[],
+                 unsigned int n) {
   for (unsigned int i = 0; i < n; i++){
     if (x == A[i]){
       return i;
@@ -2949,19 +2949,21 @@ int linearSearch(const ItemType x, const ItemType A[], unsigned int n) {
 
 #+end_src
 
- - Time complexity: as the name suggests, linear 
+ - Time complexity: as the name suggests, linear
+   + searching through ~n~ elements takes time proportional to ~n~
+   + Twice as many elements -> twice as much time
  
-** Binary search
+*** Binary search: Idea
  
  - Works correctly on sorted data only
- - Will find some occurrence of searched item x (may not be the first one)
+   + Will find some occurrence of searched item x (may not be the first one)
  
  - Check the middle item m 
- - if x == m, we have found x
- - if x < m then x will not be located to the right of m, and thus x should be sought for in the subarray to the left of m
- - if the x > m then x will not be located to the left of m, and thus x should be sought for in the subarray to the right of m
+   + if ~x == m~, we have found ~x~
+   + if ~x < m~ then ~x~ will not be located to the right of ~m~, and thus ~x~ should be sought for in the subarray to the left of ~m~
+   + if ~x > m~ then ~x~ will not be located to the left of ~m~, and thus ~x~ should be sought for in the subarray to the right of ~m~
  
-** Binary search
+*** Interface
  
 
 #+begin_src C++
@@ -2980,57 +2982,48 @@ int linearSearch(const ItemType x, const ItemType A[], unsigned int n) {
 
 #+end_src
 
-** Binary search
+*** Implementation
  
- -  bool binarySearch(ItemType x, 
 
  #+begin_src C++
-const ItemType A[], unsigned int n){
-  /*1*/    int low = 0;
-                                     /*2*/    int high = n - 1;
+bool binarySearch(ItemType x, const ItemType A[], unsigned int n) {
+  /*1*/ int low = 0;
+  /*2*/ int high = n - 1;
 
-
-
-
-
-
-
-
-                                     /*3*/    while (low <= high) {
-                                       /*4*/         int mid = (low + high) / 2;
-                                       /*5*/         if (x == A[mid])
-                                         /*6*/              return true;
-                                       /*7*/         else if (x < A[mid])
-                                         /*8*/              high = mid - 1;
-                                       /*9*/         else
-                                         /*10*/            low = mid + 1;
-                                     } //end while
-                                     /*11*/   return false;
-                                   }
-
+  /*3*/ while (low <= high) {
+    /*4*/ int mid = (low + high) / 2;
+    /*5*/ if (x == A[mid])
+      /*6*/ return true;
+    /*7*/ else if (x < A[mid])
+      /*8*/ high = mid - 1;
+    /*9*/ else
+      /*10*/ low = mid + 1;
+  } // end while
+  /*11*/ return false;
+}
  #+end_src
 
-** Binary search
+*** Time Complexity
  
  - If the array holds 32 items, needs roughly 5 steps
  - If the array holds 2048 items, needs roughly 11 steps
- - why?
+   + why?
  
- - In general, in the worst case, at most ?log2(n)? + 1 steps
+ - In general, in the worst case, at most $\log_2(n) + 1$ steps
+
+   + Twice as many items => only one extra step
  
  - Let's analyze the case for 4 items
  - How about 7 items?
  
-** Sorting
+*** Sorting: Definition
  
- - What is sorting?
- - rearranging items in some sort of order (either ascending or descending)
- - examples
- - useful for many applications 
+ - Rearranging items in some sort of order (either ascending or descending)
+ - useful for many applications
  - many known sorting algorithms exist: selection sort, insertion sort, bubble sort, quick sort, merge sort, heap sort, shell sort, radix sort, etc. 
  - each have different performance characteristics (e.g., quick sort is the fastest in the average case, while heap sort and merge sort are the fastest in the worst case)
  
-** The selection sort algorithm
+*** The selection sort algorithm: Idea
  
  - The minimum member of the original array will be the first element of the sorted array
  - If we take away the the first element, then the minimum element of the remaining subarray will be the second element in the sorted order
@@ -3039,7 +3032,7 @@ const ItemType A[], unsigned int n){
  - So, repeatedly select the minimum element from the remaining elements and places it next in the ordering, until all elements have been ordered
  - Example using 2 arrays?
  
-** The selection sort algorithm
+*** Two Array Pseudocode
  
  - Sort array A[n]:
  
@@ -3054,11 +3047,9 @@ for (i = 0; i < n; i++){
 
  #+begin_src C++
 }
-
-
  #+end_src
 
-** The selection sort algorithm
+*** One Array Pseudocode
  
  - Sort array A[n]:
  
@@ -3072,15 +3063,13 @@ for (i = 0; i < n; i++){
 
  #+begin_src C++
 }
-
-
  #+end_src
 
-** The selection sort algorithm
+*** Loop Invariants
  
  - Recall loop invariants: at the end of each iteration i
- - the subarray A[0..i-1] is a prefix of the sorted array 
- - the subarray A[i..n] contains the remaining elements in some arbitrary order
+   + the subarray A[0..i-1] is a prefix of the sorted array
+   + the subarray A[i..n] contains the remaining elements in some arbitrary order
  
  - Refined version:
  
@@ -3094,11 +3083,9 @@ for (i = 0; i < n; i++){
 
  #+begin_src C++
 }
-
-
  #+end_src
 
-** The selection sort algorithm
+*** Implementation
  
 
 #+begin_src C++
@@ -3112,11 +3099,13 @@ void selectionSort(ItemType A[], unsigned int n){
 
 #+end_src
 
-** The selection sort algorithm
+*** Min Helper Function
  
 
 #+begin_src C++
-unsigned int min(const ItemType A[], unsigned int begin, unsigned int end){
+unsigned int min(const ItemType A[],
+                 unsigned int begin,
+                 unsigned int end){
   assert(begin <= end);
   unsigned int m = begin;
   for (unsigned int i = begin + 1; i < end; i++){
@@ -3129,7 +3118,7 @@ unsigned int min(const ItemType A[], unsigned int begin, unsigned int end){
 
 #+end_src
 
-** The selection sort algorithm
+*** Swap Helper Function
  
 
 #+begin_src C++
@@ -3142,7 +3131,7 @@ void swap(ItemType &x, ItemType &y) {
 
 #+end_src
 
-** The selection sort algorithm
+*** Another Implementation
  
 
 #+begin_src C++
@@ -3166,19 +3155,17 @@ void selectionSort(ItemType A[], int N){
 
 #+end_src
 
-** The insertion sort algorithm
+*** The Insertion Sort algorithm
  
  - Divide the unsorted array into two regions 
- - sorted "left" region/subarray
- - unsorted "right" region/subarray
+   + sorted "left" region/subarray
+   + unsorted "right" region/subarray
  - Incrementally take one element from the unsorted region
- - insert it into the sorted region to generate a sorted region that is one element larger
+   + insert it into the sorted region to generate a sorted region that is one element larger
  - Rinse and repeat
- 
- 
  - Sorting happens when inserting element (and not when selecting it)
  
-** The insertion sort algorithm
+*** Intertion Sort Pseudocode
  
  - Sort A[n]:
  
@@ -3193,11 +3180,11 @@ for i ranging from 0 to n-1 do {
 
  - Example?
  
-** The insertion sort algorithm
+*** Invariant
  
  - At the end of each iteration i:
- - the subarray A[0..i] is sorted, 
- - while the subarray A[i+1..n] is in some arbitrary order
+   + the subarray A[0..i] is sorted,
+   + while the subarray A[i+1..n] is in some arbitrary order
  
  - Sort A[n]:
  
@@ -3210,7 +3197,7 @@ for i ranging from 0 to n-1 do {
 
  #+end_src
 
-** The insertion sort algorithm
+*** Implementation
  
 
 #+begin_src C++
@@ -3228,7 +3215,7 @@ void insertionSort(ItemType A[], unsigned int n) {
 
 #+end_src
 
-** The insertion sort algorithm
+*** Helper Function: Find
  
 
 #+begin_src C++
@@ -3243,7 +3230,7 @@ unsigned int find(ItemType x, const ItemType A[], unsigned int n) {
 
 #+end_src
 
-** The insertion sort algorithm
+*** Helper Function: shiftRight
  
 
 #+begin_src C++
@@ -3259,7 +3246,7 @@ void shiftRight(ItemType A[], unsigned int begin, unsigned int end) {
 
 #+end_src
 
-** The insertion sort algorithm
+*** Another Implementation
  
 
 #+begin_src C++
@@ -3287,6 +3274,14 @@ void insertionSort(DataType A[], int N) {
 
 #+end_src
 
+*** TODO Bonus: Bubble Sort
+- Main idea:
+  + Repeatedly go through array
+  + Look at side-by-side elements
+  + If the left one is bigger, swap them
+- Can do with two nested loops
+  + After outer loop's run ~i~, the ~i~ largest elements are sorted at end of the array
+  + After each inner loop's ~j~ run, the ~i~ th largest element is not in the first ~j~ elements
 * Constructors and overloading :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides007-ctors.pdf
