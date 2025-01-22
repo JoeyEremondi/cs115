@@ -72,6 +72,8 @@
 # #+LATEX_HEADER: \setminted[C++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 # #+LATEX_HEADER: \setminted[C++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 
+#+PROPERTY: header-args:C++  :includes <iostream> :prologue "using namespace std;"
+
 * Contents :TOC_1_gh:
 - [[#introduction][Introduction]]
 - [[#review][Review]]
@@ -2888,6 +2890,7 @@ Time Time::add(const Time &t) const {  // in Time.cpp
 * Searching and sorting :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides006-searchsort.pdf
+:header-args:C++:  :includes <iostream> :prologue "using namespace std;"
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 
@@ -3120,7 +3123,7 @@ unsigned int min(const ItemType A[],
 
 *** Swap Helper Function
  
-
+#+name: swap
 #+begin_src C++
 void swap(ItemType &x, ItemType &y) {
   ItemType tmp = x;
@@ -3250,9 +3253,9 @@ void shiftRight(ItemType A[], unsigned int begin, unsigned int end) {
  
 
 #+begin_src C++
-void insertionSort(DataType A[], int N) {
+void insertionSort(ItemType A[], int N) {
   int i, j, insert_index;
-  DataType x;
+  ItemType x;
 
   for (int i = 0; i < N; i++) {
     // save the element from position i
@@ -3274,7 +3277,7 @@ void insertionSort(DataType A[], int N) {
 
 #+end_src
 
-*** TODO Bonus: Bubble Sort
+*** Bonus: Bubble Sort
 - Main idea:
   + Repeatedly go through array
   + Look at side-by-side elements
@@ -3282,6 +3285,32 @@ void insertionSort(DataType A[], int N) {
 - Can do with two nested loops
   + After outer loop's run ~i~, the ~i~ largest elements are sorted at end of the array
   + After each inner loop's ~j~ run, the ~i~ th largest element is not in the first ~j~ elements
+- See: [[https://www.youtube.com/watch?v=37E3wokWzlU]]
+
+*** Bubble Sort Code
+#+begin_src C++ :noweb strip-export :exports both
+typedef int ItemType;
+<<swap>>
+void bubbleSort(ItemType A[], int N){
+  for (int i = 0; i < N-1; i++){
+    for (int j = 0; j < (N-1)-i; j++){
+      if (A[j] > A[j+1]){
+        swap(A[j], A[j+1]);
+      }}}}
+
+int main(){
+  int A[10] = {2, 3, 5, 4, 1, 4, 99, 3000, 0, -33};
+  bubbleSort(A, 10);
+  for (int i = 0; i < 10; i++){
+    cout << A[i] << " ";
+  } cout << endl;
+}
+
+#+end_src
+
+#+RESULTS:
+: -33 0 1 2 3 4 4 5 99 3000
+
 * Constructors and overloading :noexport:
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides007-ctors.pdf
