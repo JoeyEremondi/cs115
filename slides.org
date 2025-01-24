@@ -81,6 +81,7 @@
 - [[#records][Records]]
 - [[#program-organization-principles][Program Organization Principles]]
 - [[#abstract-data-types-via-classes][Abstract Data Types via Classes]]
+- [[#searching-and-sorting][Searching and sorting]]
 
 * Introduction
 :PROPERTIES:
@@ -2887,7 +2888,7 @@ Time Time::add(const Time &t) const {  // in Time.cpp
     }
 
  #+end_src
-* Searching and sorting :noexport:
+* Searching and sorting
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides006-searchsort.pdf
 :header-args:C++:  :includes <iostream> :prologue "using namespace std;"
