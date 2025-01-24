@@ -8021,3 +8021,8 @@ Local Variables:
 org-latex-packages-alist: nil
 org-export-with-tags: nil
 End:
+
+* A1 test :noexport:
+#+begin_src C++
+
+#+end_src
