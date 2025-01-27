@@ -1820,6 +1820,8 @@ int main ( ){
 }
 #+end_src
 
+#+RESULTS:
+
 **** Column 2
 :PROPERTIES:
 :BEAMER_col: 0.6

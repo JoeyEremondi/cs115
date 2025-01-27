@@ -1,0 +1,19 @@
+#+title: How to Debug Programs
+
+* Debugging Compile-time Errors
+- You try to compile your code, but you get an error
+  + Problem happens before you run it
+- Scroll up in the error messages, and look at the first one that happened in /this run of the compiler/
+  + *READ THAT MESSAGE*
+    - Look at the line number
+    - Look at what it says
+  + Read the code at the line that it's pointing to
+    - Do this /before/ you start changing things
+* Debugging Run-time Errors
+- a.k.a. Your code runs, but does the wrong thing
+- Print statements
+  + ~cout~ at points in your code, that you delete before you hand your code in
+- Assert statements
+  + ~assert(someCondition)~
+  + Your program will crash if it's false
+    - But it will tell you which thing faile\
