@@ -52,7 +52,7 @@
 #+BEAMER_HEADER: \usepackage[outputdir=pdf]{minted}
 #+BEAMER_HEADER: \usepackage{etoolbox}
 #+BEAMER_HEADER: \usepackage{hyphenat}
-# #+BEAMER_HEADER: \AtBeginEnvironment{minted}{\pause}
+#+BEAMER_HEADER: \AtBeginEnvironment{minted}{\pause}
 #+BEAMER_HEADER: \setminted[racket]{escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 #+BEAMER_HEADER: \setminted[c++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
 #+BEAMER_HEADER: \setminted[C++]{autogobble,escapeinside=||,bgcolor=LightGray,beameroverlays=true,baselinestretch=1.2,fontsize=\scriptsize}
@@ -82,6 +82,7 @@
 - [[#program-organization-principles][Program Organization Principles]]
 - [[#abstract-data-types-via-classes][Abstract Data Types via Classes]]
 - [[#searching-and-sorting][Searching and sorting]]
+- [[#constructors-and-overloading][Constructors and overloading]]
 
 * Introduction
 :PROPERTIES:
@@ -1667,6 +1668,7 @@ struct CatalogEntry {
 * Program Organization Principles
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides004-organization.pdf
+:header-args:C++:  :includes <iostream> :prologue "using namespace std;"
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -1745,7 +1747,7 @@ struct CatalogEntry {
 :PROPERTIES:
 :BMCOL:
 :END:
- 
+
 - On global variables and functions
   
 **** Column 1
@@ -1796,8 +1798,8 @@ int main ( ){
 :PROPERTIES:
 :BEAMER_col: 0.4
 :END:
-#+name: local-static-example
 
+#+name: local-static-example
 #+begin_src C++ :results output :exports both
 void fun(int var1) {
   int x1=0;
@@ -1820,7 +1822,6 @@ int main ( ){
 }
 #+end_src
 
-#+RESULTS:
 
 **** Column 2
 :PROPERTIES:
@@ -1828,7 +1829,7 @@ int main ( ){
 :END:
 
 
-***** Variable value persists across multiple calls to the function
+- Variable value persists across multiple calls to the function
   + Like a global, but can only be accessed from inside the function
   + So other things can't mess it up!
 
@@ -1964,7 +1965,8 @@ int main(){
 //     expressed as an unsigned integer.
 // Precondition(s): value1 < upper1
 // Returns: N/A
-// Side effect: The counter is initialized, with value1 as the current counter value, and upper1 as the
+// Side effect: The counter is initialized, with value 1
+//    the current counter value, and upper1 as the
 // upper bound of counter values.
 
  #+end_src
@@ -1982,7 +1984,6 @@ int main(){
 // Returns: The unsigned integer value of
 // the counter.
 // Side effect: N/A
-
 
 // incrementCounter
 //
@@ -2029,8 +2030,6 @@ void incrementCounter();
  
 
 #+begin_src C++
-#include <iostream>
-using namespace std;
 #include "encapsulated_counter.h"
 
 int main() {
@@ -2271,10 +2270,11 @@ int main( ){
   cout << counterGetValue(d) << endl;
   return 0;
 }
-
-
 #+end_src
 
+- Outputs
+  + 0
+  + 3
 *** Data Representation, Implementation, Issues :BMCOL:
 **** Col1
 :PROPERTIES:
@@ -2322,6 +2322,7 @@ cout << counterGetValue(c) << endl;
 * Abstract Data Types via Classes
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides005-adt-classes.pdf
+:header-args:C++:  :includes <iostream> :prologue "using namespace std;"
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -2369,7 +2370,7 @@ private:
 *** Client Code :BMCOL:
 **** Column 1
 :PROPERTIES:
-:BEAMER_col: 0.5
+:BEAMER_col: 0.7
 :END:
 #+begin_src C++
 #include "counter.h"
@@ -2379,21 +2380,8 @@ int main( ) {
   c.initialize(0, 3);
   d.initialize(0, 10);
 
-  c.increment();
-  c.increment();
-  c.increment();
-
-#+end_src
-
-**** Column 2
-:PROPERTIES:
-:BEAMER_col: 0.5
-:END:
-#+begin_src C++
-
-  d.increment();
-  d.increment();
-  d.increment();
+  c.increment(); c.increment(); c.increment();
+  d.increment(); d.increment(); d.increment();
 
   cout << c.getValue() << endl;
   cout << d.getValue() << endl;
@@ -2403,6 +2391,26 @@ int main( ) {
 
 #+end_src
 
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.3
+:END:
+- Outputs:
+  + 0
+  + 3
+- Just like our struct version
+
+
+*** Some terminology
+- *Class*: a type that we define
+  + Contains member variables (fields)
+  + Has member methods (functions)
+  + Members may be public or private
+- *Object:* is a value of a class type
+  + e.g. a specific instance of a class
+- In our example
+  + ~Counter~ is a class
+  + ~c~ and ~d~ are objects of type ~Counter~
 
 *** Data Representation
  
@@ -2476,12 +2484,22 @@ void Counter::initialize(unsigned int value1, unsigned int upper1) {
 
 #+end_src
 
+*** Fields and Members
+- When defining a member methods:
+  + All class fields and methods are in scope
+  + No need for ~Counter&~ argument like in struct version
+- Private Fields and Members
+  + Can be used in the /definition/ of public methods
+  + Cannot be used outside of class methods
+
+
 *** Constructors
  
  - Can declare a class constructor
    + special kind of member function
    + automatically invoked when an instance of the class is created
-   + intended to perform initialization (forces to initialize when creating instances!) 
+   + intended to perform initialization (forces to initialize when creating instances!)
+ - Use this in place of ~Counter::initialize~
 
  #+begin_src C++
 // counter.h
@@ -2511,7 +2529,7 @@ Counter::Counter(unsigned int value1, unsigned int upper1){
 // clientCode.cpp
 
 int main( ) {
-
+  // We call the constructor *when declaring* the variable
   Counter c(0, 3);
   Counter d(0, 10);
   c.increment();
@@ -2548,6 +2566,7 @@ Class Time{
 
 #+begin_src C++
 // getComponents
+// pass in references so we can return multiple values
 void getComponents(unsigned int &hrs,
                    unsigned int &mins,
                    unsigned int &secs);
@@ -2620,7 +2639,9 @@ namespace {
   const unsigned long int MINS_IN_HOUR = 60;
   const unsigned long int SECS_IN_HOUR = SECS_IN_MIN * MINS_IN_HOUR;
 
-  unsigned long int convertToSecs(unsigned hrs, unsigned mins, unsigned secs) {
+  unsigned long int convertToSecs(unsigned hrs,
+                                  unsigned mins,
+                                  unsigned secs) {
     return hrs * SECS_IN_HOUR + mins * SECS_IN_MIN + secs;
   }
 }
@@ -2727,8 +2748,8 @@ Time t = Time(1, 0, 45).add(Time(0, 30, 15));
 *** Default constructor
  
  - Can give default initial values
- - Constructor with no parameters
- - Invoked by compiler if the client did not invoke another constructor 
+   + Constructor with no parameters
+   + Invoked by compiler if the client did not invoke another constructor
 
  #+begin_src C++
 // time.h
@@ -2742,12 +2763,10 @@ public:
 Time::Time( ) {
   seconds = 0;
 }
-
 // client code in main
 Time x;
 Time y(13,13,13);
 Time z( ); // invalid!
-
  #+end_src
 
 *** C++ classes are records with encapsulated fields :BMCOL:
@@ -3314,18 +3333,43 @@ int main(){
 #+RESULTS:
 : -33 0 1 2 3 4 4 5 99 3000
 
-* Constructors and overloading :noexport:
+* Constructors and overloading
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides007-ctors.pdf
+:header-args:C++:  :includes <iostream> :prologue "using namespace std;"
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
  
  
  
- - Function overloading, type coercion, operator overloading 
+** Function overloading, type coercion, operator overloading
  
-** Default constructors (revisited)
+*** Multiset ADT
+#+begin_src C++
+typedef int ItemType;
+
+class Multiset
+{
+public:
+  // Default constructor
+  Multiset();
+
+  bool empty() const;
+  bool full() const;
+  unsigned int memberCount() const;
+  void insert(ItemType x);
+  void remove(ItemType x);
+  bool member(ItemType x) const;
+  void print() const;
+
+private:
+  unsigned int data_count;
+  ItemType data[MAX_MEMBERS];
+};
+#+end_src
+
+*** Default constructors (revisited)
  
  - Default constructor written by the programmer
  - constructor creates an empty Multiset
@@ -3339,18 +3383,11 @@ public:
 };
 
  #+end_src
+   - Default constructor provided by the compiler
+     + Client code: ~Multiset m;~
+     + but not ~Multiset m( )~;
 
- - Default constructor provided by the compiler
- 
-
- #+begin_src C++
-Client code: Multiset m; // but not Multiset m( );
-
-
-
- #+end_src
-
-** Constructors
+*** Declaring another constructor
  
  - Want to insert all elements of an array A of size n into Multiset
 
@@ -3374,18 +3411,19 @@ public:
 
  #+end_src
 
-** Constructors
+*** Using and Implementing the constructor
  
  - Client code
 
  #+begin_src C++
 int A[5] = { 2, 5, 4, 3, 1 };
-Multiset m(A, 5);  // Invoking the constructor with an array argument followed
-// by an integral argument
+Multiset m(A, 5);  // Invoking the constructor with an array arg
+// followed by an integral argument
 
  #+end_src
 
- - If frequently done, might as well write a constructor
+ - Implementation
+   + Multiset stored as sorted array
 
  #+begin_src C++
 Multiset::Multiset(const ItemType A[], unsigned int n) {
@@ -3400,7 +3438,7 @@ Multiset::Multiset(const ItemType A[], unsigned int n) {
 
  #+end_src
 
-** Constructors
+*** Yet Another Constructor
  
  - Want to create a Multiset with n copies of the same item x
  
@@ -3424,23 +3462,33 @@ Multiset::Multiset(ItemType x, unsigned int n) {
 
  #+end_src
 
-** Other uses of constructors
- 
+*** Other uses of constructors
+ - Assignments
  - Anonymous objects can be useful and efficient
  
 
  #+begin_src C++
-Counter c1, c2;         // ordinary variables initialized using default constructor
-Counter c3(0, 3);       // ordinary variable initialized using initializing constructor
-c1 = Counter( );         // unnamed instance constructed with default constructor
-c2 = Counter(0, 10);  // unnamed instance constructed with initializing constructor
+// ordinary variables initialized using default constructor
+Counter c1, c2;
+// ordinary variable initialized using initializing constructor
+Counter c3(0, 3);
+// unnamed instance constructed with default constructor
+c1 = Counter( );
+// unnamed instance constructed with initializing constructor
+c2 = Counter(0, 10);
 
 Counter ctr1[MAX];
 ctr1[5] = Counter(0,3);
 
  #+end_src
 
-** Other uses of constructors (cont'd)
+*** Constructor Overloading
+- When we define multiple constructors for a class, we say it is /overloaded/
+- The compiler picks the right constructor
+  + based on the types of the arguments given
+  + Can't have two constructors with the same argument types
+
+*** Constructors for  arguments and return values
  
  - Creating anonymous objects for function call
 
@@ -3465,8 +3513,9 @@ House House::add(const House &other) const {
 
  #+end_src
 
-** Overloading
- 
+*** Overloading In General
+- Can overload any function, not just constructors
+  + Again, correct one chosen by argument types
 
 #+begin_src C++
 int myMax(int a, int b) {
@@ -3475,7 +3524,6 @@ int myMax(int a, int b) {
   else
     return b;
 }
-
 float myMax(float a, float b) {
   if (a > b)
     return a;
@@ -3483,20 +3531,17 @@ float myMax(float a, float b) {
     return b;
 }
 int main( ) {
-
   // invoke myMax(float, float)
   cout << myMax(1.2f, 4.7f);
   // invoke myMax(int, int)
   cout << myMax(3, 4);
-
-  return 0;
-}
-
-
+  return 0;}
 #+end_src
 
-** Overloading
+*** Choosing a Function
  
+- Either type or number of args must be different
+  + How about different return types only? (nope!)
 
 #+begin_src C++
 int myMax(int a, int b) {
@@ -3510,27 +3555,15 @@ int myMax(int a, int b, int c) {
   return myMax(a, myMax(b, c));
 }
 
-#+end_src
-
- - How about different return types only? (nope!)
-
- #+begin_src C++
 int main( ) {
-
   // invoke myMax(int, int)
   cout << myMax(3, 4);
-
   // invoke myMax(int, int, int)
   cout << myMax(3, 4, 5);
-
-  return 0;
-}
-
-
+  return 0;}
  #+end_src
 
-** Overloading
- 
+*** Overloading Class Member Functions
 
 #+begin_src C++
 // header
@@ -3546,31 +3579,36 @@ void Multiset::print( ) const {
 void Multiset::print(ostream& output_stream) const {
   for (unsigned int i = 0; i < data_count; i++) {
     if (i != 0)
-      output_stream << ", ";  // comma separation for all except the first member
+      // comma separation for all except the first member
+      output_stream << ", ";
     output_stream << data[i];
   }
 }
 
 #+end_src
 
-** Type coercions
+*** Type coercions
  
  - AKA implicit (static or dynamic) type conversion
  - Occurs when evaluating expressions, passing values to functions, and returning values from functions
  - No warning produced by compiler unless has possibility of information loss
  
  - Coercion order:
- - double <- float <- long int <- int <- short int <- char
- - No warnings are provided for type upgrade given in the above order
- - ``safe'' coercion 
+   + {~double <- float <- long int <- int <- short int <- char~
+        + No warnings are provided for type upgrade given in the above order
+     - ``safe'' coercion
  
-** Type coercions (examples)
+*** Type coercions (examples) :BMCOL:
  
-
+**** Col1
+:PROPERTIES:
+:BEAMER_COL: 0.6
+:END:
 #+begin_src C++
 void myMax(float f1, float f2); // 1A
 void myMax(int i1, int i2); // 1B
 myMax(7, 9);
+
 
 void zipIt(float f1); // 2A
 void zipIt(string s1); // 2B
@@ -3581,6 +3619,26 @@ void zoom(float f1); // 3A
 void zoom(string s1); // 3B
 int x = 14;
 zoom(x);
+
+#+end_src
+
+**** Col2
+:PROPERTIES:
+:BEAMER_COL: 0.4
+:END:
+ - 1: None (1B)
+ - 2: None (2B)
+ - 3: Safe (3A) 
+
+
+*** Type coercions (examples ctd.) :BMCOL:
+
+**** Col1
+:PROPERTIES:
+:BEAMER_COL: 0.6
+:END:
+#+begin_src C++
+
 void whoosh(char c1); // 4A
 void whoosh(string s1); // 4B
 double pi = 3.14159;
@@ -3593,12 +3651,14 @@ crunch(e);
 
 #+end_src
 
- - 1: None (1B)               2: None (2B) 
- - 3: Safe (3A) 
+**** Col2
+:PROPERTIES:
+:BEAMER_COL: 0.4
+:END:
  - 4: Unsafe and possibly warning (4A)
- - 5: Error! 
- 
-** Type coercions (examples cont'd)
+ - 5: Error!
+
+*** Type coercions (examples ctd.)
  
 
 #+begin_src C++
@@ -3617,12 +3677,12 @@ mixed(r5, r6);
  - 6: both safe but ambiguous 
  - 7: both unsafe and ambiguous
  
-** Operator overloading
- 
- - Gives more than one meaning to the same operator
- - Operands (arguments to operators) are new data types
- - thus, overloading the operator 
- - Uses keyword operator
+*** Operator overloading
+ - ~operator~ keyword
+   + Gives more than one meaning to the same operator
+   + Operands (arguments to operators) are new data types
+   + thus, overloading the operator
+   + Uses keyword operator
  
 
  #+begin_src C++
@@ -3634,7 +3694,7 @@ House &operator= (const House &h);
 
  #+end_src
 
-** Operator overloading (example)
+*** Operator overloading (example)
  
 
 #+begin_src C++
@@ -3673,7 +3733,7 @@ void print() const;
 
  #+end_src
 
-** Implementing ==
+*** Implementing ==
  
  - Let's say we want to implement a function called isEquals
  
@@ -3699,7 +3759,7 @@ bool House::operator==(const House &h) const {
 
  #+end_src
 
-** The == operator
+*** The == operator
  
  - Can now use it as an operator 
  
@@ -3715,8 +3775,8 @@ if (h1 == h2) {
 
  #+end_src
 
-** Implementing assignment operator (=) 
- 
+*** Implementing assignment operator (=)
+- First attempt:
 
 #+begin_src C++
 void House::operator=(const House &h) {
@@ -3734,11 +3794,12 @@ void House::operator=(const House &h) {
  - for this, need to mutable House type object (i.e. reference)
  
  
-** Implementing assignment operator (=) 
+*** Implementing assignment operator (=) 
  
-
+- Updated version
 #+begin_src C++
-House &House::operator=(const House &h) { // & is used for efficiency only!
+// & is used for efficiency only!
+House &House::operator=(const House &h) {
   if (this != &h) {
     address = h.address;
     owner = h.owner;
@@ -3750,12 +3811,12 @@ House &House::operator=(const House &h) { // & is used for efficiency only!
 
 #+end_src
 
- - this is a pointer to the reference object
-*this are the ``contents'' of the reference object
+ - ~this~ is a pointer to the reference object
+ - ~*this~ is the ``contents'' of the reference object
  
  
-** Assignment operator (=) 
- 
+*** Assignment operator (=) 
+- Client code
 
 #+begin_src C++
 House h1, h2, h3;
@@ -3769,7 +3830,7 @@ h1.printCost(); // prints 900
 
 #+end_src
 
-** Implementing addition operator (+) 
+*** Implementing addition operator (+) 
  
 
 #+begin_src C++
@@ -3789,7 +3850,7 @@ House House::operator+ (const House &h) {
 
 #+end_src
 
-** Implementing increment operator (+=) 
+*** Implementing increment operator (+=) 
  
 
 #+begin_src C++
@@ -3807,9 +3868,9 @@ House &House::operator+= (const House &h) {
 
 #+end_src
 
-** Reimplementing addition operator (+) 
+*** Reimplementing addition operator (+) 
  
-
+- Simpler version based on ~+=~
 #+begin_src C++
 House House::operator+ (const House &h) {
 
@@ -3824,11 +3885,11 @@ House House::operator+ (const House &h) {
 
 #+end_src
 
-** Overloading non-member operations
+*** Overloading non-member operations
  
  - What if you did not write the House class? 
- - can't implement addition (+) as a member function of House!
- - no problem, implement it as a non-member function with an additional House argument (standing for the reference object)
+   + can't implement addition (+) as a member function of House!
+   + no problem, implement it as a non-member function with an additional House argument (standing for the reference object)
  
 
  #+begin_src C++
@@ -3843,8 +3904,8 @@ House operator+ (const House &h1, const House &h2) {
 
  - Similarly for the case when the first operand is a primitive type
  
-** Overloading non-member operations
- 
+*** Stream Operators
+ - Similar for stream operator ~<<~ in C++
  - Want to add a stream insertion operator (operator<<) to the House class
 
  #+begin_src C++
@@ -3863,7 +3924,7 @@ void operator<< (ostream &out, const House &h) {
 
  - One issue: fields (e.g. address) are private! 
  
-** Overloading non-member operations
+*** Overloading non-member operations
  
 
 #+begin_src C++
@@ -3882,26 +3943,21 @@ void House::print(ostream &out) const{
 }
 
 void House::print() const{
-  print(cout);
-}
+  print(cout);}
 
 void operator<< (ostream &out, const House &h) {
-  h.print(out);
-}
+  h.print(out);}
 
-With this, cout << h2; works as intended
 
 #+end_src
 
-** Overloading non-member operations
+- With this, ~cout << h2;~ works as intended
+
+*** Overloading non-member operations
  
+- But ~cout << h2 << endl;~ will give compile time error!
 
-#+begin_src C++
-But cout << h2 << endl; will give compile time error!
-
-#+end_src
-
- - Use the following implementation instead:
+- Use the following implementation instead:
  
 
  #+begin_src C++
@@ -3909,9 +3965,8 @@ ostream &operator<< (ostream &out, const House &h) {
   h.print(out);
   return out;
 }
-
-
  #+end_src
+ - e.g. The operator returns the stream for the next thing
 
 * Object-oriented design :noexport:
 :PROPERTIES:
@@ -3922,9 +3977,9 @@ ostream &operator<< (ostream &out, const House &h) {
  
  
  
- - Composition, inheritance, polymorphism, dynamic binding, hidden functions & operators  
+** Composition, inheritance, polymorphism, dynamic binding, hidden functions & operators
  
-** Terminology
+*** Terminology
  
  - Top-down design: process of repeatedly decomposing a complicated problem into smaller, more manageable subproblems that can be solved by functions that can be implemented independently of the rest of the project
  - Object-oriented design (OOD): software design technique where the problem domain is decomposed into a set of objects that together solve a software problem
@@ -3935,7 +3990,7 @@ ostream &operator<< (ostream &out, const House &h) {
  - Methods (=class member functions)
  - Message Passing (=invocation of member functions through an object)
  
-** Composition 
+*** Composition
  
  - Idea:
  - say we want to define a class P1
@@ -3945,7 +4000,7 @@ ostream &operator<< (ostream &out, const House &h) {
  - C++ syntax allows you to call other constructors of C1, C2, and C3 if needed, and pass the appropriate arguments in their parameters
  - use the methods of C1, C2, and C3 using the declared objects while implementing the methods of P1
  
-** Composition (example)
+*** Composition (example)
  
 
 #+begin_src C++
@@ -3982,7 +4037,7 @@ void print (ostream &out);
 
  #+end_src
 
-** Composition (example)
+*** Composition (example)
  
  - Bicycle::Bicycle()
  -  : front_wheel(), back_wheel(),seat()
@@ -4002,7 +4057,7 @@ Bicycle b;
 
  #+end_src
 
-** Composition (example)
+*** Composition (example)
  
  - Bicycle::Bicycle (string wheel_manufacturer1, string wheel_product1, int diameter_in_inches1, 
  - int weight_in_grams1, int spokeCount1, string wheel_manufacturer2, 
@@ -4021,7 +4076,7 @@ Bicycle b;
 
  #+end_src
 
-** Composition (example)
+*** Composition (example)
  
 
 #+begin_src C++
@@ -4066,7 +4121,7 @@ colour(original.colour) {
 
  #+end_src
 
-** Composition (example)
+*** Composition (example)
  
  - Bicycle::Bicycle (const Bicycle &original)
  -  : front_wheel (original.front_wheel),
@@ -4080,7 +4135,7 @@ colour(original.colour) {
 
  #+end_src
 
-** Composition (another example)
+*** Composition (another example)
  
 
 #+begin_src C++
@@ -4099,7 +4154,7 @@ private:
 
 #+end_src
 
-** Composition (another example)
+*** Composition (another example)
  
 
 #+begin_src C++
@@ -4126,7 +4181,7 @@ void GuardedArray::store(unsigned int i, ItemType x) {
 
 #+end_src
 
-** Composition (another example)
+*** Composition (another example)
  
 
 #+begin_src C++
@@ -4154,7 +4209,7 @@ private:
 
 #+end_src
 
-** Composition (another example)
+*** Composition (another example)
  
 
 #+begin_src C++
@@ -4171,7 +4226,7 @@ ItemType ManagedArray::retrieve(unsigned int i) const {
 
 #+end_src
 
-** Composition (another example)
+*** Composition (another example)
  
 
 #+begin_src C++
@@ -4188,7 +4243,7 @@ void ManagedArray::insert(unsigned int i, ItemType x) {
 
 #+end_src
 
-** Composition (yet another example)
+*** Composition (yet another example)
  
  - Can in turn define Multiset using ManagedArray (see notes for full details)
  
@@ -4200,7 +4255,7 @@ void ManagedArray::insert(unsigned int i, ItemType x) {
  
  - can create a hierarchy of classes linked by the ancestor-descendant relation  
  
-** Inheritance
+*** Inheritance
  
  - Child class inherits everything in the parent class 
  - when an object of the child class is instantiated, 
@@ -4216,7 +4271,7 @@ void ManagedArray::insert(unsigned int i, ItemType x) {
  - e.g. C extends P, GC extends C 
  - then all publicly inherited public fields of C will be members of GC
  
-** Inheritance (public vs. private)
+*** Inheritance (public vs. private)
  
 
 #+begin_src C++
@@ -4253,7 +4308,7 @@ private:
  - how can we access v1 from inside C or its clients?
  - what if we wrote : private p?
  
-** Inheritance (hierarchy, overriding)
+*** Inheritance (hierarchy, overriding)
  
  - Can specify a hierarchy:
 
@@ -4289,7 +4344,7 @@ void C::f2(){
 
  #+end_src
 
-** Inheritance (constructors)
+*** Inheritance (constructors)
  
  - Constructor of the base class is implicitly invoked
  - Can specify constructors as well
@@ -4317,7 +4372,7 @@ D::D(...) : C(...), f1(...), f2(...), ...
  - a constructor of each member field fi is invoked (which may initiate the invocation of other constructors)
  - the body of the constructor of D is invoked
  
-** Inheritance (protected)
+*** Inheritance (protected)
  
  - Supports more flexibility
  
@@ -4352,7 +4407,7 @@ private:
 
  #+end_src
 
-** Inheritance type
+*** Inheritance type
  
  - All permutations possible
  
@@ -4386,10 +4441,10 @@ class C3 : private P {
 
  #+end_src
 
-** Inheritance type (cont'd)
+*** Inheritance type (cont'd)
  
  
-** Inheritance type (cont'd)
+*** Inheritance type (cont'd)
  
 
 #+begin_src C++
@@ -4421,7 +4476,7 @@ int main(){
 
 #+end_src
 
-** Example: the Building (base) class
+*** Example: the Building (base) class
  
 
 #+begin_src C++
@@ -4456,7 +4511,7 @@ unsigned int area;
 
  #+end_src
 
-** Example: the House (child) class
+*** Example: the House (child) class
  
 
 #+begin_src C++
@@ -4491,7 +4546,7 @@ unsigned int applianceCount;
 
  #+end_src
 
-** Example: implementation of House
+*** Example: implementation of House
  
  - House::House(const string& address1,
  -              const string& owner1,
@@ -4521,7 +4576,7 @@ void House:: print() const {
 
  #+end_src
 
-** Example: the Barn (base) class
+*** Example: the Barn (base) class
  
 
 #+begin_src C++
@@ -4551,7 +4606,7 @@ float hayCapacity;
 
  #+end_src
 
-** Example: client code
+*** Example: client code
  
 
 #+begin_src C++
@@ -4564,7 +4619,7 @@ h1.print();
 
 #+end_src
 
-** Issues with inheritance
+*** Issues with inheritance
  
  - Implementation inheritance = examples that we have seen earlier
  - allows code reuse
@@ -4578,7 +4633,7 @@ h1.print();
  
  - Another more powerful use of inheritance = interface inheritance
  
-** Interface inheritance
+*** Interface inheritance
  
  - Rather than reusing implementation, reuse interface!
  - program to an interface, not an implementation
@@ -4596,7 +4651,7 @@ Say we want to develop 3 similar functions; how to rather implement one?
  - develop 3 derived classes that extend this base class and implements (virtual) functions of the base class
  - C++ compiler will do the rest via dynamic binding
  
-** Example: data sources
+*** Example: data sources
  
 
 #+begin_src C++
@@ -4613,7 +4668,7 @@ int sumArray(const int A[], unsigned int n) {
 
 #+end_src
 
-** Example: data sources (cont'd)
+*** Example: data sources (cont'd)
  
 
 #+begin_src C++
@@ -4630,7 +4685,7 @@ int sumManagedArray(const ManagedArray &A) {
 
 #+end_src
 
-** Example: data sources (cont'd)
+*** Example: data sources (cont'd)
  
 
 #+begin_src C++
@@ -4648,7 +4703,7 @@ int sumStandardInputStream() {
 
 #+end_src
 
-** Example: data sources (cont'd)
+*** Example: data sources (cont'd)
  
 
 #+begin_src C++
@@ -4664,7 +4719,7 @@ int sumDataSource(a data source) {
 
 #+end_src
 
-** Example: data sources (cont'd)
+*** Example: data sources (cont'd)
  
 
 #+begin_src C++
@@ -4684,7 +4739,7 @@ public:
 
  - Abstract class can't be instantiated (but can be referenced)
  
-** Example: data sources (cont'd)
+*** Example: data sources (cont'd)
  
 
 #+begin_src C++
@@ -4701,7 +4756,7 @@ int sumDataSource(DataSource &ds) {
  - What's new: can be applied to instances of any derived class of DataSource
  - Called a polymorphic function
  
-** Example: data sources (cont'd)
+*** Example: data sources (cont'd)
  
 
 #+begin_src C++
@@ -4721,7 +4776,7 @@ private:
 
 #+end_src
 
-** Example: data sources (cont'd)
+*** Example: data sources (cont'd)
  
 
 #+begin_src C++
@@ -4744,7 +4799,7 @@ int ArrayDataSource::next() {
 
 #+end_src
 
-** Example: data sources (cont'd)
+*** Example: data sources (cont'd)
  
 
 #+begin_src C++
@@ -4761,7 +4816,7 @@ int sum = sumDataSource(ads);
  - determined at runtime 
  - depends on the exact type of object ads is bound to
  
-** Example: data sources (cont'd)
+*** Example: data sources (cont'd)
  
 
 #+begin_src C++
@@ -4778,7 +4833,7 @@ private:
 
 #+end_src
 
-** Example: data sources (cont'd)
+*** Example: data sources (cont'd)
  
  - ManagedArrayDataSource::ManagedArrayDataSource(const ManagedArray& A)
 
@@ -4799,7 +4854,7 @@ int ManagedArrayDataSource::next() {
 
  #+end_src
 
-** Example: data sources (cont'd)
+*** Example: data sources (cont'd)
  
 
 #+begin_src C++
@@ -4816,7 +4871,7 @@ int sum = sumDataSource(mads);
 
 #+end_src
 
-** Static vs. dynamic binding
+*** Static vs. dynamic binding
  
 
 #+begin_src C++
@@ -4849,7 +4904,7 @@ int main() {
 
 #+end_src
 
-** Static vs. dynamic binding (cont'd)
+*** Static vs. dynamic binding (cont'd)
  
 
 #+begin_src C++
@@ -4883,7 +4938,7 @@ int main() {
 
 #+end_src
 
-** Static vs. dynamic binding (cont'd)
+*** Static vs. dynamic binding (cont'd)
  
 
 #+begin_src C++
@@ -4912,7 +4967,7 @@ int main() {
 
 #+end_src
 
-** Hidden functions and operators
+*** Hidden functions and operators
  
  - A function or operator in the base class with the same name and parameters as a function in the derived class
  - can still access a hidden function using the base-class type qualifier
