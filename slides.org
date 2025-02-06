@@ -85,6 +85,7 @@
 - [[#constructors-and-overloading][Constructors and overloading]]
 - [[#object-oriented-design-composition-and-inheritance][Object-oriented design: Composition and Inheritance]]
 - [[#object-oriented-design-interfaces-subtying-and-polymorphism][Object-oriented design: Interfaces, Subtying and Polymorphism]]
+- [[#pointers][Pointers]]
 
 * Introduction
 :PROPERTIES:
@@ -5281,9 +5282,12 @@ void DVDEntry::printInfo() {
  
  
  
- - Parametric polymorphism: template functions, template classes
+**  Parametric polymorphism: template functions, template classes
+:PROPERTIES:
+:BMCOL:
+:END:
  
-** Motivation
+*** Motivation
  
  - Want to define both uniformly
  
@@ -5296,11 +5300,6 @@ int MaxInt(int a, int b) {
     return b;
 }
 
-
-
-
-
-
 double MaxDouble(double a, double b) {
   if (b < a)
     return a;
@@ -5308,11 +5307,9 @@ double MaxDouble(double a, double b) {
     return b;
 }
 
-
-
  #+end_src
 
-** Motivation
+*** Idea
  
  - Can define a generic function with generic parameters
  
@@ -5324,17 +5321,17 @@ SomeType MaxSomeType(SomeType a, SomeType b) {
   else
     return b;
 }
-
-
  #+end_src
+ - What properties does ~SomeType~ need for this to work?
 
-** Motivation
+*** Implementing using Templates
  
- - Keywords: template, typename
+ - Keywords: ~template~, ~typename~
  
 
  #+begin_src C++
-template <typename T> // can also use the keyword class rather than typename
+// can also use the keyword class rather than typename
+template <typename T>
 T Max(T a, T b) {
   if (b < a)
     return a;
@@ -5347,30 +5344,36 @@ Max<int>(3, 4); // or in most cases, simply: Max(3, 4);
 
  #+end_src
 
-** Program organization
+*** Program organization
  
  - Where should we place function templates?
- - inclusion compilation model vs. separate compilation model
+   + inclusion compilation model vs. separate compilation model
  
  - We will use inclusion compilation model (as it is supported by all compilers)
  
  - Idea: 
- - place template in a header file 
- - the compiler will only generate code on instantiation 
- - avoids ``code bloat'' suffered by early implementations
+   + place template in a header file
+   + the compiler will only generate code on instantiation
+     - avoids ``code bloat'' suffered by early implementations
  
-** Restrictions on template abstraction
+*** Restrictions on template abstraction
  
-
+- Only works for types which have the necessary operations defined
 #+begin_src C++
-Max(string("abc"), string("def")); // works as string class overloads <
+// works since string class overloads <
+Max(string("abc"), string("def"));
 
 Max("abc", "def"); // WRONG, as < is not defined for C strings
+// i.e. arrays of characters
 
 #+end_src
 
- - Similarly, won't work for other types that do not define <
+
+*** Restrictions ctd.
  
+
+ - Similarly, won't work for other types that do not define <
+
 
  #+begin_src C++
 struct Book {
@@ -5378,13 +5381,6 @@ struct Book {
   string title;
 };
 
-
- #+end_src
-
-** Restrictions on template abstraction
- 
-
-#+begin_src C++
 Book b1, b2;
 b1.author = "Me";
 b1.title = "BestSeller";
@@ -5394,36 +5390,25 @@ b2.title= "Whatever!";
 Max(b1,b2); // WRONG!
 
 
-
-
-
 #+end_src
-
- - Unless we also have the following:
- 
+*** Making The Example Work
+ - It will compile if we add the following:
 
  #+begin_src C++
 bool operator<(const Book &b1, const Book &b2) {
- #+end_src
-
- - return (b1.author < b2.author) ||
-
- #+begin_src C++
-((b1.author==b2.author) && (b1.title <b2.title));
-}
-
+  return (b1.author < b2.author) ||
+         ((b1.author == b2.author) && (b1.title < b2.title));
  #+end_src
 
  - Only then:
  
-
  #+begin_src C++
 Max(b1,b2); // Works!
 
 
  #+end_src
 
-** Specifying template abstraction
+*** Specifying template abstraction
  
 
 #+begin_src C++
@@ -5435,7 +5420,8 @@ Max(b1,b2); // Works!
 // Purpose: Find the maximum of two given arguments.
 // Template Parameter(s):
 //  <1> T: A type for which the following operations are defined:
-//    -> copy constructor [usually automatically created by C++ compilers]
+//    -> copy constructor
+//       [usually automatically created by C++ compilers]
 //    -> binary less than comparison (<)
 // Parameter(s):
 //  <1> a: An instances of type T
@@ -5446,13 +5432,12 @@ Max(b1,b2); // Works!
 
 #+end_src
 
-** Specifying template abstraction
+*** Reducing the Requirements
  
  - Earlier, could have dropped the copy constructor requirement by passing references instead:
  
- - template <typename T>
-
  #+begin_src C++
+template <typename T>
 T &Max(T &a, T &b) {
   if (b < a)
     return a;
@@ -5464,9 +5449,8 @@ T &Max(T &a, T &b) {
 
  - Better implementation as doesn't waste memory by creating temporary objects
  
-** Another example
- 
-
+*** Selection Sort
+- Recall, we had ~int~ hard-coded in
 #+begin_src C++
 typedef int ItemType;
 
@@ -5475,7 +5459,9 @@ void Swap(ItemType &a, ItemType &b){
   a = b;
   b = tmp;
 }
-unsigned int FindMin(const ItemType A[], unsigned int begin, unsigned int end){
+unsigned int FindMin(const ItemType A[],
+                     unsigned int begin,
+                     unsigned int end){
   ...
     }
 void Sort(ItemType A[], unsigned int n){
@@ -5487,22 +5473,22 @@ void Sort(ItemType A[], unsigned int n){
 
 #+end_src
 
-** Another example
+*** Generic Helper Functions
  
- - template <typename ItemType>
+ - Should work for anything with ~<~
 
- #+begin_src C++
+#+begin_src C++
+template <typename ItemType>
 void Swap(ItemType &a, ItemType &b){
   ItemType tmp = a;        // copy constructor
   a = b;                           // assignment operator
   b = tmp;
+
 }
- #+end_src
-
- - template <typename ItemType>
-
- #+begin_src C++
-unsigned int FindMin(const ItemType A[], unsigned int begin, unsigned int end){
+template <typename ItemType>
+unsigned int FindMin(const ItemType A[],
+                     unsigned int begin,
+                     unsigned int end){
   assert(begin <= end);
   unsigned int m = begin;
   for (unsigned int i = begin + 1; i <= end; i++){
@@ -5514,11 +5500,11 @@ unsigned int FindMin(const ItemType A[], unsigned int begin, unsigned int end){
 
  #+end_src
 
-** Another example
- 
- - template <typename ItemType>
 
+*** A Fully Generic Sort
+ 
  #+begin_src C++
+template <typename ItemType>
 void Sort(ItemType A[], unsigned int n){
   for (unsigned int i = 0; i < n; i++){
     unsigned int m = FindMin(A, i, n - 1);
@@ -5531,20 +5517,20 @@ void Sort(ItemType A[], unsigned int n){
 
  #+begin_src C++
 // Template Parameter(s):
-//  <1> ItemType: A type for which the following operations are defined:
+//  <1> ItemType: A type for which
+//          the following operations are defined:
 //    -> copy constructor
 //    -> assignment operator
 //    -> binary less than comparison (<)
 
  #+end_src
 
-** Misc notes
+*** Multiple Typenames
  
  - Can have multiple different type names in template arguments (separated by a comma), e.g.:  
- 
- - template <typename T, typename K, typename O>
 
  #+begin_src C++
+template <typename T, typename K, typename O>
 T func1(K a, O b) {
   T x, y;
   ...
@@ -5556,14 +5542,15 @@ T func1(K a, O b) {
 
  #+end_src
 
-** Misc notes
+*** Functions as Template Parameters
  
  - Could have generalized our selection sort template to sort either in ascending or in descending order by replacing < with a function
- 
- - template <typename T, bool compare(const T &x, const T &y)>
 
  #+begin_src C++
-unsigned int Find(const T A[], unsigned int begin, unsigned int end) {
+template <typename T, bool compare(const T &x, const T &y)>
+unsigned int Find(const T A[],
+                  unsigned int begin,
+                  unsigned int end) {
   assert(begin <= end);
   unsigned int m = begin;
   for (unsigned int i = begin + 1; i <= end; i++){
@@ -5575,13 +5562,12 @@ unsigned int Find(const T A[], unsigned int begin, unsigned int end) {
 
  #+end_src
 
-** Misc notes
+*** Function Parameters ctd.
  
  - New template for sort
  
- - template <typename T, bool compare(const T &x, const T &y)>
-
  #+begin_src C++
+template <typename T, bool compare(const T &x, const T &y)>
 void Sort(T A[], unsigned int n){
   for (unsigned int i = 0; i < n; i++){
     unsigned int m = Find<T, compare>(A, i, n - 1);
@@ -5592,9 +5578,9 @@ void Sort(T A[], unsigned int n){
 
  #+end_src
 
-** Misc notes
+*** Template Client Code
  
-
+- Can explicitly specify which operation to fill the template in with
 #+begin_src C++
 bool less_than(const int &x, const int &y){
   return x < y;
@@ -5610,61 +5596,30 @@ Sort<int, greater_than>(...);
 
 #+end_src
 
-** Template classes
- 
- - template<typename T>
+*** Template classes
+- Can also define classes in terms of type variables
+  + Useful for defining /containers/
+  + Want to specify /how/ the data is structured, but not what type it is
+- E.g. Guarded arrays
+  + Just like before, but not restricted to integer elements
+#+begin_src C++
+template<typename T>
 
- #+begin_src C++
-class Comparator{
-  T x;
-  T y;
+class GuardedArray {
 public:
-  Comparator(T ax, T ay);
-  bool isEquals();
-  bool isGreaterThan();
-  bool isLessThan();
+  static const unsigned int LENGTH = 500;
+  GuardedArray();
+  GuardedArray(T x);
+  ItemType retrieve(unsigned int i) const;
+  void store(unsigned int i, T x);
+private:
+  T data_array[LENGTH];
 };
- #+end_src
 
- - template<typename T>
+#+end_src
 
- #+begin_src C++
-Comparator<T>::Comparator(T ax, T ay){
-  x = ax;
-  y = ay;
-}
- #+end_src
 
- - template<typename T>
-
- #+begin_src C++
-bool Comparator<T>::isEquals(){
-  return x == y;
-}
-
- #+end_src
-
- - template<typename T>
-
- #+begin_src C++
-bool Comparator<T>::isGreaterThan(){
-  return x > y;
-}
-
- #+end_src
-
- - template<typename T>
-
- #+begin_src C++
-bool Comparator<T>::isLessThan(){
-  return x < y;
-}
-
- #+end_src
-
-** Template classes
- 
-
+*** Template classes :noexport:
 #+begin_src C++
 #include <iostream>
 #include "headerFile.h"
@@ -5679,40 +5634,56 @@ int main() {
 
 #+end_src
 
-* Pointers :noexport:
+* Pointers
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides011-pointers.pdf
+:header-args:C++:  :includes <iostream> :prologue "using namespace std;"
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
  
- 
- 
- 
-** Motivation
+** Directly Managing Memory
+:PROPERTIES:
+:BMCOL:
+:END:
+
+*** The C++ Memory Model
+ - We can imagine RAM/Memory as being like a giant array
+   + Indicies between ~0~ and ~2^64~
+ - With array indices, we could:
+   + Get the element at a certain index
+   + Set the element at a certain index
+   + Do arithmetic on the indices
+ - Pointers let you do this /for all of memory/
+
+*** Pointers vs. References
  
  - Reference = alias for another variable
  
  - Pointer = address of another variable stored elsewhere in memory 
  
  - Like references, but much more powerful
- - can be initialized to anything!
- - can change over time (unlike references)
+   + can be initialized to anything!
+   + can change over time (unlike references)
+   + can do pointer arithmetic
 
- #+begin_src C++
-can do pointer arithmetic (pointer arguments are evaluated when passed to functions during function invocation; see first lecture slides!)
-
- #+end_src
-
-Examples of initialization, the & operator, and dereferencing (the * operator)
-x vs. &x vs. *x
+ - We'll show examples of initialization, the ~&~ operator, and dereferencing (the ~*~ operator)
+    + ~x~ vs. ~&x~ vs. ~*x~
  
  
-** Motivation
+*** Address-Of and Dereferencing
  
-
+- (A)mpersand for (A)ddress-of a variable
+  + Produces a pointer from a variable
+- ~*~ called /dereferencing/, gets the contents of the address
+  + Produces a value from a pointer
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
-int *x, *y, p, q; // vs. int* x, y, p ,q;
+int *x, *y, p, q;
+// vs. int* x, y, p ,q;
 
 p = 5;
 q = 6;
@@ -5721,9 +5692,18 @@ x = &p;
 y = &q;
 
 if(x==y){
-  cout << "Yeah, and I am Cinderella!";
+  cout << "Hello";
   cout << "\n";
  }
+
+#+end_src
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
+
 x = y;
 cout << *x << "\n";
 
@@ -5737,9 +5717,12 @@ cout << **&x << "\n";
 
 #+end_src
 
-** Recall value passing semantics
+
+*** Review: Pass by Value
  
- - Call by value (arguments evaluated)
+ - Pass by value
+   + Arguments evaluated then copied
+   + Can be any value, not just variable
  
 
  #+begin_src C++
@@ -5756,7 +5739,9 @@ int main( ){
 }
  #+end_src
 
- - Call by reference (can only send vars)
+*** Review: Pass by Reference
+ - Pass by reference
+   + Argument /must/ be a variable
  
 
  #+begin_src C++
@@ -5775,9 +5760,12 @@ int main() {
 
  #+end_src
 
-** Recall value passing semantics
+*** New: Pass by Address
  
- - Call by address (arguments evaluated)
+ - Call by address
+   + Arguments evaluated and copied
+   + But the thing that's copied is an address in memory
+ - Must explicitly dereference to get/set value at that address
  
 
  #+begin_src C++
@@ -5794,28 +5782,14 @@ int main( ){
 }
  #+end_src
 
- - Call by reference (can only send vars)
- 
 
- #+begin_src C++
-void doubleR(int &a){
-  a = a*2;
-}
+*** Another example: Swap
 
-int main() {
-  int a = 4;
-  doubleR(a);
-  cout << a << endl;
-
-  return 0;
-}
-
-
- #+end_src
-
-** Another example
- 
- - Call by address (arguments evaluated)
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+ - Call by address
  
 
  #+begin_src C++
@@ -5833,10 +5807,16 @@ int main( ){
 }
  #+end_src
 
- - Call by reference (can only send vars)
- 
 
- #+begin_src C++
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+
+- Call by reference
+
+#+begin_src C++
 void doubleR(int &a, int &b){
   int temp = a;
   a = b;
@@ -5852,9 +5832,14 @@ int main() {
 
  #+end_src
 
-** Constant pointers 
- 
 
+*** Constant pointers
+ 
+- Can get value at address, but not set
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 struct BigRecord {
   ...
@@ -5867,6 +5852,14 @@ void f(const BigRecord *pRec1){
     ,*pRec1 = *pRec2; // Wrong!
   pRec1 = pRec2;   // No issues
 }
+
+#+end_src
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 
 int main(){
   BigRecord x;
@@ -5882,30 +5875,75 @@ int main(){
 
 #+end_src
 
-** Arrays and pointers
+
+
+*** Arrays are just pointers
+- In C++, arrays are just pointers to the start of the array
+  + This is why functions don't need the array dimensions in the type
+- Array element ~A[i]~ just adds ~i~ to the pointer ~A~.
+  + Need the 2nd dimension size to do offset calculation for 2D array
+- This is also why arrays are always pass-by-reference
+  + The value of an array /is/ its start location in memory, so copying an array just copies its address
+  + So the resulting behaviour is pass-by-reference
+
+*** Array Example
+- Example:
+  #+begin_src C++ :exports both
+  int main(){
+  int A[5] = {1, 2, 3, 4, 5};
+  int i = 3;
+  cout << A[i] << endl; //Adds i to address A
+
+  // Also works, but is terrible
+  cout << i[A] << endl; //Adds A to address i, same result
+  }
+  #+end_src
+
+  #+RESULTS:
+  | 4 |
+  | 4 |
+
+*** Arrays and pointers example
+:PROPERTIES:
+:BMCOL:
+:END:
  
 
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
-// Every array variable can be used as
-// a pointer to the first member of the
-// array (with certain restrictions)
+// Every array variable can be
+// used as a pointer to the first
+// membe of the array
+// (with certain restrictions)
 
-// Array argument
-
-int sumArray(int A[], unsigned int n){
+int sumArray(int A[],
+             unsigned int n){
   int sum = 0;
   for (int i = 0; i < n; i++){
     sum += A[i];
   }
   return sum;
 }
-// This is why arrays are (by default)
-// passed by references
 
+#+end_src
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
+
+// This is why arrays are
+// passed by references
+// (by default)
 
 // Array as pointer
 
-int sumArray(int *A, unsigned int n){
+int sumArray(int *A,
+             unsigned int n){
   int sum = 0;
   for (int i = 0; i < n; i++){
     sum += A[i]; // or, *(A+i)
@@ -5915,7 +5953,9 @@ int sumArray(int *A, unsigned int n){
 
 #+end_src
 
-** Arrays and pointers
+
+
+*** Arrays using pointers
  
 
 #+begin_src C++
@@ -5924,12 +5964,9 @@ int A[5] = {1, 5, 10, 15, 20};
 cout << A[0];
 cout << *(A+0);
 cout << *A;
-
 cout << *(A+3);
 cout << *A+3;
 cout << *(A+3)+3;
-
-
 
 A++; // Wrong!
 
@@ -5937,7 +5974,6 @@ A++; // Wrong!
 int *B = A; // or int *B = &(A[0]);
 B++; // line 11 (see below)
 cout << *B;
-
 // compiler automatically increments
 // it to the proper location depending
 // on the type of data B is pointing to,
@@ -5947,12 +5983,12 @@ cout << *B;
 
 #+end_src
 
-** C-strings and pointers
+*** C-strings and pointers
  
-
+- C-string are just arrays of characters with the special ~\0~ at the end
+  + Unlike c++ ~string~ which is a class
 #+begin_src C++
 // computing the length of string #1
-
 unsigned int cstringLength(const char s[]) {
   unsigned int length = 0;
   while (s[length] != '\0')
@@ -5960,12 +5996,7 @@ unsigned int cstringLength(const char s[]) {
   return length;
 }
 
-
-
-
-
 // computing the length of string #2
-
 unsigned int cstringLength(const char *s) {
   unsigned int length = 0;
   while (*(s + length) != '\0')
@@ -5976,7 +6007,7 @@ unsigned int cstringLength(const char *s) {
 
 #+end_src
 
-** C-strings and pointers (cont'd)
+*** C-strings and pointers (cont'd)
  
 
 #+begin_src C++
@@ -5994,7 +6025,7 @@ unsigned int cstringLength(const char *s) {
 
  - In general, given two pointers p and q of the same type, (p - q) is the integer that can be added to p to obtain q.
  
-** C-strings and pointers (cont'd)
+*** Copying Strings using Arrays
  
 
 #+begin_src C++
@@ -6009,8 +6040,7 @@ void cstringCopy(char des[], const char src[]){
 
 #+end_src
 
-** C-strings and pointers (cont'd)
- 
+*** Concatenation using Pointers
 
 #+begin_src C++
 // string concatenation
@@ -6031,7 +6061,7 @@ void cstringConcat(char des[], const char src[]){
 
 #+end_src
 
-** Programming using pointers
+*** Example: Book Records without Pointers
  
 
 #+begin_src C++
@@ -6043,20 +6073,15 @@ struct Book {
 };
 
 // Global Book collection
-#+end_src
-
- - Book collection[] = 
-
- #+begin_src C++
-    {
-      { "Computer Security: Art and Science", "Matt Bishop", "QA 76.9.A25 B56 2002" },
-     { "Applied Cryptography", "Bruce Schneier","QA 76.9.A25 S35 1996"},
-          { "Practical Software Maintenance", "Thomas M. Pigoski","QA 76.76.S64 P54 1996"}
-    };
-
+Book collection[] = {
+    {"Computer Security: Art and Science", "Matt Bishop",
+     "QA 76.9.A25 B56 2002"},
+    {"Applied Cryptography", "Bruce Schneier", "QA 76.9.A25 S35 1996"},
+    {"Practical Software Maintenance", "Thomas M. Pigoski",
+     "QA 76.76.S64 P54 1996"}};
  #+end_src
 
-** Programming using pointers
+*** Example ctd.
  
 
 #+begin_src C++
@@ -6078,14 +6103,16 @@ unsigned int findBook(const Book collection[], unsigned int n, const string &tit
 
 #+end_src
 
-** Programming using pointers
+*** Example Client Code
  
 
 #+begin_src C++
 const unsigned int COLLECTION_SIZE = sizeof(collection) / sizeof(Book);
 
 int main(){
-  unsigned int i = findBook(collection, COLLECTION_SIZE, "Applied Cryptography");
+  unsigned int i = findBook(collection,
+                            COLLECTION_SIZE,
+                            "Applied Cryptography");
   if (i == COLLECTION_SIZE)
     cout << "Book not found" << endl;
   else
@@ -6096,16 +6123,12 @@ int main(){
 
 #+end_src
 
-** Programming using pointers
+*** Programming using pointers: Members
  
-
+- What if we only had a /pointer/ to a book?
+  + ~o->x~ is the same as ~(*o).x~
+  + Convenient for getting fields/methods from pointers
 #+begin_src C++
-// function for printing Books
-void printBook(const Book &book){
-  cout << "title: " << book.title << endl;
-  cout << "author: " << book.author << endl;
-  cout << "call number: " << book.call_number << endl;
-}
 
 void printBook(const Book *book){
   cout << "title: " << book->title << endl;
@@ -6115,19 +6138,14 @@ void printBook(const Book *book){
 
 #+end_src
 
-** Programming using pointers
- 
-
+*** Programming using pointers: Failure
+- You can never get the value from address ~nullptr~
+  + aka address ~0~;
+- So we can return ~nullptr~ when ~findBook~ fails to find the book
 #+begin_src C++
-// function for finding a Book with some title
-unsigned int findBook(const Book collection[], unsigned int n, const string &title){
-  for (unsigned int i = 0; i < n; i++){
-    if (collection[i].title == title)
-      return i;
-  }
-  return n;
-}
-const Book *findBook(const Book collection[], unsigned int n, const string &title){
+const Book *findBook(const Book collection[],
+                     unsigned int n,
+                     const string &title){
   for (const Book *p = collection; p < collection + n; p++){
     if (p->title == title)
       return p;
@@ -6137,23 +6155,37 @@ const Book *findBook(const Book collection[], unsigned int n, const string &titl
 
 #+end_src
 
-** Programming using pointers
+*** Programming using pointers
  
 
 #+begin_src C++
-const unsigned int COLLECTION_SIZE = sizeof(collection) / sizeof(Book);
+const unsigned int COLLECTION_SIZE
+  = sizeof(collection) / sizeof(Book);
 
 int main(){
-  const Book *b = findBook(collection, COLLECTION_SIZE, "Applied Cryptography");
+  const Book *b = findBook(collection,
+                           COLLECTION_SIZE,
+                           "Applied Cryptography");
   if (b == nullptr)
     cout << "Book not found" << endl;
   else
     printBook(b);
   return 0;
 }
-
-
 #+end_src
+- YOU HAVE TO CHECK if the pointer is null
+- Otherwise you'll get a lovely ~segmentation fault~ when you try to dereference
+
+
+*** A note on Null Pointers
+- Sir Tony Hoare, inventor of null pointers:
+
+ #+begin_quote
+    I call it my billion-dollar mistake. It was the invention of the null reference in 1965. At that time, I was designing the first comprehensive type system for references in an object oriented language (ALGOL W). My goal was to ensure that all use of references should be absolutely safe, with checking performed automatically by the compiler. But I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement. This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a billion dollars of pain and damage in the last forty years.
+ #+end_quote
+- But we're stuck with them
+    + Newer languages like Rust and Swift have gotten rid of them
+
 
 * Dynamic memory management using Pointers :noexport:
 :PROPERTIES:
