@@ -83,6 +83,8 @@
 - [[#abstract-data-types-via-classes][Abstract Data Types via Classes]]
 - [[#searching-and-sorting][Searching and sorting]]
 - [[#constructors-and-overloading][Constructors and overloading]]
+- [[#object-oriented-design-composition-and-inheritance][Object-oriented design: Composition and Inheritance]]
+- [[#object-oriented-design-interfaces-subtying-and-polymorphism][Object-oriented design: Interfaces, Subtying and Polymorphism]]
 
 * Introduction
 :PROPERTIES:
@@ -3968,7 +3970,7 @@ ostream &operator<< (ostream &out, const House &h) {
  #+end_src
  - e.g. The operator returns the stream for the next thing
 
-* Object-oriented design :noexport:
+* Object-oriented design: Composition and Inheritance
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides008-oop-design.pdf
 :END:
@@ -3978,30 +3980,36 @@ ostream &operator<< (ostream &out, const House &h) {
  
  
 ** Composition, inheritance, polymorphism, dynamic binding, hidden functions & operators
+:PROPERTIES:
+:BMCOL:
+:END:
  
 *** Terminology
  
- - Top-down design: process of repeatedly decomposing a complicated problem into smaller, more manageable subproblems that can be solved by functions that can be implemented independently of the rest of the project
  - Object-oriented design (OOD): software design technique where the problem domain is decomposed into a set of objects that together solve a software problem
- 
  - Classes (allows us to define ADT)
  - Objects (=class instances)
  - Fields (=class member fields/variables)
  - Methods (=class member functions)
- - Message Passing (=invocation of member functions through an object)
+ - Message Passing (=calling of member functions through an object)
  
 *** Composition
  
- - Idea:
- - say we want to define a class P1
-   + conceptually divide P1 into constituent parts 
- - in the definition of the P1 class, declare instances of its constituents (which are other classes, say C1, C2, and C3)
- - C++ compiler will call all of the constituent classes C1, C2, and C3's default constructors before it calls P1's constructor
- - C++ syntax allows you to call other constructors of C1, C2, and C3 if needed, and pass the appropriate arguments in their parameters
- - use the methods of C1, C2, and C3 using the declared objects while implementing the methods of P1
+ - Build new classes from existing ones
+ - e.g. define a class P1
+   + conceptually divide P1 into parts
+ - in the defn of P1 class, declare instances of parts
+   + (objects of classes, say C1, C2, and C3)
+ - C++ compiler will call C1, C2, and C3's default constructors before calls P1's constructor
+   + Can call other constructors of C1, C2, and C3 if needed, and pass the appropriate arguments in their parameters
+ - Use the methods of C1, C2, and C3 from fields to implement P1 methods
  
-*** Composition (example)
- 
+*** Composition (example) :BMCOL:
+
+**** Col1
+:PROPERTIES:
+:BEAMER_COL: 0.35
+:END:
 
 #+begin_src C++
 class Bicycle {
@@ -4009,47 +4017,49 @@ private:
   Wheel front_wheel;
   Wheel back_wheel;
   Seat seat;
+
 public:
-  Bicycle ();
+  Bicycle();
+
+ #+end_src
+
+
+**** Col2
+:PROPERTIES:
+:BEAMER_COL: 0.65
+:END:
+#+begin_src C++
+  Bicycle(string wheel_manufacturer1,
+          string wheel_product1,
+          int diameter_in_inches1,
+          int weight_in_grams1,
+          int spokeCount1,
+          string wheel_manufacturer2,
+          string wheel_product2,
+          int diameter_in_inches2,
+          int weight_in_grams2,
+          int spokeCount2,
+          string seat_manufacturer1,
+          string seat_product1,
+          string seat_colour1);
+  Bicycle(const Bicycle &original);
+  Bicycle &operator=(const Bicycle &original);
+  void read(istream &in);
+  void print(ostream &out);
+};
 #+end_src
 
- -  Bicycle (string wheel_manufacturer1,
- -                 string wheel_product1,
- -                 int diameter_in_inches1, 
- -                 int weight_in_grams1, 
- -                int spokeCount1,
- -             string wheel_manufacturer2,
- -                 string wheel_product2,
- -    int diameter_in_inches2,
- -        int weight_in_grams2, 
- -    int spokeCount2,
- -    string seat_manufacturer1,
- -        string seat_product1,
-
+*** Explicit Initializers
+- Special syntax to say how to initialize fields for default constructor
  #+begin_src C++
-string seat_colour1);
-Bicycle (const Bicycle& original);
-~Bicycle ();
-Bicycle &operator= (const Bicycle &original);
-void read  (istream &in);
-void print (ostream &out);
-};
-
+Bicycle::Bicycle()
+    : front_wheel(), back_wheel(), seat()
+{
+  // body of default constructor
+}
  #+end_src
 
-*** Composition (example)
- 
- - Bicycle::Bicycle()
- -  : front_wheel(), back_wheel(),seat()
-
- #+begin_src C++
-    {
-      // body of default constructor
-    }
-
-
- #+end_src
-
+ - Could also give arguments depending how ~Wheel~ and ~Seat~ are defined
  - What happens when you declare a Bicycle object?
 
  #+begin_src C++
@@ -4057,85 +4067,95 @@ Bicycle b;
 
  #+end_src
 
-*** Composition (example)
- 
- - Bicycle::Bicycle (string wheel_manufacturer1, string wheel_product1, int diameter_in_inches1, 
- - int weight_in_grams1, int spokeCount1, string wheel_manufacturer2, 
- - string wheel_product2, int diameter_in_inches2, int weight_in_grams2, int spokeCount2,
- - string seat_manufacturer1, string seat_product1, string seat_colour1)
- -  : front_wheel (wheel_manufacturer1, wheel_product1,
- -    diameter_in_inches1, weight_in_grams1, spokeCount1),
- -    back_wheel (wheel_manufacturer2, wheel_product2,
- -    diameter_in_inches2, weight_in_grams2, spokeCount2),
- -    seat (seat_manufacturer1, seat_product1, seat_colour1)
+*** Initializers in non-default Constructors
 
  #+begin_src C++
-    {
-      // body of initializing constructor
-    }
 
+Bicycle::Bicycle(string wheel_manufacturer1,
+                 string wheel_product1,
+                 int diameter_in_inches1,
+                 int weight_in_grams1,
+                 int spokeCount1,
+                 string wheel_manufacturer2,
+                 string wheel_product2,
+                 int diameter_in_inches2,
+                 int weight_in_grams2,
+                 int spokeCount2,
+                 string seat_manufacturer1,
+                 string seat_product1,
+                 string seat_colour1)
+    : front_wheel(wheel_manufacturer1, wheel_product1,
+                  diameter_in_inches1, weight_in_grams1,
+                  spokeCount1),
+      back_wheel(wheel_manufacturer2, wheel_product2,
+                 diameter_in_inches2, weight_in_grams2,
+                 spokeCount2),
+      seat(seat_manufacturer1, seat_product1, seat_colour1) {...}
  #+end_src
 
-*** Composition (example)
- 
-
+*** The Constituent Classes :BMCOL:
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 class Seat {
 private:
   string manufacturer;
   string product;
   string colour;
+
 public:
-  Seat ();
-  Seat (string manufacturer1, string product1, string colour1);
-  Seat (const Seat &original);
-  ~Seat ();
-  Seat &operator= (const Seat &original);
-  void read  (istream &in);
-  void print (ostream &out);
+  Seat();
+  Seat(string manufacturer1,
+       string product1,
+       string colour1);
+  Seat(const Seat &original);
+  ~Seat();
+  Seat &operator=(const Seat &o);
+  void read(istream &in);
+  void print(ostream &out);
 };
+
 #+end_src
 
- - Seat::Seat (string manufacturer1, 
- -                    string product1, string colour1)
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 
- #+begin_src C++
-: manufacturer(manufacturer1), // copy cons
-    product(product1), //copy constructor
-    colour(colour1) //copy constructor
+Seat::Seat(string manufacturer1,
+           string product1,
+           string colour1)
+    // copy constructors
+    : manufacturer(manufacturer1),
+      product(product1),
+      colour(colour1)
 {
-  // body of initializing constructor
 }
 
- #+end_src
-
- - Seat::Seat (const Seat &original)
- -  : manufacturer(original.manufacturer),
- -    product(original.product),
-
- #+begin_src C++
-colour(original.colour) {
-  // body of initializing constructor
+Seat::Seat(const Seat &orig)
+  : manufacturer(orig.manufacturer),
+    product(orig.product),
+    colour(orig.colour) {
 }
-
-
  #+end_src
 
-*** Composition (example)
+
+*** Calling the Copy Constructor
  
- - Bicycle::Bicycle (const Bicycle &original)
- -  : front_wheel (original.front_wheel),
- -    back_wheel (original.back_wheel),
- -    seat (original.seat)
-
  #+begin_src C++
+  Bicycle::Bicycle (const Bicycle &original)
+   : front_wheel (original.front_wheel),
+     back_wheel (original.back_wheel),
+     seat (original.seat)
     {
       // body of copy constructor
     }
-
  #+end_src
 
-*** Composition (another example)
+*** Another Example: Safe Arrays
  
 
 #+begin_src C++
@@ -4154,7 +4174,7 @@ private:
 
 #+end_src
 
-*** Composition (another example)
+*** Implementation
  
 
 #+begin_src C++
@@ -4181,7 +4201,7 @@ void GuardedArray::store(unsigned int i, ItemType x) {
 
 #+end_src
 
-*** Composition (another example)
+*** Managed Array with Insert/Remove
  
 
 #+begin_src C++
@@ -4209,11 +4229,12 @@ private:
 
 #+end_src
 
-*** Composition (another example)
+*** Implementation (1)
  
 
 #+begin_src C++
-ManagedArray::ManagedArray(unsigned int n, ItemType x) : guaurded_array(x) {
+ManagedArray::ManagedArray(unsigned int n, ItemType x)
+    : guaurded_array(x) {
   assert(n <= MAX_LENGTH);
   count = n;
 }
@@ -4226,7 +4247,7 @@ ItemType ManagedArray::retrieve(unsigned int i) const {
 
 #+end_src
 
-*** Composition (another example)
+*** Implementation (2)
  
 
 #+begin_src C++
@@ -4243,37 +4264,45 @@ void ManagedArray::insert(unsigned int i, ItemType x) {
 
 #+end_src
 
-*** Composition (yet another example)
+*** Composition vs. Inheritance
  
  - Can in turn define Multiset using ManagedArray (see notes for full details)
  
  - Another approach (inheritance):
  
- - start with base class (parent/super-class) that gives a vague idea of the objects that we are after
+   + start with base class (parent/super-class) that gives a vague idea of the objects that we are after
  
- - define other more specialized derived classes (child/sub-classes) that ``inherits'' everything in the parent class
+   + define other more specialized derived classes (child/sub-classes) that ``inherits'' everything in the parent class
  
- - can create a hierarchy of classes linked by the ancestor-descendant relation  
+   + can create a hierarchy of classes linked by the ancestor-descendant relation
  
 *** Inheritance
+ - Inheritance lets you /extend/ a class into a new class
+   + Child class inherits everything in the parent class
+   + when an object of the child class is instantiated,
+   + all fields of the parent class will be allocated
  
- - Child class inherits everything in the parent class 
- - when an object of the child class is instantiated, 
- - all fields of the parent class will be allocated
+ - Can can only directly access some fields and methods
+   + those that are public (and protected)
+   + ~protected~: like ~private~ except child classes can access
  
- - But can only directly access some fields and methods
- - those that are public (and protected)
- 
- - Child class can re-implement some functions of the parent!
- - this is called function overriding
+ - Child class can re-implement some functions of the parent
+   + this is called /function overriding/
  
  - Add to this mix the hierarchy of classes
- - e.g. C extends P, GC extends C 
- - then all publicly inherited public fields of C will be members of GC
+   + e.g. C extends P, GC extends C
+   + then all publicly inherited public fields of C will be members of GC
  
 *** Inheritance (public vs. private)
+:PROPERTIES:
+:BMCOL:
+:END:
  
 
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
 #+begin_src C++
 class P {
 public:
@@ -4281,15 +4310,19 @@ public:
   int f2() const;
   int f3() const;
 private:
-#+end_src
-
- - int v1
-
- #+begin_src C++
+int v1
 int v2;
 };
 
 
+
+#+end_src
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+#+begin_src C++
 
 
 class C : public P {
@@ -4303,14 +4336,21 @@ private:
  #+end_src
 
  - what happens when C x is declared?
- - can we access f1 from inside C or its clients? 
- - can we access v1 from inside C or its clients?
+ - can we access f1 from inside C or its clients?  v1?
  - how can we access v1 from inside C or its clients?
- - what if we wrote : private p?
+ - what if we wrote ~: private P~?
+   + Would make all ~public~ fields of ~P~ private in ~C~
  
 *** Inheritance (hierarchy, overriding)
  
- - Can specify a hierarchy:
+
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+
+
+ - Can specify a hierarchy: ~GC <: C <: P~
 
  #+begin_src C++
 class C : public P { ... };
@@ -4319,8 +4359,7 @@ class GC : public C { ... };
  #+end_src
 
  - Can override an inherited function:
-
- #+begin_src C++
+#+begin_src C++
 class P {
 public:
   void f1();
@@ -4329,6 +4368,14 @@ public:
 void P::f1(){
   // definition 1
 }
+#+end_src
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
+
 class C : public P {
 public:
   void f1();
@@ -4344,12 +4391,20 @@ void C::f2(){
 
  #+end_src
 
+
 *** Inheritance (constructors)
+:PROPERTIES:
+:BMCOL:
+:END:
  
  - Constructor of the base class is implicitly invoked
  - Can specify constructors as well
 
- #+begin_src C++
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 class C : ... { ... };
 class D : public C {
 public:
@@ -4360,24 +4415,37 @@ public:
   D2 f2;
   ...
 };
-D::D(...) : C(...), f1(...), f2(...), ...
-{
-  ...
-    }
 
- #+end_src
+D::D(...) :
+  C(...),
+  f1(...),
+  f2(...), ...
+{ ...   }
+
+
+#+end_src
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+
 
  - To invoke a constructor of D:
- - a constructor C is invoked (which may initiate the invocation of other constructors)
- - a constructor of each member field fi is invoked (which may initiate the invocation of other constructors)
- - the body of the constructor of D is invoked
+   + a constructor C is invoked (which may initiate the invocation of other constructors)
+   + a constructor of each member field ~fi~ is invoked (which may initiate the invocation of other constructors)
+   + the body of the constructor of D is invoked
  
 *** Inheritance (protected)
  
- - Supports more flexibility
- 
 
- #+begin_src C++
+
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+ - Supports more flexibility
+#+begin_src C++
 class P {
 public:
   void f1();
@@ -4387,6 +4455,14 @@ private:
   int x;
 };
 
+
+#+end_src
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 
 
 class C : public P {
@@ -4407,12 +4483,20 @@ private:
 
  #+end_src
 
+
 *** Inheritance type
  
- - All permutations possible
- 
 
- #+begin_src C++
+
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+ - All permutations possible
+   + ~: public P~ makes all public ~P~ members public in ~C~
+   + ~: protected P~ makes all public ~P~ members protected in ~C~
+   + ~: private P~ makes all public ~P~ members protected in ~C~
+#+begin_src C++
 class P {
 public:
   void f1();
@@ -4422,7 +4506,13 @@ private:
   int x;
 };
 
+#+end_src
 
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 
 class C1 : public P {
   ...
@@ -4441,12 +4531,16 @@ class C3 : private P {
 
  #+end_src
 
-*** Inheritance type (cont'd)
- 
+
+
  
 *** Inheritance type (cont'd)
  
 
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 class P {
 public:
@@ -4460,25 +4554,43 @@ public:
   void f3();
 };
 
+#+end_src
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
+
 
 void C::f3(){
-  f1();        // all good
-  x = 7;     // error, not accessible!
+  // all good
+  f1();
+  // error, not accessible!
+  x = 7;
 }
 
 int main(){
   P p1;
   C c1;
-  p1.f1();     // works
-  c1.f1();     // error, not accessible!
+  // works
+  p1.f1();
+  // error, not accessible!
+  c1.f1();
   ...
     }
 
 #+end_src
 
-*** Example: the Building (base) class
- 
 
+*** Example: the Building (base) class
+
+- Make a type that it's impossible to create a value of
+  + BUT which is the common parent for other types
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 class Building {
 
@@ -4487,94 +4599,96 @@ protected:
   Building();
 
   // assignment constructor
+  Building(const string &address1,
+           const string &owner1,
+           unsigned int cost1,
+           unsigned int area1);
+
 #+end_src
 
- - Building(const string& address1,
- -            const string& owner1,
- -            unsigned int cost1,
-
- #+begin_src C++
-unsigned int area1);
-
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 
 protected:
-// member variables
-string address;
-string owner;
-unsigned int cost;
-unsigned int area;
-
+  // member variables
+  string address;
+  string owner;
+  unsigned int cost;
+  unsigned int area;
 };
 
 // Assumes: won't ever create a
 // Building object!
-
  #+end_src
+
 
 *** Example: the House (child) class
  
 
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 class House : public Building {
 
 public:
   // constructors
   House();
+
+  House(const string &address1,
+        const string &owner1,
+        unsigned int cost1,
+        unsigned int area1,
+        unsigned int roomCount1,
+        bool fireplace1,
+        unsigned int applianceCount1);
+
 #+end_src
 
- - House(const string& address1,
- -         const string& owner1,
- -         unsigned int cost1,
- -         unsigned int area1,
- -         unsigned int roomCount1,
- -         bool fireplace1,
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 
- #+begin_src C++
-unsigned int applianceCount1);
-
-// print data
-void print() const;
+  // print data
+  void print() const;
 
 private:
-// additional member variables
-unsigned int roomCount;
-bool fireplace;
-unsigned int applianceCount;
-
+  // additional member variables
+  unsigned int roomCount;
+  bool fireplace;
+  unsigned int applianceCount;
 };
-
-
  #+end_src
 
-*** Example: implementation of House
- 
- - House::House(const string& address1,
- -              const string& owner1,
- -              unsigned int cost1,
- -              unsigned int area1,
- -              unsigned int roomCount1,
- -              bool fireplace1,
- -              unsigned int applianceCount1)
- -       : Building(address1, owner1,
 
- #+begin_src C++
-cost1, area1) {
+*** Example: implementation of House
+
+#+begin_src C++
+House::House(const string &address1, const string &owner1,
+             unsigned int cost1, unsigned int area1,
+             unsigned int roomCount1, bool fireplace1,
+             unsigned int applianceCount1)
+    : Building(address1, owner1, cost1, area1) {
   roomCount = roomCount1;
   fireplace = fireplace1;
   applianceCount = applianceCount1;
-              }
-void House:: print() const {
-  cout << "HOUSE"<< endl;
-  cout << "Location: "<< address;
-  cout << endl;
-  ...
-    cout << "Bedrooms: "<< roomCount;
-  cout << endl;
-  ...
-    }
+}
 
-
+cout << "HOUSE" << endl;
+cout << "Location: " << address;
+cout << endl;
+... cout << "Bedrooms: " << roomCount;
+cout << endl;
+...
+}
  #+end_src
+
 
 *** Example: the Barn (base) class
  
@@ -4585,15 +4699,11 @@ public:
   // constructors
   Barn();
 
-#+end_src
-
- - Barn(const string& address1,
- -        const string& owner1,
- -        unsigned int cost1,
- -        unsigned int area1,
-
- #+begin_src C++
-float hayCapacity1);
+  Barn(const string& address1,
+       const string& owner1,
+       unsigned int cost1,
+       unsigned int area1,
+       float hayCapacity1);
 
 // print
 void print() const;
@@ -4619,40 +4729,51 @@ h1.print();
 
 #+end_src
 
-*** Issues with inheritance
+*** Issues with Inheritance vs. Composition
  
  - Implementation inheritance = examples that we have seen earlier
- - allows code reuse
+   + allows code reuse
  
  - Reuse can be done better using composition 
- - easier to understand code
- - encapsulation boundary are better protected 
- - less interdependencies
+   + easier to understand code
+   + encapsulation boundary are better protected
+   + fewer interdependencies
  
  - For code reuse, we will almost always use composition rather than implementation inheritance
  
- - Another more powerful use of inheritance = interface inheritance
+ - More powerful: interface inheritance
+
+
+* Object-oriented design: Interfaces, Subtying and Polymorphism
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides009-subtyping.pdf
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
+
+
+
+** Polymorphism, dynamic binding, hidden functions & operators
+:PROPERTIES:
+:BMCOL:
+:END:
  
 *** Interface inheritance
  
  - Rather than reusing implementation, reuse interface!
- - program to an interface, not an implementation
+   + program to an interface, not an implementation
  
-
- #+begin_src C++
-Say we want to develop 3 similar functions; how to rather implement one?
- #+end_src
-
- - via a common interface 
+ - Say we want to develop 3 similar functions; how to rather implement one?
+   + via a common interface
  
  - Key idea:
- - introduce abstract interface (the base class)
- - write the function in terms of this interface
- - develop 3 derived classes that extend this base class and implements (virtual) functions of the base class
- - C++ compiler will do the rest via dynamic binding
+   + introduce abstract interface (the base class)
+   + write the function in terms of this interface
+   + develop 3 derived classes that extend this base class and implements (virtual) functions of the base class
+   + C++ compiler will do the rest via /dynamic binding/
  
-*** Example: data sources
- 
+*** Example: Summing All Elements in a List-like structure
+- Array version:
 
 #+begin_src C++
 int sumArray(const int A[], unsigned int n) {
@@ -4668,7 +4789,7 @@ int sumArray(const int A[], unsigned int n) {
 
 #+end_src
 
-*** Example: data sources (cont'd)
+*** ManagedArray Version
  
 
 #+begin_src C++
@@ -4685,7 +4806,7 @@ int sumManagedArray(const ManagedArray &A) {
 
 #+end_src
 
-*** Example: data sources (cont'd)
+*** Standard Input Stream Version
  
 
 #+begin_src C++
@@ -4703,8 +4824,9 @@ int sumStandardInputStream() {
 
 #+end_src
 
-*** Example: data sources (cont'd)
- 
+*** Reducing Redundancy
+- All the examples were doing essentially the same thing
+- In Pseudocode:
 
 #+begin_src C++
 int sumDataSource(a data source) {
@@ -4719,27 +4841,28 @@ int sumDataSource(a data source) {
 
 #+end_src
 
-*** Example: data sources (cont'd)
+- How can we make this concrete code?
+
+*** Abstract Classes and the Virtual keyword
  
+- When we declare a method as virtual, it /must be overridden/ in some child class
+  + Give a dummy value of 0
+- An /abstract class/ has at least one virtual method
+  + Gives /interface/ without an implementation
 
 #+begin_src C++
 class DataSource {
-
 public:
-
   // exhausted
   virtual bool exhausted() const = 0; // pure virtual function
-
   // next
   virtual int next() = 0; // pure virtual function
-
 };
-
 #+end_src
 
- - Abstract class can't be instantiated (but can be referenced)
+ - Abstract class can't be instantiated (but can be referenced or extended)
  
-*** Example: data sources (cont'd)
+*** Generic Code via Abstract Classes
  
 
 #+begin_src C++
@@ -4753,11 +4876,15 @@ int sumDataSource(DataSource &ds) {
 
 #+end_src
 
- - What's new: can be applied to instances of any derived class of DataSource
- - Called a polymorphic function
+ - What's new: can be applied to _instances of any derived class_ of DataSource
+ - Called a *polymorphic function*
  
-*** Example: data sources (cont'd)
+*** Extending the Interface
  
+- Array Version
+  + Has the same methods as ~DataSource~
+  + BUT we specify the concrete representation
+    - ~private~ fields
 
 #+begin_src C++
 const unsigned ARRAY_DATA_SOURCE_CAPACITY = 1000;
@@ -4776,9 +4903,9 @@ private:
 
 #+end_src
 
-*** Example: data sources (cont'd)
+*** Implementing the Interface
  
-
+- Must give implementation of each unspecified method from ~DataSource~
 #+begin_src C++
 ArrayDataSource::ArrayDataSource(const int A[], unsigned int n) {
   assert(n < ARRAY_DATA_SOURCE_CAPACITY);
@@ -4799,8 +4926,7 @@ int ArrayDataSource::next() {
 
 #+end_src
 
-*** Example: data sources (cont'd)
- 
+*** Dynamic Binding
 
 #+begin_src C++
 // set up and initialize managed array data source
@@ -4812,12 +4938,13 @@ int sum = sumDataSource(ads);
 
 #+end_src
 
- - Which version of exhausted() and next() to use in sumDataSource(ads)?
- - determined at runtime 
- - depends on the exact type of object ads is bound to
+ - Which version of ~exhausted()~ and ~next()~ to use in ~sumDataSource(ads)~?
+   + determined *at runtime*
+   + depends on the exact type of object ~ads~ is bound to
+     -  In this case, ~ArrayDataSource~
  
-*** Example: data sources (cont'd)
- 
+*** A Different Instance
+- For ~ManagedArray~
 
 #+begin_src C++
 class ManagedArrayDataSource : public DataSource {
@@ -4833,11 +4960,10 @@ private:
 
 #+end_src
 
-*** Example: data sources (cont'd)
- 
- - ManagedArrayDataSource::ManagedArrayDataSource(const ManagedArray& A)
+*** Implementation
 
  #+begin_src C++
+ManagedArrayDataSource::ManagedArrayDataSource(const ManagedArray& A)
 : array(A.length()) {
   for (unsigned int k = 0; k < A.length(); k++)
     array.store(k, A.retrieve(k));
@@ -4854,7 +4980,7 @@ int ManagedArrayDataSource::next() {
 
  #+end_src
 
-*** Example: data sources (cont'd)
+*** Dynamic Binding for the Managed Array Version
  
 
 #+begin_src C++
@@ -4867,26 +4993,41 @@ ManagedArrayDataSource mads(ma);
 
 // call sumDataSouce to add up entries
 int sum = sumDataSource(mads);
-
-
 #+end_src
 
-*** Static vs. dynamic binding
- 
+- The code of ~sumDataSource~ /has not changed!/
+  + But ~next~ and ~exhausted~ functions it was provided have
 
+*** Static Binding Example
+- Static means "at compile time"
+- C++ uses static by default
+  + Not true in other languages (Java, Python)
+
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
 #+begin_src C++
 class C {
 public:
-  void f() { /* implementation 1 */ }
+  void f() { /* impl 1*/}
   ...
 };
 
 class D : public C {
 public:
-  void f() { /* implementation 2 */ }
+  void f() { /* impl 2*/}
   ...
 };
 
+
+#+end_src
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+#+begin_src C++
 
 
 
@@ -4896,31 +5037,47 @@ void g(C &c) {
 
 int main() {
   D d;
-  d.f();  // static binding: impl.2 invoked
-  g(d);  // static binding: impl.1 invoked
+  // static binding: impl.2 invoked
+  d.f();
+  // static binding: impl.1 invoked
+  g(d);
   return 0;
 }
 
 
 #+end_src
 
-*** Static vs. dynamic binding (cont'd)
- 
 
+*** Dynamic Binding Example
+- Dynamic means "at run time"
+  +  ~virtual~ keyword tells C++ to use dynamic binding
+
+**** Column 1
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 class C {
 public:
-  virtual void f() { /* implementation 1 */ }
+  virtual void f() { /* impl 1*/}
   ...
 };
 
 class D : public C {
 public:
   // implictly virtual
-  void f() { /* implementation 2 */ }
+  void f() { /* impl 2*/}
   ...
 };
 
+
+#+end_src
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 
 
 void g(C &c) {
@@ -4929,17 +5086,20 @@ void g(C &c) {
 
 int main() {
   D d;
-  d.f();  // static binding: impl.2 invoked
-  g(d);  // dynamic binding: impl.2
-  // invoked
+  // static binding:
+  //    impl.2 invoked
+  d.f();
+  // dynamic binding: impl.2 invoked
+  g(d);
   return 0;
 }
 
 
 #+end_src
 
-*** Static vs. dynamic binding (cont'd)
- 
+
+*** Overloading is Static
+- Overloading, /not overriding/
 
 #+begin_src C++
 class E : public C {
@@ -4949,13 +5109,6 @@ public:
   void f(int i) { /* implementation 3 */ }
   ...
 };
-
-
-
-
-
-
-
 
 int main() {
   E e;
@@ -4967,37 +5120,161 @@ int main() {
 
 #+end_src
 
+*** Polymorphism
+- From the Greek
+  + /Poly/ : many
+  + /Morphos/ : forms
+- OOP lets us write one function that works on many types
+- This is /subtyping polymorphism/
+  + We'll see another kind later
+  + If ~A~ extends ~B~, you can use a ~B~ object anywhere an ~A~ is expected
+  + If ~A~ extends ~B~, we say ~A~ is a /subtype/ of ~B~
+
+*** What Actually Are Objects?
+- We can finally say what an object /is/:
+  + An instance of a class
+  + Containing a value for each field of that class
+  + /and/ containing a pointer to the implementation of each virtual method of that class
+- Objects package data and operations together
+
+*** Subyping as a Safer Alternative to Unions
+- Recall our library code
+ #+begin_src C++
+struct CatalogEntry {
+  string title;
+  string author;
+  string publisher;
+  unsigned int publishingYear;
+  string callNumber;
+  CatalogEntryType tag;
+  union {
+    struct { unsigned int pages; } book;
+    struct { unsigned int discs, minutes; } dvd;
+  } variant;
+};
+ #+end_src
+ - Can do better with OOP
+
+
+*** CatalogEntry Abstract Class
+- Base class with all of the shared fields
+ #+begin_src C++
+class CatalogEntry {
+public:
+  // e.g. an operation we want to do for any entry
+  virtual void printInfo() = 0;
+protected:
+  string title;
+  string author;
+  string publisher;
+  unsigned int publishingYear;
+  string callNumber;
+  // No tag or variant-specific info
+};
+ #+end_src
+
+
+*** A Book Subtype
+#+begin_src C++
+//Book.h
+class BookEntry : public CatalogEntry {
+public:
+ void printInfo();
+private:
+  int pages;
+}
+// Book.cpp
+void BookEntry::printInfo(){
+  // Have all CatalogEntry fields
+  // plus pages
+  cout << title << author ...
+     << pages;
+}
+#+end_src
+
+*** A DVD Subtype
+#+begin_src C++
+//Book.h
+class DVDEntry : public CatalogEntry {
+public:
+ void printInfo();
+private:
+  int discs;
+  int minutes;
+}
+// Book.cpp
+void DVDEntry::printInfo(){
+  // Have all CatalogEntry fields
+  // plus pages
+  cout << title << author ...
+     << discs << minutes;
+}
+#+end_src
+
 *** Hidden functions and operators
  
  - A function or operator in the base class with the same name and parameters as a function in the derived class
- - can still access a hidden function using the base-class type qualifier
+   + can access using the base-class type qualifier
 
  #+begin_src C++
 void Derived1::func() {
-  Base1::func(); // func() is defined in both the base and the child class Derived1
+  // func() is defined in both
+  // the base and the child class Derived1
+  Base1::func();
   // ...
 }
 
- #+end_src
-
- - And similarly for operators
-
- #+begin_src C++
+// same for operators
 Derived1 &Derived1::operator=(const Derived1 &original) {
   if (this != &original) {
-    Base1::operator=(original); // = is defined in both the base and the child class
+    // = is defined in both the base and the child class
+    Base1::operator=(original);
     field1 = original.field1;
   }
   return *this;
 }
-
-
-
  #+end_src
 
-* Templates :noexport:
+*** Hidden Function Example
+
+**** Column 1
 :PROPERTIES:
-:EXPORT_FILE_NAME: pdf/slides009-templates.pdf
+:BEAMER_col: 0.55
+:END:
+- Leave ~CatalogEntry::printInfo()~ as virtual, but give it an implementation
+#+begin_src C++
+void CatalogEntry::printInfo(){
+cout << title << author <<
+    ... << callNumber;
+  }
+#+end_src
+- ~BookEntry~ and ~DVDEntry~ then only need to deal with their specific fields
+  + Can call the base type version for the rest;
+
+**** Column 2
+:PROPERTIES:
+:BEAMER_col: 0.45
+:END:
+#+begin_src C++
+void BookEntry::printInfo() {
+  // Call the base class version
+  // to print the shared fields
+  CatalogEntry::printInfo();
+  // Print our specifc fields
+  cout << pages;
+}
+
+void DVDEntry::printInfo() {
+  CatalogEntry::printInfo();
+  cout << discs << minutes;
+}
+#+end_src
+
+
+
+* Templates and Generics :noexport:
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides010-templates.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -5404,7 +5681,7 @@ int main() {
 
 * Pointers :noexport:
 :PROPERTIES:
-:EXPORT_FILE_NAME: pdf/slides010-pointers.pdf
+:EXPORT_FILE_NAME: pdf/slides011-pointers.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -5878,18 +6155,17 @@ int main(){
 
 #+end_src
 
-* Dynamic memory management :noexport:
+* Dynamic memory management using Pointers :noexport:
 :PROPERTIES:
-:EXPORT_FILE_NAME: pdf/slides011-dyn-pointers.pdf
+:EXPORT_FILE_NAME: pdf/slides012-dyn-pointers.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
- - using pointers
+
  
  
  
- 
-** Motivation
+*** Motivation
  
  - So far used pointers for allocating space during compile-time only
  - error-prone and might be difficult to understand 
@@ -5907,7 +6183,7 @@ int main(){
  
  
  
-** Motivation
+*** Motivation
  
  - Allocates memory in ``heap'' (in contrast to .text, .data, and stack)
  
@@ -5925,7 +6201,7 @@ px = nullptr;
 
  #+end_src
 
-** Simple example
+*** Simple example
  
 
 #+begin_src C++
@@ -5961,7 +6237,7 @@ int main(){
 
 #+end_src
 
-** Pictorial representation
+*** Pictorial representation
  
 
 #+begin_src C++
@@ -5972,7 +6248,7 @@ p -> title = "Emma";
 
 #+end_src
 
-** Array of pointers
+*** Array of pointers
  
 
 #+begin_src C++
@@ -5996,7 +6272,7 @@ for (int i = 0; i < 10; I++){
 
 #+end_src
 
-** Array of pointers
+*** Array of pointers
  
 
 #+begin_src C++
@@ -6026,7 +6302,7 @@ for (int i = 0; i < 10; i++)
 
  #+end_src
 
-** Pointer to dynamic array
+*** Pointer to dynamic array
  
 
 #+begin_src C++
@@ -6053,7 +6329,7 @@ for (int i = 0; i < 10; i++)
 
 #+end_src
 
-** Pointer to dynamic array
+*** Pointer to dynamic array
  
 
 #+begin_src C++
@@ -6072,7 +6348,7 @@ parray = nullptr;
 
 #+end_src
 
-** Pointer to array of pointers (double pointer)
+*** Pointer to array of pointers (double pointer)
  
 
 #+begin_src C++
@@ -6096,7 +6372,7 @@ for (int i = 0; i < 10; i++){
 
 #+end_src
 
-** Pointer to array of pointers (double pointer)
+*** Pointer to array of pointers (double pointer)
  
 
 #+begin_src C++
@@ -6128,7 +6404,7 @@ pparray = nullptr;
 
  #+end_src
 
-** Collection data structures with maximum capacity
+*** Collection data structures with maximum capacity
  
 
 #+begin_src C++
@@ -6153,7 +6429,7 @@ int main(){
 
 #+end_src
 
-** Collection data structures w/o maximum capacity
+*** Collection data structures w/o maximum capacity
  
 
 #+begin_src C++
@@ -6185,7 +6461,7 @@ int main(){
 
 #+end_src
 
-** Collection data structures that dynamically expand/shrink
+*** Collection data structures that dynamically expand/shrink
  
  - Initialize the array with some arbitrary capacity
  
@@ -6199,7 +6475,7 @@ int main(){
  
  - Deallocate the array when it is no longer needed
  
-** Collection data structures that dynamically expand/shrink
+*** Collection data structures that dynamically expand/shrink
  
 
 #+begin_src C++
@@ -6228,7 +6504,7 @@ int main(){
 
 #+end_src
 
-** Collection data structures that dynamically expand/shrink
+*** Collection data structures that dynamically expand/shrink
  
 
 #+begin_src C++
@@ -6263,7 +6539,7 @@ void init(){
 
 #+end_src
 
-** Collection data structures that dynamically expand/shrink
+*** Collection data structures that dynamically expand/shrink
  
 
 #+begin_src C++
@@ -6283,7 +6559,7 @@ void append(int x) {
 
 #+end_src
 
-** Collection data structures that dynamically expand/shrink
+*** Collection data structures that dynamically expand/shrink
  
 
 #+begin_src C++
@@ -6318,7 +6594,7 @@ assert(array_length < array_capacity);
 
 #+end_src
 
-** Collection data structures that dynamically expand/shrink
+*** Collection data structures that dynamically expand/shrink
  
 
 #+begin_src C++
@@ -6351,7 +6627,7 @@ void cleanup(){
 
 #+end_src
 
-** Dynamically allocated 2d arrays
+*** Dynamically allocated 2d arrays
  
 
 #+begin_src C++
@@ -6378,7 +6654,7 @@ pparray = new int*[10];
 
 #+end_src
 
-** Dynamically allocated 2d arrays
+*** Dynamically allocated 2d arrays
  
 
 #+begin_src C++
@@ -6397,7 +6673,7 @@ for (unsigned int i = 0; i < 10; i++){
 
 #+end_src
 
-** Dynamically allocated 2d arrays
+*** Dynamically allocated 2d arrays
  
 
 #+begin_src C++
@@ -6424,7 +6700,7 @@ delete [] pparray;
 
  #+end_src
 
-** Dynamic memory management and ADTs
+*** Dynamic memory management and ADTs
  
  - Why handle manually when we can automate allocation using constructors and deallocation using destructors?
  
@@ -6437,7 +6713,7 @@ delete [] pparray;
  
  
  
-** String example (cont'd)
+*** String example (cont'd)
  
 
 #+begin_src C++
@@ -6467,7 +6743,7 @@ char String::member(unsigned int i) const {
 
 #+end_src
 
-** String example (cont'd)
+*** String example (cont'd)
  
 
 #+begin_src C++
@@ -6500,7 +6776,7 @@ buf = newbuf;
 
 #+end_src
 
-** String example (cont'd)
+*** String example (cont'd)
  
 
 #+begin_src C++
@@ -6534,7 +6810,7 @@ String::~String() {
 
 #+end_src
 
-** String example (cont'd)
+*** String example (cont'd)
  
 
 #+begin_src C++
@@ -6564,7 +6840,7 @@ String::String(){
 
 #+end_src
 
-** String example (cont'd)
+*** String example (cont'd)
  
 
 #+begin_src C++
@@ -6599,7 +6875,7 @@ buf = nonConstBuf;
 
 #+end_src
 
-** String example (cont'd)
+*** String example (cont'd)
  
  - Three different uses:
  
@@ -6636,7 +6912,7 @@ String f(...){
 
  #+end_src
 
-** String example (cont'd)
+*** String example (cont'd)
  
  - Can the & before &original be left out?
  
@@ -6656,7 +6932,7 @@ String::String(const String &original) {
  
  
  
-** String example (cont'd)
+*** String example (cont'd)
  
 
 #+begin_src C++
@@ -6677,7 +6953,7 @@ s = u;                    // assignment operator
 
 #+end_src
 
-** String example (cont'd)
+*** String example (cont'd)
  
 
 #+begin_src C++
@@ -6699,7 +6975,7 @@ s = s;   // Self assignment! Q: Is there anything wrong with this?
 
 #+end_src
 
-** String example (cont'd)
+*** String example (cont'd)
  
 
 #+begin_src C++
@@ -6719,7 +6995,7 @@ String &String::operator=(const String &original) {
 
 #+end_src
 
-** Concatenation
+*** Concatenation
  
 
 #+begin_src C++
@@ -6748,7 +7024,7 @@ s.append(t).append(u);
 
 #+end_src
 
-** 
+***
  
  
  
@@ -6982,7 +7258,7 @@ s.append(t).append(u);
  - Install the buffer into the current object
  
  
-** Concatenation
+*** Concatenation
  
 
 #+begin_src C++
@@ -7000,7 +7276,7 @@ String &String::append(const String &s){
 
 #+end_src
 
-** Concatenation
+*** Concatenation
  
  - append is a mutation operation, let's formulate a creation version
  
@@ -7021,7 +7297,7 @@ String String::concatenate(const String &s) const {
 
  #+end_src
 
-** Concatenation
+*** Concatenation
  
  - Efficient only if supported by the compiler
  - First, let's define a private helper constructor
@@ -7042,19 +7318,15 @@ String String::concatenate(const String &s) const {
 
  #+end_src
 
-* Dynamic memory management :noexport:
+* Dynamic memory management and OOP :noexport:
 :PROPERTIES:
-:EXPORT_FILE_NAME: pdf/slides012-dyn-oop.pdf
+:EXPORT_FILE_NAME: pdf/slides013-dyn-oop.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
- - and object-oriented design
+** Interaction between dynamic memory management and OOD features, such as composition, inheritance, and dynamic binding
  
- 
- 
- - Interaction between dynamic memory management and OOD features, such as composition, inheritance, and dynamic binding
- 
-** Composition and inheritance
+*** Composition and inheritance
  
  - Recall invocation seq. of const.
  
@@ -7087,7 +7359,7 @@ D::D(...) : C(...), f2(...), f1(...), ... {
 
  #+end_src
 
-** Constructor invocation sequence example
+*** Constructor invocation sequence example
  
 
 #+begin_src C++
@@ -7128,7 +7400,7 @@ int main() {
 
 #+end_src
 
-** Destructor invocation sequence
+*** Destructor invocation sequence
  
  - Destructor invocation sequence is exactly the opposite of that of the constructor!
  
@@ -7163,7 +7435,7 @@ D::~D() {
 
  #+end_src
 
-** Destructor invocation sequence (cont'd)
+*** Destructor invocation sequence (cont'd)
  
 
 #+begin_src C++
@@ -7198,7 +7470,7 @@ int main() {
 
 #+end_src
 
-** Constructors and destructors
+*** Constructors and destructors
  
 
 #+begin_src C++
@@ -7211,7 +7483,7 @@ delete ps; // (explicitly) calls the destructor
 
 #+end_src
 
-** Recall: static vs. dynamic binding
+*** Recall: static vs. dynamic binding
  
 
 #+begin_src C++
@@ -7245,7 +7517,7 @@ int main() {
 
 #+end_src
 
-** Virtual destructor
+*** Virtual destructor
  
 
 #+begin_src C++
@@ -7277,7 +7549,7 @@ int main() {
 
 #+end_src
 
-** Using classes that involve dynamically allocated memory
+*** Using classes that involve dynamically allocated memory
  
  - If you craft your class properly by equipping it with: 
  - a default constructor 
@@ -7286,7 +7558,7 @@ int main() {
  - a destructor 
  - then you may simply treat the class as a built-in type
  
-** Example (using String to define Book)
+*** Example (using String to define Book)
  
 
 #+begin_src C++
@@ -7322,7 +7594,7 @@ Book::~Book() { }
 
  #+end_src
 
-** Polymorphism
+*** Polymorphism
  
  - Base class pointer = child class instance : works as expected
  - Child class pointer = base class instance : WRONG
@@ -7345,7 +7617,7 @@ sp2 = cp; // WRONG!
 
  #+end_src
 
-** Polymorphism with pure virtual functions
+*** Polymorphism with pure virtual functions
  
 
 #+begin_src C++
@@ -7384,7 +7656,7 @@ cp->print(); // dynamic binding
 
 #+end_src
 
-** Polymorphism and dynamic arrays
+*** Polymorphism and dynamic arrays
  
 
 #+begin_src C++
@@ -7414,7 +7686,7 @@ for (int i = 0; i < 100; i++) {
 
 * Canonical forms for C++ classes :noexport:
 :PROPERTIES:
-:EXPORT_FILE_NAME: pdf/slides013-canonical.pdf
+:EXPORT_FILE_NAME: pdf/slides014-canonical.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -7656,18 +7928,17 @@ Class B{
 
 #+end_src
 
-* Linked lists :noexport:
+* Linked lists: Barebones Version :noexport:
 :PROPERTIES:
-:EXPORT_FILE_NAME: pdf/slides014-list.pdf
+:EXPORT_FILE_NAME: pdf/slides015-list.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
  
  
  
- - A bare-bones version
- 
-** Motivation
+
+*** Motivation
  
  - Want to allocate memory on demand, but only 1 node at a time 
  - Idea: dynamically allocate only a single node when requested
@@ -7679,7 +7950,7 @@ Class B{
  
  
  
-** Node definition
+*** Node definition
  
 
 #+begin_src C++
@@ -7698,7 +7969,7 @@ head = nullptr;
 
 #+end_src
 
-** Adding a new node to the list
+*** Adding a new node to the list
  
 
 #+begin_src C++
@@ -7728,7 +7999,7 @@ void insert(int data){
 
 #+end_src
 
-** Adding a new node to the list
+*** Adding a new node to the list
  
 
 #+begin_src C++
@@ -7761,7 +8032,7 @@ void insertS(int data){
 
 #+end_src
 
-** Traversing the list
+*** Traversing the list
  
 
 #+begin_src C++
@@ -7791,7 +8062,7 @@ int count() {
 
 #+end_src
 
-** Deleting the entire list
+*** Deleting the entire list
  
 
 #+begin_src C++
@@ -7811,7 +8082,7 @@ void deleteLinkedList(){
 
 #+end_src
 
-** Removing a node
+*** Removing a node
  
 
 #+begin_src C++
@@ -7846,7 +8117,7 @@ void remove(int x){
 
 #+end_src
 
-** Testing it all out
+*** Testing it all out
  
 
 #+begin_src C++
@@ -7874,9 +8145,9 @@ int main() {
 
 #+end_src
 
-* Linked lists :noexport:
+* Multisets with Linked Lists :noexport:
 :PROPERTIES:
-:EXPORT_FILE_NAME: pdf/slides015-multiset.pdf
+:EXPORT_FILE_NAME: pdf/slides016-multiset.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -7885,7 +8156,7 @@ int main() {
  
  - An application: Multiset Revisited
  
-** ADT Multiset
+*** ADT Multiset
  
  - Domain: items from ItemType
  
@@ -7899,7 +8170,7 @@ int main() {
  - member: test if an item of type ItemType is in a Multiset instance
  - print: print the members of a Multiset instance in ascending order
  
-** ADT Multiset
+*** ADT Multiset
  
 
 #+begin_src C++
@@ -7935,7 +8206,7 @@ private:
 
 #+end_src
 
-** Traversing and managing a linked list
+*** Traversing and managing a linked list
  
  - Traversing: 
  
@@ -7956,7 +8227,7 @@ Node *duplicateLinkedList(const Node *pOldHead) const;
  
  #+end_src
 
-** Implementing duplicateLL
+*** Implementing duplicateLL
  
 
 #+begin_src C++
@@ -7996,7 +8267,7 @@ Node *duplicateLL(const Node *pHead1) const{
 
 #+end_src
 
-** Constructors and destructors
+*** Constructors and destructors
  
 
 #+begin_src C++
@@ -8019,7 +8290,7 @@ Multiset::~Multiset(){
 
 #+end_src
 
-** Assignment operator
+*** Assignment operator
  
 
 #+begin_src C++
@@ -8034,7 +8305,7 @@ Multiset &Multiset::operator=(const Multiset &original){
 
 #+end_src
 
-** Managing a linked list (cont'd)
+*** Managing a linked list (cont'd)
  
  - Membership checking, Inserting, and removing
  
@@ -8056,7 +8327,7 @@ Node *searchLinkedList(Node *pHead, ItemType x) const;
  
  #+end_src
 
-** Implementing member
+*** Implementing member
  
 
 #+begin_src C++
