@@ -93,6 +93,7 @@
 - [[#dynamic-memory-management-and-oop][Dynamic memory management and OOP]]
 - [[#canonical-forms-for-c-classes][Canonical forms for C++ classes]]
 - [[#linked-lists-barebones-version][Linked lists: Barebones Version]]
+- [[#multisets-with-linked-lists][Multisets with Linked Lists]]
 
 * Introduction
 :PROPERTIES:
@@ -8212,7 +8213,7 @@ int main() {
 #+end_src
 
 
-* Multisets with Linked Lists :noexport:
+* Multisets with Linked Lists
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides017-multiset.pdf
 :END:
@@ -8221,25 +8222,34 @@ int main() {
  
  
  
- - An application: Multiset Revisited
+** Linked List application: Multiset Revisited
  
-*** ADT Multiset
+*** Recall: Multisets
+- Datatype for storing 1 /or more/ copies of some elements
+  + Keep count of how many of each item are in
+  + Removing only removes one copy of an item
+
+*** ADT Multiset without Upper Bounds
  
  - Domain: items from ItemType
  
  - Structure: arbitrarily many members, possibly with duplicates
  
  - Operations supported:
- - empty: check if a Multiset instance is empty.
- - memberCount: get the number of items in a Multiset instance
- - insert: insert an item of type ItemType into a Multiset instance
- - remove: remove the first occurrence of an item of type ItemType from a Multiset instance
- - member: test if an item of type ItemType is in a Multiset instance
- - print: print the members of a Multiset instance in ascending order
+   + empty: check if a Multiset instance is empty.
+   + memberCount: get the number of items in a Multiset instance
+   + insert: insert an item of type ItemType into a Multiset instance
+   + remove: remove the first occurrence of an item of type ItemType from a Multiset instance
+   + member: test if an item of type ItemType is in a Multiset instance
+   + print: print the members of a Multiset instance in ascending order
  
-*** ADT Multiset
- 
+*** Class Declaration
 
+
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.35
+:END:
 #+begin_src C++
 // multiset-linkedlist.h
 typedef int ItemType;
@@ -8247,17 +8257,24 @@ struct Node {
   ItemType datum;
   Node *pNext;
 };
+#+end_src
 
+
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.65
+:END:
+#+begin_src C++
 class Multiset {
 public:
-  // Default constructor
+  // Default and copy constructors
   Multiset();
-  // Copy constructor
   Multiset(const Multiset &original);
   // Destructor
   ~Multiset();
   // Assignment operator
-  Multiset &operator=(const Multiset &original);
+  Multiset
+    &operator=(const Multiset &original);
   // Other functions
   bool empty() const;
   unsigned int memberCount() const;
@@ -8272,6 +8289,7 @@ private:
 
 
 #+end_src
+
 
 *** Traversing and managing a linked list
  
@@ -8296,24 +8314,35 @@ Node *duplicateLinkedList(const Node *pOldHead) const;
 
 *** Implementing duplicateLL
  
-
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
-Node *duplicateLL(const Node *pHead1) const{
+Node *duplicateLL(
+  const Node *pHead1) const {
 
   // empty list
   if (pHead1 == nullptr)
     return nullptr;
 
-  // handle the first node separately
+  // handle first node separately
   Node *pHead2 = new Node;
   pHead2->data = pHead1->data;
 
-  // Copy the rest of the linked list
+  // Copy the rest
   const Node *p1 = pHead1;
-  Node           *p2 = pHead2;
+  Node *p2 = pHead2;
+
+  #+end_src
 
 
 
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+  #+begin_src C++
   // still Nodes to copy
   while (p1->pNext != nullptr) {
     // make a new Node for our copy
@@ -8326,12 +8355,11 @@ Node *duplicateLL(const Node *pHead1) const{
     // copy the data
     p2->data = p1->data;
   }
-  // set the end of the new list to nullptr
+  // set end of new list to null
   p2->pNext = nullptr;
 
   return pHead2;
 }
-
 #+end_src
 
 *** Constructors and destructors
