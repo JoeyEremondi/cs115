@@ -91,6 +91,7 @@
 - [[#dynamic-memory-management-using-pointers][Dynamic memory management using Pointers]]
 - [[#dynamic-memory-management-extended-example][Dynamic memory management: Extended Example]]
 - [[#dynamic-memory-management-and-oop][Dynamic memory management and OOP]]
+- [[#canonical-forms-for-c-classes][Canonical forms for C++ classes]]
 
 * Introduction
 :PROPERTIES:
@@ -7752,70 +7753,67 @@ for (int i = 0; i < 100; i++) {
 #+ATTR_LaTeX: :height 0.7\textwidth :center
 [[./img/ddynarray7.png]]
 
-* Canonical forms for C++ classes :noexport:
+* Canonical forms for C++ classes
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides015-canonical.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
  
+** Canonical Form/Standard Form
  
  
- 
-** Canonical form (definition)
+*** Canonical form (definition)
  
  - A C++ class is in canonical form if it provides the following four member functions/operators:
- - default constructor
- - copy constructor
- - destructor
- - assignment operator
+   + default constructor
+   + copy constructor
+   + destructor
+   + assignment operator
  
  - These are otherwise provided by default
- - unless some constructor other than the copy constructor is provided for a class, then the default constructor is not provided by default!
+   + unless some constructor other than the copy constructor is provided for a class, then the default constructor is not provided by default!
  
- - The reason for putting a class in canonical form: to avoid memory leaks and to make call by value and return from functions work as expected
+ - The reason for putting a class in canonical form
+   + to avoid memory leaks
+   + to make call by value and return from functions work as expected
  
  
  
-** How to write a copy constructor
+*** How to write a copy constructor
  
- - MyClass::MyClass(const MyClass &original)
 
  #+begin_src C++
-: MyBaseClass(original), // delegate copying of base class fields to its own cc
-    field1(original.field1),    // delegate copying of field1 to its own cc, etc.
- #+end_src
-
- -        field2(original.field2),
- -        field3(original.field3)
-
- #+begin_src C++
+MyClass::MyClass(const MyClass &original)
+    : MyBaseClass(
+          original), // delegate copying of base class fields
+                     // to its own cc
+      // delegate copying of field1 to its own cc, etc.
+      field1(original.field1),
+      field2(original.field2), field3(original.field3)
 // ...
-    {
-
-      // do everything that is required to perform a deep copy of original fields to the
-      // reference object fields
-
-    }
-
-
+{
+  // do everything that is required
+  // to perform a deep copy of original fields to
+  // the reference object fields
+}
  #+end_src
 
-** How to write a destructor
+*** How to write a destructor
  
- - MyClass::~MyClass()
 
  #+begin_src C++
+ MyClass::~MyClass()
     {
       // usually empty (unless code performed dynamic allocation)
 
-      // free/deallocate all dynamically allocated memory in the reverse order of their
-      // allocation order
+      // free/deallocate all dynamically allocated memory
+      // in reverse allocation order
     }
 
  #+end_src
 
- - A virtual destructor should be used for any class that is involved in inheritance, i.e., for any base class or any derived class (see week 10 slide 46)
+ - A virtual destructor should be used for any class that is involved in inheritance, i.e., for any base class or any derived class
  - if in doubt, make it virtual
 
  #+begin_src C++
@@ -7825,24 +7823,25 @@ virtual ~MyClass();
  - never make it purely virtual, however (provide implementation regardless)
  - don't attempt to invoke base-class destructor (will be done automatically)
  
-** How to write an assignment operator
+*** How to write an assignment operator
  
 
 #+begin_src C++
 MyClass &MyClass::operator=(const MyClass &original){
   if(&original != this) // don't assign to itself
     {
-      // 1. everything in destructor (to get rid of the existing value of this reference instance)
-      // 2. Everything in the copy constructor (to copy original's fields to reference instance)
+      // 1. everything in destructor
+        //(get rid of the existing value of this reference instance)
+      // 2. Everything in the copy constructor
+        // (to copy original's fields to reference instance)
       // 2a. if this is a derived class, add this line
       MyBaseClass::operator=(original);
-
-      // 2b. if the copy constructor copies fields using the ":" syntax (i.e., an initializer list),
+      // 2b. if the copy constructor copies fields
+      //using the ":" syntax (i.e., an initializer list),
       // add these lines
       field1 = original.field1;
       field2 = original.field2;
       field3 = original.field3;
-
       // 2c. everything in copy constructor body
     }
   return *this;
@@ -7851,7 +7850,7 @@ MyClass &MyClass::operator=(const MyClass &original){
 
 #+end_src
 
-** Example: the Committee class
+*** Example: the Committee class
  
 
 #+begin_src C++
@@ -7876,7 +7875,7 @@ public:
 
 #+end_src
 
-** The Committee class (default constructor)
+*** The Committee class (default constructor)
  
 
 #+begin_src C++
@@ -7895,17 +7894,14 @@ Committee::Committee() {
 
 #+end_src
 
-** The Committee class (copy constructor)
+*** The Committee class (copy constructor)
  
 
 #+begin_src C++
 // Copy Constructor
-#+end_src
-
- - Committee::Committee(const Committee &original)
-
- #+begin_src C++
-:  pbudget(new float(*(original.pbudget))) // put this line (delegate copying to cc of float)
+Committee::Committee(const Committee &original)
+    : pbudget(new float(*(
+          original.pbudget))) // (delegate copying to cc of float)
 {
   // OR these 2 lines (i.e. copy manually)
   // pbudget = new float;
@@ -7918,37 +7914,27 @@ Committee::Committee() {
     pmembers[i] = new string(*(original.pmembers[i]));
   }
 }
-
-
  #+end_src
 
-** The Committee class (destructor)
+*** The Committee class (destructor)
  
-
 #+begin_src C++
 // Destructor
-#+end_src
+Committee::~Committee() {
+  // optional for tracing execution:
+  // cout << "Destructor for Committee class" << endl;
 
- - Committee::~Committee()
+  delete pbudget;
+  for (int i = 0; i < 10; i++) {
+    delete pmembers[i];
 
- #+begin_src C++
-    {
-      // optional for tracing execution:
-      // cout << "Destructor for Committee class" << endl;
-
-      delete pbudget;
-      for (int i = 0; i < 10; i++)
-        {
-          delete pmembers[i];
-
-          // optional for tracing execution:
-          // cout << "Deleting array... " << 10 - i << endl;
-        }
-    }
-
+    // optional for tracing execution:
+    // cout << "Deleting array... " << 10 - i << endl;
+  }
+}
  #+end_src
 
-** The Committee class (assignment operator)
+*** The Committee class (assignment operator)
  
 
 #+begin_src C++
@@ -7972,24 +7958,38 @@ Committee &Committee::operator=(const Committee &original) {
 
 #+end_src
 
-** New C++ features to support canonical classes
+*** New C++ features to support canonical classes
  
 
 #+begin_src C++
 Class A {
-  A() = default; // default constructor has default implementation (i.e. does nothing)
-  A(const A &original) = default; // copy const. has default impl. (i.e. shallow copies)
-  ~A() = default; // destructor has default implementation (i.e. does nothing)
+  // default constructor has default implementation
+  //  (i.e. does nothing)
+  A() = default;
+  // copy const. has default impl. (i.e. shallow copies)
+  A(const A &original) = default;
+  // destructor has default implementation (i.e. does nothing)
+  ~A() = default;
   A &operator=(const A &other) = default; // shallow copy again
   ...
 };
+#+end_src
 
-// tells compiler that no implementation is desired (rarely a good idea)
+
+*** Defaults for Canonical Classes (ctd)
+#+begin_src C++
+// tells compiler no implementation is desired
+// usually a bad idea
 Class B{
-  B() = delete; // e.g., prevents arrays from being declared
-  B(const B &original) = delete; // prevent instances from being passed by value
-  ~B() = delete; // prevents instances from being deallocated (can't use delete on B)
-  B &operator=(const B &other) = delete; // can't use assignment operator
+  // e.g., prevents arrays from being declared
+  B() = delete;
+  // prevent instances from being passed by value
+  B(const B &original) = delete;
+   // prevents instances from being deallocated
+  // (can't use delete on B)
+  ~B() = delete;
+  // can't use assignment operator
+  B &operator=(const B &other) = delete;
   ...
 };
 
