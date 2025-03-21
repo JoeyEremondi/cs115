@@ -90,6 +90,7 @@
 - [[#pointers][Pointers]]
 - [[#dynamic-memory-management-using-pointers][Dynamic memory management using Pointers]]
 - [[#dynamic-memory-management-extended-example][Dynamic memory management: Extended Example]]
+- [[#dynamic-memory-management-and-oop][Dynamic memory management and OOP]]
 
 * Introduction
 :PROPERTIES:
@@ -7005,7 +7006,7 @@ String::String(const char *s) {
 - We need a /destructor/
 - Want a way to "cleanup" when we're done with an object
   + Free memory or other resources
-  + Called whenever we do ~free~ on an object
+  + Called whenever we do ~delete~ on an object
   + Automatically called on locally-declared variables that go out of scope
     - Since their memory only exists for the duration of the function call
 
@@ -7312,7 +7313,7 @@ String String::concatenate(const String &s) const {
 
  #+end_src
 
-* Dynamic memory management and OOP :noexport:
+* Dynamic memory management and OOP
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides014-dyn-oop.pdf
 :END:
@@ -7321,7 +7322,7 @@ String String::concatenate(const String &s) const {
 ** Interaction between dynamic memory management and OOD features, such as composition, inheritance, and dynamic binding
  
 *** Composition and inheritance
- 
+
  - Recall invocation seq. of const.
  
 
@@ -7331,10 +7332,10 @@ class C : ... {
     };
  #+end_src
 
- - Invocation sequence does not depend on the order in which constructors are called, but as follows:
- - const. of base class
- - const. of member vars, in the order they are defined
- - body of the constructor 
+ - Invocation sequence does not depend on the order in which constructors are called. Instead:
+   + const. of base class
+   + const. of member vars, in the order they are defined
+   + body of the constructor
 
  #+begin_src C++
 class D : public C {
@@ -7346,16 +7347,17 @@ public:
   D2 f2;
   ...
 };
-
 D::D(...) : C(...), f2(...), f1(...), ... {
-  ... // body
-    }
-
+  ...}
  #+end_src
 
 *** Constructor invocation sequence example
  
 
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 class C {
 public:
@@ -7366,14 +7368,20 @@ C::C() {
   cout << "C()" << endl;
 }
 C::C(const char *s) {
-  cout << "C(const char *)" << endl;
+  cout <<
+    "C(const char *)" << endl;
 }
 class D : public C {
 public:
   D();
 };
+#+end_src
 
-
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 D::D() : C() {
   cout << "D()" << endl;
 }
@@ -7384,14 +7392,15 @@ private:
   C x;
   C z;
 };
-E::E() : D(), x("Hello"), z("Goodbye"){
+E::E() : D(),
+         x("Hello"),
+         z("Goodbye"){
   cout << "E()" << endl;
 }
 int main() {
   E y;
   return 0;
 }
-
 #+end_src
 
 *** Destructor invocation sequence
@@ -7406,7 +7415,7 @@ class C : ... {
 
  #+end_src
 
- - When an object of type D goes out of scope, ~D() is called, which executes its body, then calls ~C2(), then ~C1(), and finally ~C() 
+ - When object of type D goes out of scope, ~D() called, executes body, then calls ~C2(), ~C1(), ~C()
  
  
  
@@ -7421,17 +7430,18 @@ private:
   C2 f2;
   ...
 };
-
 D::~D() {
   ... // body of ~D()
     }
-
-
  #+end_src
 
 *** Destructor invocation sequence (cont'd)
  
 
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
 #+begin_src C++
 class C{
 public:
@@ -7447,10 +7457,17 @@ class C2 : public C {
 public:
   ~C2() { cout << "~C2()" << endl; }
 };
+#+end_src
 
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+#+begin_src C++
 class D : public C {
 public:
-  ~D() { cout << "~D()" << endl; }
+  ~D() { cout << "~D()"
+              << endl; }
 private:
   C1 x;
   C2 y;
@@ -7466,13 +7483,15 @@ int main() {
 
 *** Constructors and destructors
  
-
 #+begin_src C++
-String *ps = new String; // calls constructor as usual
+// calls constructor as usual
+String *ps = new String;
 
-String *ps = new String("Hello"); // can also specify which constructor to use
+// can also specify which constructor to use
+String *ps = new String("Hello");
 
-delete ps; // (explicitly) calls the destructor
+// (explicitly) calls the destructor
+delete ps;
 
 
 #+end_src
@@ -7480,22 +7499,33 @@ delete ps; // (explicitly) calls the destructor
 *** Recall: static vs. dynamic binding
  
 
+
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 class C {
 public:
-  virtual void f() { /* implementation 1 */ }
+  virtual void f() {
+    /* implementation 1 */ }
   ...
 };
 
 class D : public C {
 public:
   // implictly virtual
-  void f() { /* implementation 2 */ }
+  void f() {
+    /* implementation 2 */ }
   ...
 };
+#+end_src
 
-
-
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 void g(C &c) {
   c.f( );
 }
@@ -7514,12 +7544,17 @@ int main() {
 *** Virtual destructor
  
 
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 class C {
 public:
   // Say this is an abstract class
   ...
-~C();  // WRONG, use virtual ~C() instead
+// WRONG, use virtual ~C() instead
+~C();
 };
 
 class D : public C {
@@ -7529,9 +7564,18 @@ public:
 private:
   ...
 };
+#+end_src
+
+
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+#+begin_src C++
 void destroy(C *ptr) {
   ...
-    delete ptr; // wanted to call ~D()
+    // wanted to call ~D()
+    delete ptr;
   ...
     }
 
@@ -7546,15 +7590,15 @@ int main() {
 *** Using classes that involve dynamically allocated memory
  
  - If you craft your class properly by equipping it with: 
- - a default constructor 
+   + a default constructor
    + a copy constructor 
- - an assignment operator and 
- - a destructor 
+   + an assignment operator and
+   + a destructor
  - then you may simply treat the class as a built-in type
  
 *** Example (using String to define Book)
  
-
+- Class definition
 #+begin_src C++
 class Book {
 public:
@@ -7570,22 +7614,24 @@ public:
 
 #+end_src
 
- - Book::Book(const String &a, 
+
+*** Implementation (using String to define Book)
 
  #+begin_src C++
-const String &t) : author(a), title(t) { }
-Book::Book(const Book &b) : author(b.author), title(b.title) { }
+Book::Book(const String &a, const String &t)
+  : author(a), title(t) {}
+Book::Book(const Book &b)
+  : author(b.author), title(b.title) {}
 
-Book &operator=(const Book &b){
-  if (&b != this){
+Book &operator=(const Book &b) {
+  if (&b != this) {
     author = b.author;
     title = b.title;
   }
   return *this;
 }
 
-Book::~Book() { }
-
+Book::~Book() {}
  #+end_src
 
 *** Polymorphism
@@ -7614,6 +7660,11 @@ sp2 = cp; // WRONG!
 *** Polymorphism with pure virtual functions
  
 
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+
 #+begin_src C++
 class Critter {
 private:
@@ -7626,11 +7677,16 @@ public:
 Critter::Critter(int n){
   legCount = n;
 }
+#+end_src
 
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+
+#+begin_src C++
 // Note: there is no implementation for the
 // pure virtual function named print
-
-
 class Spider:  public Critter{
 private:
   bool poisonous;
@@ -7651,32 +7707,50 @@ cp->print(); // dynamic binding
 #+end_src
 
 *** Polymorphism and dynamic arrays
- 
+
+
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 
 #+begin_src C++
 Critter *critter_array[100];
 for (int i = 0; i < 100; i++) {
   if (i % 2 == 0)
-    critter_array[i] = new Spider(false);
+    critter_array[i] =
+      new Spider(false);
   else
-    critter_array[i] = new Ant(6, 50);
+    critter_array[i] =
+      new Ant(6, 50);
  }
+#+end_src
+#+ATTR_LaTeX: :height 0.7\textwidth :center
+[[./img/ddynarray6.png]]
 
 
 
+**** Example :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 
-
-
-Critter **critter_array = new Critter*[100];
+#+begin_src C++
+Critter **critter_array
+  = new Critter*[100];
 for (int i = 0; i < 100; i++) {
   if (i % 2 == 0)
-    critter_array[i] = new Spider(false);
+    critter_array[i] =
+      new Spider(false);
   else
-    critter_array[i] = new Ant(6, 50);
+    critter_array[i] =
+      new Ant(6, 50);
  }
 
 
 #+end_src
+#+ATTR_LaTeX: :height 0.7\textwidth :center
+[[./img/ddynarray7.png]]
 
 * Canonical forms for C++ classes :noexport:
 :PROPERTIES:
