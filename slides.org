@@ -86,6 +86,7 @@
 - [[#review-types-and-values][Review: Types and Values]]
 - [[#object-oriented-design-composition-and-inheritance][Object-oriented design: Composition and Inheritance]]
 - [[#object-oriented-design-interfaces-subtying-and-polymorphism][Object-oriented design: Interfaces, Subtying and Polymorphism]]
+- [[#templates-and-generics][Templates and Generics]]
 - [[#pointers][Pointers]]
 
 * Introduction
@@ -5083,8 +5084,8 @@ public:
   virtual int next();
 private:
   int data[ARRAY_DATA_SOURCE_CAPACITY];
-  unsigned length;
-  unsigned i;
+  unsigned int length;
+  unsigned int i;
 };
 
 
@@ -5314,7 +5315,7 @@ int main() {
 - OOP lets us write one function that works on many types
 - This is /subtyping polymorphism/
   + We'll see another kind later
-  + If ~A~ extends ~B~, you can use a ~B~ object anywhere an ~A~ is expected
+  + If ~A~ extends ~B~, you can use a ~A~ object anywhere a ~B~ is expected
   + If ~A~ extends ~B~, we say ~A~ is a /subtype/ of ~B~
 
 *** What Actually Are Objects?
@@ -5349,7 +5350,7 @@ struct CatalogEntry {
 class CatalogEntry {
 public:
   // e.g. an operation we want to do for any entry
-  virtual void printInfo() = 0;
+  virtual void printInfo();
 protected:
   string title;
   string author;
@@ -5398,7 +5399,7 @@ void DVDEntry::printInfo(){
 }
 #+end_src
 
-*** Hidden functions and operators
+*** Virtual Override Example
  
  - A function or operator in the base class with the same name and parameters as a function in the derived class
    + can access using the base-class type qualifier
@@ -5459,7 +5460,7 @@ void DVDEntry::printInfo() {
 
 
 
-* Templates and Generics :noexport:
+* Templates and Generics
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides010-templates.pdf
 :END:
@@ -5796,7 +5797,7 @@ public:
   static const unsigned int LENGTH = 500;
   GuardedArray();
   GuardedArray(T x);
-  ItemType retrieve(unsigned int i) const;
+  T retrieve(unsigned int i) const;
   void store(unsigned int i, T x);
 private:
   T data_array[LENGTH];
@@ -6381,45 +6382,49 @@ int main(){
 #+OPTIONS: todo:nil
 
  
+** Pointers and New
  
- 
-*** Motivation
+*** Static vs Dynamic allocation
  
  - So far used pointers for allocating space during compile-time only
- - error-prone and might be difficult to understand 
- - could have avoided by using arrays and references 
+   + error-prone and might be difficult to understand
+   + could have avoided by using arrays and references
  
  - But what if we don't know the size of required memory at compile-time
- - we can allocate memory of size MAX (a constant)
+   + we can allocate memory of size MAX (a constant)
  
  - Problems with this model:
- - might run out of space (despite having a lot of unused memory)
- - can be under-utilized (e.g. if we only use a small part of MAX)
+   + might run out of space (despite having a lot of unused memory)
+   + can be under-utilized (e.g. if we only use a small part of MAX)
  
  - Solution: allocate memory on demand at run-time!
  
  
  
  
-*** Motivation
+*** Run-time Allocation
  
- - Allocates memory in ``heap'' (in contrast to .text, .data, and stack)
+ - Allocates memory in /heap/ (in contrast to .text, .data, and stack)
  
- - Uses keyword new to allocate memory
+ - Uses keyword ~new~ to allocate memory
 
  #+begin_src C++
 int *px = new int;
 ,*px = 777;
 cout << *px;
+#+end_src
 
-Must free-up space when done, using keyword delete (otherwise memory leak can happen!); also clean up any dangling pointers using nullptr
+- Must free-up space when done, using keyword delete (otherwise memory leak can happen!)
+  + also clean up any dangling pointers using nullptr
+
+ #+begin_src C++
 ...
 delete px;
 px = nullptr;
 
  #+end_src
 
-*** Simple example
+*** Simple example: Book Record
  
 
 #+begin_src C++
@@ -6428,86 +6433,82 @@ struct Book {
   string author;
   string call_number;
 };
-
 void printBook(const Book *pBook){
   cout << "title: " << pBook->title << endl;
   cout << "author: " << pBook->author << endl;
   cout << "call number: " << pBook->call_number;
   cout << endl;
 }
-
-
 int main(){
   // allocate a Book from heap
   Book *pb = new Book;
-
   pb->title = "Security";
   pb->author = "Matt Bishop";
   pb->call_number = "QA.420";
-
   printBook(pb);
-
   delete pb; // explicit deallocation
-
-  return 0;
-}
+  return 0;}
 
 
 #+end_src
 
-*** Pictorial representation
+*** Pictorial representation: Run-time Allocation
  
 
 #+begin_src C++
 Book *p;
 p = new Book;
 p -> title = "Emma";
-
-
 #+end_src
 
-*** Array of pointers
+#+attr_latex: :width 100px
+[[./img/book_dynamic1.png]]
+
+*** Safely Allocating Memory
  
 
 #+begin_src C++
 Book *pb[10];
 
-
-
-
-
-
-
-
-
-
-
 for (int i = 0; i < 10; I++){
   pb[i] = new Book;
   pb[i] -> title = "Emma";
  }
-
-
 #+end_src
 
-*** Array of pointers
- 
 
+#+BEGIN_center
+#+ATTR_LaTeX: :height 0.3\textwidth :center
+[[./img/uninitialized_array.png]]
+...
+#+ATTR_LaTeX: :height 0.3\textwidth :center
+[[./img/book_static_array.png]]
+#+end_center
+
+*** Safely Deallocating Memory
+:PROPERTIES:
+:BEAMER_env: column
+:END:
+
+**** Col 1 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
 #+begin_src C++
 for (int i = 0; i < 10; i++)
   delete pb[i];
-
-
-
-
-
-
-
-
-
-
 #+end_src
 
+
+#+BEGIN_center
+#+ATTR_LaTeX: :height 0.5\textwidth :center
+[[./img/uninitialized_array.png]]
+#+end_center
+
+**** Col 2 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
  - Dangling pointers!
  - assign nullptr to indicate this
  
@@ -6520,34 +6521,50 @@ for (int i = 0; i < 10; i++)
 
  #+end_src
 
-*** Pointer to dynamic array
- 
+*** The Null Pointer
+- If you ever try to dereference ~nullptr~, your program will immediately crash
+  + This is /good!/
+  + Crashes right at the point of failure
+  + Doesn't silently fail and access garbage memory
+
+*** Pointer to dynamic array: Allocation
+:PROPERTIES:
+:BEAMER_env: column
+:END:
+
+**** Col 1 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
 
 #+begin_src C++
 Book *parray = new Book[10];
+#+end_src
+
+
+[[./img/book_dynamic_array1.png]]
 
 
 
 
 
-
-
-
-
-
+**** Col 2 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+#+begin_src C++
 for (int i = 0; i < 10; i++)
   parray[i].title = "Emma";
 
 // could have also used:
-
 // (parray+i)->title = "Emma";
-
 // (*(parray+i)).title = "Emma";
-
-
 #+end_src
 
-*** Pointer to dynamic array
+#+ATTR_LaTeX: :height 0.7\textwidth :center
+[[./img/book_dynamic_array2.png]]
+
+*** Pointer to dynamic array: Deallocation
  
 
 #+begin_src C++
@@ -6566,11 +6583,31 @@ parray = nullptr;
 
 #+end_src
 
-*** Pointer to array of pointers (double pointer)
- 
 
+
+*** Arrays are just pointers
+- An array ~A~ is actually just a pointer to the start of the array in memory
+  + This is why arrays are always pass-by-reference
+- ~A[i]~ is the same as ~*(A + i)~
+  + Get the value ~i~ places after the start of the array
+- Why we always need to pass the length of the array
+  + Address tells us where it starts, not where it ends
+
+*** Pointer to array of pointers (double pointer): Allocating
+:PROPERTIES:
+:BEAMER_env: column
+:END:
+
+**** Col 1 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.42
+:END:
 #+begin_src C++
-Book **pparray = new Book * [10];
+Book **pparray = new Book*[10];
+#+end_src
+
+#+ATTR_LaTeX: :height 0.7\textwidth :center
+[[./img/book_dynamic_array_pointers1.png]]
 
 
 
@@ -6579,9 +6616,11 @@ Book **pparray = new Book * [10];
 
 
 
-
-
-
+**** Col 2 :BMCOL:
+:PROPERTIES:
+:BEAMER_col: 0.58
+:END:
+#+begin_src C++
 for (int i = 0; i < 10; i++){
   parray[i] = new Book;
   parray[i] -> title = "Emma";
@@ -6589,8 +6628,9 @@ for (int i = 0; i < 10; i++){
 
 
 #+end_src
+[[./img/book_dynamic_array_pointers2.png]]
 
-*** Pointer to array of pointers (double pointer)
+*** Pointer to array of pointers (double pointer): Deallocating
  
 
 #+begin_src C++
@@ -6623,7 +6663,7 @@ pparray = nullptr;
  #+end_src
 
 *** Collection data structures with maximum capacity
- 
+- Example: print in reverse order
 
 #+begin_src C++
 const int CAPACITY = 1000;
@@ -6648,7 +6688,8 @@ int main(){
 #+end_src
 
 *** Collection data structures w/o maximum capacity
- 
+
+- Example: print in reverse order
 
 #+begin_src C++
 int main(){
@@ -6662,7 +6703,6 @@ int main(){
   // sequence
   A = new int[length];
 
-
   for (int i = 0; i < length; i++)
     cin >> A[i];
 
@@ -6672,14 +6712,13 @@ int main(){
 
   // Deallocate memory
   delete [] A;
-
   return 0;
 }
 
 
 #+end_src
 
-*** Collection data structures that dynamically expand/shrink
+*** Dynamically Expanding and Shrinking: IDea
  
  - Initialize the array with some arbitrary capacity
  
@@ -6693,7 +6732,7 @@ int main(){
  
  - Deallocate the array when it is no longer needed
  
-*** Collection data structures that dynamically expand/shrink
+*** Expand/Shrink main function
  
 
 #+begin_src C++
@@ -6722,16 +6761,14 @@ int main(){
 
 #+end_src
 
-*** Collection data structures that dynamically expand/shrink
+*** Initializing
  
 
 #+begin_src C++
 // Amount of memory available
 unsigned int array_capacity = 0;
-
 // Amount of memory used
 unsigned int array_length = 0;
-
 // Actual memory resource
 int *array = nullptr;
 
@@ -6741,15 +6778,12 @@ bool isInitialized(){
 
 void init(){
   assert(! isInitialized());
-
   // Default initial capacity
   array_capacity = 4;
-
   // Array is empty initially
   array_length = 0;
   // Allocate array
   array = new int[array_capacity];
-
   assert(isInitialized());
 } // end init()
 
@@ -6757,7 +6791,7 @@ void init(){
 
 #+end_src
 
-*** Collection data structures that dynamically expand/shrink
+*** Example: Append for shrinking/growing
  
 
 #+begin_src C++
@@ -6777,43 +6811,34 @@ void append(int x) {
 
 #+end_src
 
-*** Collection data structures that dynamically expand/shrink
+*** Expand for Shrinking/Growing
  
 
 #+begin_src C++
-void expand(){
+void expand() {
   assert(isInitialized());
   assert(array_capacity > 0);
   assert(array_length == array_capacity);
 
   // Calculate new capacity
-  int new_array_capacity = array_capacity*2;
+  int new_array_capacity = array_capacity * 2;
   // Allocate bigger array
-#+end_src
+  int *new_array = new int[new_array_capacity];
 
-int *new_array = 
+  // Copy contents
+  for (unsigned int i = 0; i < array_length; i++)
+    new_array[i] = array[i];
+  // Deallocate old array
+  delete[] array;
 
-#+begin_src C++
-new int[new_array_capacity];
-
-// Copy contents
-for (unsigned int i = 0; i < array_length; i++)
-  new_array[i] = array[i];
-// Deallocate old array
-delete [] array;
-
-// Use new array and update capacity
-array = new_array;
-array_capacity = new_array_capacity;
-
-assert(array_length < array_capacity);
+  // Use new array and update capacity
+  array = new_array;
+  array_capacity = new_array_capacity;
+  assert(array_length < array_capacity);
 }
-
-
 #+end_src
 
-*** Collection data structures that dynamically expand/shrink
- 
+*** Shrinking/Growing: Retrieve and Cleanup
 
 #+begin_src C++
 unsigned int length(){
@@ -6821,25 +6846,20 @@ unsigned int length(){
   return array_length;
 }
 
-
 int retrieve(unsigned int i){
   assert(isInitialized());
   assert(i < length());
-
   return array[i];
 }
 
 void cleanup(){
   assert(isInitialized());
-
   // Deallocate memory resource
   delete [] array;
   // Establish postconditions
   array = nullptr;
-
   array_capacity = 0;
   array_length = 0;
-
   assert(! isInitialized());
 }
 
