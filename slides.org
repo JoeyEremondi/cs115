@@ -92,6 +92,7 @@
 - [[#dynamic-memory-management-extended-example][Dynamic memory management: Extended Example]]
 - [[#dynamic-memory-management-and-oop][Dynamic memory management and OOP]]
 - [[#canonical-forms-for-c-classes][Canonical forms for C++ classes]]
+- [[#linked-lists-barebones-version][Linked lists: Barebones Version]]
 
 * Introduction
 :PROPERTIES:
@@ -7996,7 +7997,7 @@ Class B{
 
 #+end_src
 
-* Linked lists: Barebones Version :noexport:
+* Linked lists: Barebones Version
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides016-list.pdf
 :END:
@@ -8004,20 +8005,26 @@ Class B{
 #+OPTIONS: todo:nil
  
  
- 
+** Linked Lists
 
 *** Motivation
+ - Dynamic data structure
+   + Alternative to arrays
+   + Don't want fixed length
+     - Allocate one node at a time
+   + Able to quickly insert
+ - Idea: dynamically allocate single node when requested
+   + problem: then we will need an arbitrary number of static (i.e. allocated at compile-time) pointers
+
  
- - Want to allocate memory on demand, but only 1 node at a time 
- - Idea: dynamically allocate only a single node when requested
- - problem: but then we will need an arbitrary number of static (i.e. allocated at compile-time) pointers to handle these -- back to square one!
- - one solution: why not use just 1 static pointer to dynamically allocate the first node, but rather than allocating just for the data, allocate enough space for a compound node structure consisting of the data as well as a pointer to some potential next node 
- - i.e. let's change the definition of a node
- - if the next node does not exist, indicate this by assigning the pointer to null pointer
- - This allows us to gradually develop a linked data structure that can dynamically grow and shrink as needed
- 
- 
- 
+*** Potential Solution
+
+- use 1 static pointer to dynamically allocate the first node
+  + don't just allocate for the data
+  + allocate enough space data and pointer to potential next node
+     + i.e.  change the definition of a node
+     + if the next node does not exist, indicate with null
+     + Linked data structure that can dynamically grow and shrink as needed
 *** Node definition
  
 
@@ -8030,14 +8037,16 @@ struct Node{
 // We only need 1 pointer to handle this linked list
 // It points to the first node of the list
 
-Node *head; // let's make it global for now (can be generalized if needed)
+Node *head; // let's make it global for now
+//(can be generalized if needed)
+// e.g. as an object
 // Initially, there are no nodes, i.e. the list is empty
 
 head = nullptr;
 
 #+end_src
 
-*** Adding a new node to the list
+*** Adding to end of the list
  
 
 #+begin_src C++
@@ -8052,8 +8061,6 @@ void insert(int data){
     head = temp;
   }
 
-
-
   else{
     while(temp->next != nullptr)
       temp = temp->next;
@@ -8062,17 +8069,14 @@ void insert(int data){
     temp->data = data;
     temp->next = nullptr;
   }
-
 } // end insert
 
 #+end_src
 
-*** Adding a new node to the list
- 
+*** Adding in sorted order
 
 #+begin_src C++
 void insertS(int data){
-
   Node *curr = head;
   Node *prev = nullptr;
 
@@ -8080,10 +8084,6 @@ void insertS(int data){
     prev = curr;
     curr = curr->next;
   }
-
-
-
-
   if(prev == nullptr){
     prev = new Node;
     prev->data = data;
@@ -8108,7 +8108,6 @@ bool isEmpty(){
   return head == nullptr;
 }
 
-
 void print(){
   Node *temp = head;
   while(temp != nullptr){
@@ -8116,7 +8115,6 @@ void print(){
     temp = temp->next;
   }
 }
-
 
 int count() {
   Node *temp = head;
@@ -8212,6 +8210,7 @@ int main() {
 }
 
 #+end_src
+
 
 * Multisets with Linked Lists :noexport:
 :PROPERTIES:
