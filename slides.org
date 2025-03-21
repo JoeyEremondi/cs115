@@ -88,6 +88,8 @@
 - [[#object-oriented-design-interfaces-subtying-and-polymorphism][Object-oriented design: Interfaces, Subtying and Polymorphism]]
 - [[#templates-and-generics][Templates and Generics]]
 - [[#pointers][Pointers]]
+- [[#dynamic-memory-management-using-pointers][Dynamic memory management using Pointers]]
+- [[#dynamic-memory-management-extended-example][Dynamic memory management: Extended Example]]
 
 * Introduction
 :PROPERTIES:
@@ -6034,7 +6036,7 @@ struct BigRecord {
 
 void f(const BigRecord *pRec1){
   ...
-    BigRecord pRec2;
+    BigRecord *pRec2;
   ...
     ,*pRec1 = *pRec2; // Wrong!
   pRec1 = pRec2;   // No issues
@@ -6374,7 +6376,7 @@ int main(){
     + Newer languages like Rust and Swift have gotten rid of them
 
 
-* Dynamic memory management using Pointers :noexport:
+* Dynamic memory management using Pointers
 :PROPERTIES:
 :EXPORT_FILE_NAME: pdf/slides012-dyn-pointers.pdf
 :END:
@@ -6383,7 +6385,7 @@ int main(){
 
  
 ** Pointers and New
- 
+
 *** Static vs Dynamic allocation
  
  - So far used pointers for allocating space during compile-time only
@@ -6871,28 +6873,24 @@ void cleanup(){
 #+begin_src C++
 // allocate the 2D array
 int** pparray;
-
-
-
-
-
-pparray = nullptr;
-
-
-
-
-
-pparray = new int*[10];
-
-
-
-
-
-
-
 #+end_src
+#+ATTR_LaTeX: :height 0.1\textwidth :center
+[[./img/ddynarray1.png]]
 
-*** Dynamically allocated 2d arrays
+
+#+begin_src C++
+      pparray = nullptr;
+#+end_src
+#+ATTR_LaTeX: :height 0.1\textwidth :center
+[[./img/ddynarray2.png]]
+
+#+begin_src C++
+pparray = new int*[10];
+#+end_src
+#+ATTR_LaTeX: :height 0.3\textwidth :center
+[[./img/ddynarray3.png]]
+
+*** Allocating the Second Dimension
  
 
 #+begin_src C++
@@ -6903,56 +6901,58 @@ pparray = new int*[10];
 for (unsigned int i = 0; i < 10; i++){
   pparray[i] = new int[20];
  }
-
-
-
-
-
-
 #+end_src
+#+ATTR_LaTeX: :height 0.5\textwidth :center
+[[./img/ddynarray4.png]]
 
-*** Dynamically allocated 2d arrays
- 
-
+*** Using Dynamic 2D arrays
 #+begin_src C++
 // store 7 in position 6 of row 2
 pparray[2][6] = 7;
 
 #+end_src
-
  - How about using pointers?
  
 
  #+begin_src C++
+ *(*(parray + 2) + 6) = 7;
 // when done:
 // deallocate in reverse order
 for (unsigned int i = 0; i < 10; i++)
   delete [] pparray[i];
 delete [] pparray;
-
-
-
-
-
-
-
  #+end_src
 
+#+ATTR_LaTeX: :height 0.4\textwidth :center
+[[./img/ddynarray4.png]]
+
+
+* Dynamic memory management: Extended Example
+:PROPERTIES:
+:EXPORT_FILE_NAME: pdf/slides013-dyn-strings-example.pdf
+:END:
+#+beamer: \beamerdefaultoverlayspecification{<+->}
+#+OPTIONS: todo:nil
+** Strings with Dynamic Memory
 *** Dynamic memory management and ADTs
- 
+
  - Why handle manually when we can automate allocation using constructors and deallocation using destructors?
- 
- - design a wrapper class for c-strings for 
-   + allocating and deallocating memory for c-strings 
-   + streamline the copying and concatenation of c-strings 
- 
- 
- 
- 
- 
- 
-*** String example (cont'd)
- 
+   + e.g. Library does manual memory management so client doesn't have to
+
+ - design a wrapper class for c-strings for
+   + allocating and deallocating memory for c-strings
+   + streamline the copying and concatenation of c-strings
+
+ - In-depth example: a library wrapping C-strings
+   + We'll get something similar to the stdlib ~string~
+
+   + Show how to do the main operations
+     - Copy/default/assignment constructors, destructors, operators
+
+
+
+
+*** Interface and Implementation
 
 #+begin_src C++
 class String {
@@ -6965,9 +6965,6 @@ unsigned int length() const;
   const char *buf;
 };
 
-
-
-
 unsigned int String::length() const {
   return strlen(buf);
 }
@@ -6978,20 +6975,15 @@ char String::member(unsigned int i) const {
   return buf[i];
 }
 
-
 #+end_src
 
-*** String example (cont'd)
- 
-
+*** Allocating in the Constructor
 #+begin_src C++
 class String {
 public:
   String(const char *s);
-
   unsigned int length() const;
   char member(unsigned int i) const;
-
 private:
   const char *buf;
 };
@@ -7001,38 +6993,35 @@ private:
 // implementation
 
 String::String(const char *s) {
-#+end_src
-
-char *newbuf 
-
-#+begin_src C++
-= new char[strlen(s) + 1];
-strcpy(newbuf, s);
-buf = newbuf;
+  char *newbuf = new char[strlen(s) + 1];
+  strcpy(newbuf, s);
+  buf = newbuf;
 }
-
-
 #+end_src
 
-*** String example (cont'd)
- 
+*** Constructors are not enough
+- Constructor allocated memory
+  + When object goes out of scope, this memory will /leak/
+- We need a /destructor/
+- Want a way to "cleanup" when we're done with an object
+  + Free memory or other resources
+  + Called whenever we do ~free~ on an object
+  + Automatically called on locally-declared variables that go out of scope
+    - Since their memory only exists for the duration of the function call
 
+*** A String Destructor
 #+begin_src C++
 class String {
 public:
   String(const char *s);
   ~String();     // Destructor prototype
-
   unsigned int length() const;
   char member(unsigned int i) const;
 
 private:
   const char *buf;
 };
-
-
 // Usage
-
     { // begin of scope
       String s = "Hello World";
       ...
@@ -7040,16 +7029,13 @@ private:
 // reclaimed here
 
 // Implementation
-
 String::~String() {
   delete [] buf;
 }
-
-
 #+end_src
 
-*** String example (cont'd)
- 
+
+*** Default Constructor for String
 
 #+begin_src C++
 class String {
@@ -7064,23 +7050,16 @@ public:
 private:
   const char *buf;
 };
-
-
 // Implementation
-
 String::String(){
   // Create a c-string of length 0
   char *newbuf = new char[1];
   newbuf[0] = '\0';
   buf = newbuf;
 }
-
-
 #+end_src
 
-*** String example (cont'd)
- 
-
+*** Copy Constructor: Shallow vs. Deep Copies
 #+begin_src C++
 class String {
 public:
@@ -7088,10 +7067,8 @@ public:
   String(const char *s);
   String(const String &original);
   ~String();
-
   unsigned int length() const;
   char member(unsigned int i) const;
-
 private:
   const char *buf;
 };
@@ -7099,38 +7076,35 @@ private:
 
 String::String(const String &original) {
   unsigned int len = original.length();
-#+end_src
-
-char* nonConstBuf 
-
-#+begin_src C++
+char* nonConstBuf
 = new char[len + 1];
 strcpy(nonConstBuf, original.buf);
 buf = nonConstBuf;
 }
-
 // is the & before original really required?
-
 #+end_src
 
-*** String example (cont'd)
- 
- - Three different uses:
- 
+*** Shallow vs. Deep Copies
+- Shallow copy only copies pointers
+  + Changes to the copy will affect the original
+  + Mulitiple pointers to the same memory
+- Deep Copies allocate new memory and copy the data over
+  + Change to one won't affect the other
+- Each useful in different circumstances
+  + Important to document which you're defining
 
+*** Copy Constructor Uses
+
+ - Three different uses:
  #+begin_src C++
 // for initializing a string object by another
 String s("Hello"); // Const. invoked
 String t(s);           // Copy const. invoked
-
 // Alternative syntax
 String s = "Hello"; // Const. invoked
 String t = s;           // Copy const. invoked
-
 // for passing String args. by value
-void f(String s){
-  ...
-    }
+void f(String s){...}
 ...
 String t = "Hello";
 f(t);    // Copy const. invoked
@@ -7143,17 +7117,11 @@ String f(...){
     // return value
     return s;
 }
-
-
-
-
-
  #+end_src
 
-*** String example (cont'd)
- 
+*** One Final Point
+
  - Can the & before &original be left out?
- 
 
  #+begin_src C++
 String::String(const String &original) {
@@ -7166,20 +7134,17 @@ String::String(const String &original) {
  #+end_src
 
  - No: The copy constructor is always invoked whenever an argument of the type is passed by value to any function
- - so if & is left out, it will repeatedly call the copy constructor till the stack overflows!   
- 
- 
- 
-*** String example (cont'd)
- 
+ - so if & is left out, it will repeatedly call the copy constructor till the stack overflows!
 
+
+
+*** Assignment Operator: Prototype
 #+begin_src C++
 class String {
 public:
-  // it's a good idea to follow this standard prototype for = operator
-  // try (a=b)=c with a cons String & return type and you'll see why this is important!
-  String &operator=(const String &original);  // Assignment operator
-  ...                                                        // try (a=b)=c with a cons String & return type!
+  // good idea to follow standard prototype for = operator
+  String &operator=(const String &original);
+  ...
   private:
   const char *buf;
 };
@@ -7191,39 +7156,51 @@ s = u;                    // assignment operator
 
 #+end_src
 
-*** String example (cont'd)
- 
+*** Assignment Operator: Implementation Attempt
+
 
 #+begin_src C++
 String &String::operator=(const String &original) {
-  unsigned int len = original.length(); // len is length of string to be copied
-  char *nonConstBuf = new char[len + 1]; // allocate new space of size len
-  strcpy(nonConstBuf, original.buf); // copy original string to new space (Line 4)
-  delete [] buf; // deallocate old string (Line 5)
-  buf = nonConstBuf; // make old string pointer point to newly allocated space
-
+  // len is length of string to be copied
+  unsigned int len = original.length();
+  // allocate new space of size len
+  char *nonConstBuf = new char[len + 1];
+  // copy original string to new space (Line 4)
+  strcpy(nonConstBuf, original.buf);
+  // deallocate old string (Line 5)
+  delete [] buf;
+  // make old string pointer point to newly allocated space
+  buf = nonConstBuf;
   return *this;
 }
-
-// a potential issue
-String s = "Hello, World";
-s = s;   // Self assignment! Q: Is there anything wrong with this?
-// Ans. might do extra work; even more problematic if Line 5 is moved before Line 4
 
 
 #+end_src
 
-*** String example (cont'd)
- 
+*** Problem with that implementation
+#+begin_src C++
+// a potential issue
+String s = "Hello, World";
+s = s;   // Self assignment! Q: Is there anything wrong with this?
+// Ans. might do extra work; even more problematic if Line 5 is moved before Line 4
+#+end_src
+
+
+*** Assignment (fixed version)
+
 
 #+begin_src C++
 String &String::operator=(const String &original) {
-  if (&original != this){
-    unsigned int len = original.length(); // len is length of string to be copied
-    char *nonConstBuf = new char[len + 1]; // allocate new space of size len
-    strcpy(nonConstBuf, original.buf); // copy original string to new space
+  if (&original != this){ // Don't duplicate if they're the same
+    // len is length of string to be copied
+    unsigned int len = original.length();
+    // allocate new space of size len
+    char *nonConstBuf = new char[len + 1];
+    // copy original string to new space
+    strcpy(nonConstBuf, original.buf);
     delete [] buf; // deallocate old string
-    buf = nonConstBuf; // make old string pointer point to newly allocated space
+    // make old string pointer point to newly allocated space
+    buf = nonConstBuf;
   }
 
   return *this;
@@ -7234,8 +7211,8 @@ String &String::operator=(const String &original) {
 #+end_src
 
 *** Concatenation
- 
 
+- Merging Two Strings into one
 #+begin_src C++
 class String {
 public:
@@ -7249,11 +7226,9 @@ String &append(const String &s);
 // note: none of the following work
 // void append(const String &s)
 //  String append(const String &s)
-
 String s = "Hello";
 String t = " World";
 s.append(t);            // "Hello World"
-
 String s = "Hello";
 String t = " ";
 String u = "World";
@@ -7262,242 +7237,20 @@ s.append(t).append(u);
 
 #+end_src
 
-***
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+*** Pseudocode for Concatenation
  - Allocate a buffer that is big enough to hold both the content of the current object and that of the argument
- 
+
  - Copy the content of the current object to the beginning of the buffer
- 
+
  - Append the content of the argument to the end of the buffer
- 
+
  - Delete the original content of the current object
- 
+
  - Install the buffer into the current object
- 
- 
-*** Concatenation
- 
+
+
+*** Concatenation Implementation
+
 
 #+begin_src C++
 String &String::append(const String &s){
@@ -7514,10 +7267,11 @@ String &String::append(const String &s){
 
 #+end_src
 
-*** Concatenation
- 
+*** Creating a new string: Inefficient Version
+
  - append is a mutation operation, let's formulate a creation version
- 
+   +  Leave original strings unchanged, make a new one that merges both
+
 
  #+begin_src C++
 String concatenate(const String &s) const; // prototype
@@ -7535,11 +7289,11 @@ String String::concatenate(const String &s) const {
 
  #+end_src
 
-*** Concatenation
- 
+*** A (maybe) More Efficient Version
+
  - Efficient only if supported by the compiler
  - First, let's define a private helper constructor
- 
+
 
  #+begin_src C++
 String::String(const char *s, const char *t) {
@@ -7551,14 +7305,16 @@ String::String(const char *s, const char *t) {
 }
 
 String String::concatenate(const String &s) const {
-  return String(buf, s.buf); // still calls the copy constructor, but some smart compilers
-}                                            // will be able to recognize and avoid this unnecessary task
+  // still calls the copy constructor, but some smart compilers
+  // will be able to recognize and avoid this unnecessary task
+  return String(buf, s.buf);
+}
 
  #+end_src
 
 * Dynamic memory management and OOP :noexport:
 :PROPERTIES:
-:EXPORT_FILE_NAME: pdf/slides013-dyn-oop.pdf
+:EXPORT_FILE_NAME: pdf/slides014-dyn-oop.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -7924,7 +7680,7 @@ for (int i = 0; i < 100; i++) {
 
 * Canonical forms for C++ classes :noexport:
 :PROPERTIES:
-:EXPORT_FILE_NAME: pdf/slides014-canonical.pdf
+:EXPORT_FILE_NAME: pdf/slides015-canonical.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -8168,7 +7924,7 @@ Class B{
 
 * Linked lists: Barebones Version :noexport:
 :PROPERTIES:
-:EXPORT_FILE_NAME: pdf/slides015-list.pdf
+:EXPORT_FILE_NAME: pdf/slides016-list.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
@@ -8385,7 +8141,7 @@ int main() {
 
 * Multisets with Linked Lists :noexport:
 :PROPERTIES:
-:EXPORT_FILE_NAME: pdf/slides016-multiset.pdf
+:EXPORT_FILE_NAME: pdf/slides017-multiset.pdf
 :END:
 #+beamer: \beamerdefaultoverlayspecification{<+->}
 #+OPTIONS: todo:nil
